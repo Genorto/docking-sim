@@ -1,11 +1,11 @@
-#include "settings.h"
+#include "conclusion.h"
 
-Settings::Settings() {
-    window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Settings");
+Conclusion::Conclusion() {
+    window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Conclusion");
     event_ = new sf::Event;
 }
 
-void Settings::CheckEvents() {
+void Conclusion::CheckEvents() {
     while (window_->pollEvent(*event_)) {
         switch (event_->type) {
         case sf::Event::Closed:
@@ -15,14 +15,14 @@ void Settings::CheckEvents() {
     }
 }
 
-void Settings::Draw() {
+void Conclusion::Draw() {
     window_->clear();
     /* draw all elements */
     window_->display();
 }
 
-bool Settings::isOpen() {
+bool Conclusion::isOpen() {
     return window_->isOpen();
 }
 
-Settings::~Settings() {}
+Conclusion::~Conclusion() {}

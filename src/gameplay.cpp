@@ -1,11 +1,11 @@
-#include "settings.h"
+#include "gameplay.h"
 
-Settings::Settings() {
-    window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Settings");
+Gameplay::Gameplay() {
+    window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
     event_ = new sf::Event;
 }
 
-void Settings::CheckEvents() {
+void Gameplay::CheckEvents() {
     while (window_->pollEvent(*event_)) {
         switch (event_->type) {
         case sf::Event::Closed:
@@ -15,14 +15,14 @@ void Settings::CheckEvents() {
     }
 }
 
-void Settings::Draw() {
+void Gameplay::Draw() {
     window_->clear();
     /* draw all elements */
     window_->display();
 }
 
-bool Settings::isOpen() {
+bool Gameplay::isOpen() {
     return window_->isOpen();
 }
 
-Settings::~Settings() {}
+Gameplay::~Gameplay() {}

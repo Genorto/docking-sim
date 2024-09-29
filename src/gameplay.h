@@ -1,11 +1,11 @@
 #pragma once
 #include "window.h"
 
-class Settings : public Window {
+class Gameplay : public Window {
  public:
-     Settings();
+     Gameplay();
      virtual void CheckEvents() override;
      virtual void Draw() override;
      virtual bool isOpen() override;
-     virtual ~Settings();
+     virtual ~Gameplay();
 };
