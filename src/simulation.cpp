@@ -4,9 +4,9 @@ Simulation::Simulation() {
     window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
     event_ = new sf::Event;
     crane_ = new BulkCrane;
-    crane_->SetPos(0, 0);
+    crane_->SetPos(100, 100);
     crane_->SetSize(100, 100);
-    crane_->SetModel("src/assets/sprites/default_cane.png");
+    crane_->SetModel("src/assets/sprites/default_crane.png");
 }
 
 void Simulation::CheckEvents() {
@@ -20,7 +20,7 @@ void Simulation::CheckEvents() {
 }
 
 void Simulation::Draw() {
-    window_->clear();
+    window_->clear(sf::Color::Cyan);
     crane_->Draw(window_);
     window_->display();
 }

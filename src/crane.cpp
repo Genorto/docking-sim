@@ -17,5 +17,6 @@ void Crane::SetModel(std::string path) {
 void Crane::Draw(sf::RenderWindow*& window) {
     sf::Sprite crane(model_);
     crane.setPosition(sf::Vector2f(x_, y_));
+    crane.setScale(size_x_ / model_.getSize().x, size_y_ / model_.getSize().y);
     window->draw(crane);
 }
