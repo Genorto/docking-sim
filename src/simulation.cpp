@@ -6,7 +6,7 @@ Simulation::Simulation() {
     crane_ = new BulkCrane;
     crane_->SetPos(0, 0);
     crane_->SetSize(100, 100);
-    crane_->SetModel("src/assets/sprites/default_crane.png");
+    crane_->SetModel("src/assets/sprites/default_cane.png");
 }
 
 void Simulation::CheckEvents() {
