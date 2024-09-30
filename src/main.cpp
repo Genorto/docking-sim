@@ -3,7 +3,7 @@
 #include "conclusion.h"
 
 int main() {
-    Window* window = new Settings;
+    Window* window = new Simulation;
     while (window->isOpen()) {
         window->CheckEvents();
         window->Draw();

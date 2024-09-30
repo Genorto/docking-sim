@@ -13,7 +13,7 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main "src/main.cpp" "src/settings.h" "src/settings.cpp" "src/simulation.h" "src/simulation.cpp" "src/conclusion.h" "src/conclusion.cpp" "src/window.cpp")
+add_executable(main "src/main.cpp" "src/settings.h" "src/settings.cpp" "src/simulation.h" "src/simulation.cpp" "src/conclusion.h" "src/conclusion.cpp" "src/window.cpp" "src/crane.h" "src/bulk_crane.h" "src/container_crane.h" "src/bulk_crane.cpp" "src/fluid_crane.cpp" "src/container_crane.cpp" "src/crane.cpp")
 target_link_libraries(main PRIVATE sfml-graphics)
 target_link_libraries(main PRIVATE sfml-window)
 target_link_libraries(main PRIVATE sfml-system)

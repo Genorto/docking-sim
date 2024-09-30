@@ -8,4 +8,7 @@ class Simulation : public Window {
      virtual void Draw() override;
      virtual bool isOpen() override;
      virtual ~Simulation();
+
+ private:
+     Crane* crane_;
 };
