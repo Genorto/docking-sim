@@ -13,7 +13,7 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main "src/main.cpp" "src/settings.h" "src/settings.cpp" "src/gameplay.h" "src/gameplay.cpp" "src/conclusion.h" "src/conclusion.cpp" "src/window.cpp")
+add_executable(main "src/main.cpp" "src/settings.h" "src/settings.cpp" "src/simulation.h" "src/simulation.cpp" "src/conclusion.h" "src/conclusion.cpp" "src/window.cpp")
 target_link_libraries(main PRIVATE sfml-graphics)
 target_link_libraries(main PRIVATE sfml-window)
 target_link_libraries(main PRIVATE sfml-system)

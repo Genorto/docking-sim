@@ -1,11 +1,12 @@
-#include "gameplay.h"
+#include "simulation.h"
 
-Gameplay::Gameplay() {
+Simulation::Simulation() {
     window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
     event_ = new sf::Event;
+    /* implement objects */
 }
 
-void Gameplay::CheckEvents() {
+void Simulation::CheckEvents() {
     while (window_->pollEvent(*event_)) {
         switch (event_->type) {
         case sf::Event::Closed:
@@ -15,14 +16,14 @@ void Gameplay::CheckEvents() {
     }
 }
 
-void Gameplay::Draw() {
+void Simulation::Draw() {
     window_->clear();
-    /* draw all elements */
+    /* draw objects */
     window_->display();
 }
 
-bool Gameplay::isOpen() {
+bool Simulation::isOpen() {
     return window_->isOpen();
 }
 
-Gameplay::~Gameplay() {}
+Simulation::~Simulation() {}

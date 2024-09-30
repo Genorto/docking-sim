@@ -3,6 +3,7 @@
 Settings::Settings() {
     window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Settings");
     event_ = new sf::Event;
+    /* implement objects */
 }
 
 void Settings::CheckEvents() {
@@ -17,7 +18,7 @@ void Settings::CheckEvents() {
 
 void Settings::Draw() {
     window_->clear();
-    /* draw all elements */
+    /* draw objects */
     window_->display();
 }
 

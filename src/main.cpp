@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "gameplay.h"
+#include "simulation.h"
 #include "conclusion.h"
 
 int main() {
@@ -9,5 +9,4 @@ int main() {
         window->Draw();
     }
     delete window;
-    return 0;
 }

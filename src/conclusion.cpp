@@ -3,6 +3,7 @@
 Conclusion::Conclusion() {
     window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Conclusion");
     event_ = new sf::Event;
+    /* implement objects */
 }
 
 void Conclusion::CheckEvents() {
@@ -17,7 +18,7 @@ void Conclusion::CheckEvents() {
 
 void Conclusion::Draw() {
     window_->clear();
-    /* draw all elements */
+    /* draw objects */
     window_->display();
 }
 
