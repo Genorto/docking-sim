@@ -2,5 +2,5 @@
 #include "crane.h"
 
 class ContainerCrane : public Crane {
-    virtual void Unload(/* Ship*& target */) override;
+    virtual void AddToQueue(Ship*& target) override;
 };

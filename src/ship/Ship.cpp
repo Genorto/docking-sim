@@ -39,6 +39,10 @@ void Ship::SetType(ShipType type) {
 	type_ = type;
 }
 
+void Ship::set_weight(int weight) {
+	weight_ = weight;
+}
+
 int Ship::get_weight() {
 	return weight_;
 }

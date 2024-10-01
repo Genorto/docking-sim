@@ -12,11 +12,13 @@ public:
 	Ship& operator= (const Ship& other);
 	~Ship() = default;
 	void SetType(ShipType type);
+	void set_weight(int);
 	int get_weight();
 	int get_arrival_rejection();
 	std::pair<int, int> get_arrival_time();
 	std::string get_ship_name();
 	ShipType get_type();
+
 protected:
 	// installed before the start
 	int weight_;
