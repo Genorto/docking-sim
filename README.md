@@ -1,5 +1,5 @@
 # docking-sim
-C++ docking system simulation
+# C++ docking system simulation
 Work in progress...
 ![image](https://github.com/user-attachments/assets/cca56a83-cd61-4ecf-8ca5-975dd730b785)
 Our team's goal is to make a fully functioning docking simulation.
