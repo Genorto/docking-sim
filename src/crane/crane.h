@@ -11,6 +11,7 @@ class Crane {
      Crane(const Crane& other);
      Crane& operator=(const Crane& other);
      virtual void AddToQueue(Ship*& target) = 0;
+     bool isEmpty();
      void UnloadFirst();
      virtual void SetPos(double x, double y) final;
      virtual void SetSize(double size_x, double size_y) final;

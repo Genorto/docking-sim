@@ -7,7 +7,7 @@ Simulation::Simulation() {
     crane_->SetPos(100, 100);
     crane_->SetSize(300, 300);
     crane_->SetModel("src/assets/sprites/default_crane.png");
-    ship_ = new CargoShip;
+    ship_ = new CargoShip(100, { 0, 0 }, "GreenSausages");
     ship_->SetPos(250, 300);
     ship_->SetSize(300, 300);
     ship_->SetModel("src/assets/sprites/default_ship.png");

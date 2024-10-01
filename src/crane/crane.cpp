@@ -27,7 +27,12 @@ Crane& Crane::operator=(const Crane& other) {
     return *this;
 }
 
+bool Crane::isEmpty() {
+    return queue_.empty();
+}
+
 void Crane::UnloadFirst() {
+    if (isEmpty()) throw std::runtime_error("Queue is empty");
     queue_.front()->set_weight(0);
     queue_.pop();
 }
