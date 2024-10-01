@@ -13,7 +13,33 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main "src/main.cpp" "src/settings.h" "src/settings.cpp" "src/simulation.h" "src/simulation.cpp" "src/conclusion.h" "src/conclusion.cpp" "src/window.cpp")
+file(GLOB CPP_H
+     "src/main.cpp"
+     "src/window/window.h"
+     "src/window/window.cpp"
+     "src/window/settings.h"
+     "src/window/settings.cpp"
+     "src/window/simulation.h"
+     "src/window/simulation.cpp"
+     "src/window/conclusion.h"
+     "src/window/conclusion.cpp"
+     "src/ship/Ship.h"
+     "src/ship/Ship.cpp"
+     "src/ship/CargoShip.h"
+     "src/ship/CargoShip.cpp"
+     "src/ship/Tanker.h"
+     "src/ship/Tanker.cpp"
+     "src/crane/crane.h"
+     "src/crane/crane.cpp"
+     "src/crane/bulk_crane.h"
+     "src/crane/bulk_crane.cpp"
+     "src/crane/fluid_crane.h"
+     "src/crane/fluid_crane.cpp"
+     "src/crane/container_crane.h"
+     "src/crane/container_crane.cpp"
+)
+
+add_executable(main ${CPP_H})
 target_link_libraries(main PRIVATE sfml-graphics)
 target_link_libraries(main PRIVATE sfml-window)
 target_link_libraries(main PRIVATE sfml-system)

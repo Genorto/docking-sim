@@ -1,5 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "../ship/CargoShip.h"
+#include "../ship/Tanker.h"
+#include "../crane/bulk_crane.h"
 
 class Window {
  public:
@@ -9,6 +12,6 @@ class Window {
      virtual ~Window();
 
  protected:
-     sf::RenderWindow* window_;
-     sf::Event* event_;
+     sf::RenderWindow* window_ = nullptr;
+     sf::Event* event_ = nullptr;
 };
