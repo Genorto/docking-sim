@@ -11,4 +11,5 @@ class Simulation : public Window {
 
  private:
      Crane* crane_;
+     Ship* ship_;
 };

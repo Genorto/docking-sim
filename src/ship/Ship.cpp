@@ -62,3 +62,25 @@ std::string Ship::get_ship_name() {
 ShipType Ship::get_type() {
 	return type_;
 }
+
+void Ship::SetPos(double x, double y) {
+	x_ = x;
+	y_ = y;
+}
+
+void Ship::SetSize(double size_x, double size_y) {
+	size_x_ = size_x;
+	size_y_ = size_y;
+}
+
+void Ship::SetModel(std::string path) {
+	if (!model_.loadFromFile(path)) model_.loadFromFile("src/assets/sprites/error.png");
+}
+
+void Ship::Draw(sf::RenderWindow*& window) {
+	sf::Sprite ship(model_);
+	ship.setPosition(sf::Vector2f(x_, y_));
+	ship.setScale(size_x_ / model_.getSize().x, size_y_ / model_.getSize().y);
+	window->draw(ship);
+}
+

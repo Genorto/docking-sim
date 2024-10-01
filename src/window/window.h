@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "../ship/CargoShip.h"
+#include "../ship/Tanker.h"
 #include "../crane/bulk_crane.h"
 
 class Window {

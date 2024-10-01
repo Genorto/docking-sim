@@ -32,7 +32,6 @@ void Crane::UnloadFirst() {
     queue_.pop();
 }
 
-
 void Crane::SetPos(double x, double y) {
     x_ = x;
     y_ = y;
