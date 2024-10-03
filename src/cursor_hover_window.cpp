@@ -46,20 +46,24 @@ void CursorHoverWindow::SetInfo(std::vector<std::string*> info) {
 void CursorHoverWindow::Draw(sf::RenderWindow*& window) {
     sf::RectangleShape chw;
     chw.setPosition(sf::Vector2f(x_, y_));
-    chw.setSize(sf::Vector2f(size_x_, size_y_));
     chw.setFillColor(sf::Color(0, 0, 0, 155));
-    window->draw(chw);
+    sf::Text line;
+    line.setFont(font_);
+    line.setFillColor(sf::Color::White);
+    line.setCharacterSize(size_y_ / info_.size());
     size_t max_size = 0;
-    for (auto x : info_) {
-        max_size = std::max(max_size, x->size());
-    }
     for (size_t it = 0; it < info_.size(); ++it) {
-        sf::Text line;
-        line.setString(*info_[it]);
-        line.setFont(font_);
-        line.setCharacterSize(size_x_ / max_size * 2 - 5);
-        line.setFillColor(sf::Color::White);
-        line.setPosition(sf::Vector2f(x_, y_ + size_y_ / info_.size() * it));
+        if (info_[it]->size() > max_size) {
+            max_size = info_[it]->size();
+            line.setString(*info_[it]);
+            size_x_ = line.getLocalBounds().width + 10;
+        }
+    }
+    chw.setSize(sf::Vector2f(size_x_, size_y_));
+    window->draw(chw);
+    for (size_t it = 0; it < info_.size(); ++it) {
+        line.setString(*info_[it]);    
+        line.setPosition(sf::Vector2f(x_, y_ + size_y_ / info_.size() * it - 10));
         window->draw(line);
     }
 }

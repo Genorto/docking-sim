@@ -11,6 +11,6 @@ std::vector<std::string*> CargoShip::GetInfo() {
     std::vector<std::string*> info;
     info.push_back(new std::string("Cargo ship"));
     info.push_back(new std::string(ship_name_));
-    info.push_back(new std::string(std::to_string(weight_)));
+    info.push_back(new std::string("Weight: " + std::to_string(weight_)));
     return info;
 }

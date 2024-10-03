@@ -47,7 +47,7 @@ Simulation::Simulation() {
     ships_.push_back(ship_);
 
     chw_ = new CursorHoverWindow;
-    chw_->SetSize(300, 180);
+    chw_->SetSize(200, 150);
     chw_->SetFont("assets/fonts/roboto.ttf");
 }
 
