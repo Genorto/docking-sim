@@ -18,6 +18,7 @@ class Crane {
      virtual void SetPos(double x, double y) final;
      virtual void SetSize(double size_x, double size_y) final;
      virtual void SetModel(std::string path) final;
+     virtual void SetName(std::string name) final;
      virtual void Draw(sf::RenderWindow*& window) final;
 
  protected:
@@ -25,4 +26,5 @@ class Crane {
      double size_x_ = 0, size_y_ = 0;
      sf::Texture model_;
      std::queue<Ship*> queue_;
+     std::string name_;
 };

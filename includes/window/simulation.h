@@ -10,7 +10,7 @@ class Simulation : public Window {
      virtual ~Simulation();
 
  private:
-     Crane* crane_;
-     Ship* ship_;
+     std::vector<Crane*> cranes_;
+     std::vector<Ship*> ships_;
      CursorHoverWindow* chw_;
 };

@@ -1,5 +1,4 @@
 #include "../includes/cursor_hover_window.h"
-#include "iostream"
 
 CursorHoverWindow::CursorHoverWindow() {
 
@@ -42,9 +41,6 @@ void CursorHoverWindow::SetInfo(std::vector<std::string*> info) {
     for (size_t it = 0; it < info.size(); ++it) {
         info_[it] = new std::string(*info[it]);
     }
-    for (auto x : info_) {
-        std::cout << *x << "\n";
-    }
 }
 
 void CursorHoverWindow::Draw(sf::RenderWindow*& window) {
@@ -53,11 +49,15 @@ void CursorHoverWindow::Draw(sf::RenderWindow*& window) {
     chw.setSize(sf::Vector2f(size_x_, size_y_));
     chw.setFillColor(sf::Color::Black);
     window->draw(chw);
+    size_t max_size = 0;
+    for (auto x : info_) {
+        max_size = std::max(max_size, x->size());
+    }
     for (size_t it = 0; it < info_.size(); ++it) {
         sf::Text line;
         line.setString(*info_[it]);
         line.setFont(font_);
-        line.setCharacterSize(15);
+        line.setCharacterSize(size_x_ / max_size * 2);
         line.setFillColor(sf::Color::White);
         line.setPosition(sf::Vector2f(x_, y_ + size_y_ / info_.size() * it));
         window->draw(line);
