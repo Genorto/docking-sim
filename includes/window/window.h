@@ -3,6 +3,7 @@
 #include "../ship/cargo_ship.h"
 #include "../ship/tanker.h"
 #include "../crane/bulk_crane.h"
+#include "../cursor_hover_window.h"
 
 class Window {
  public:

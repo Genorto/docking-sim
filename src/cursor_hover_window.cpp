@@ -1,4 +1,5 @@
 #include "../includes/cursor_hover_window.h"
+#include "iostream"
 
 CursorHoverWindow::CursorHoverWindow() {
 
@@ -20,8 +21,8 @@ CursorHoverWindow& CursorHoverWindow::operator=(const CursorHoverWindow& other) 
 }
 
 void CursorHoverWindow::SetPos(double x, double y) {
-    x_ = x;
-    y_ = y;
+    x_ = x + 20;
+    y_ = y + 20;
 }
 
 void CursorHoverWindow::SetSize(double size_x, double size_y) {
@@ -29,8 +30,36 @@ void CursorHoverWindow::SetSize(double size_x, double size_y) {
     size_y_ = size_y;
 }
 
+void CursorHoverWindow::SetFont(std::string font_dir) {
+    font_.loadFromFile(font_dir);
+}
+
+void CursorHoverWindow::SetInfo(std::vector<std::string*> info) {
+    for (auto it_ : info_) {
+        delete it_;
+    }
+    info_.assign(info.size(), nullptr);
+    for (size_t it = 0; it < info.size(); ++it) {
+        info_[it] = new std::string(*info[it]);
+    }
+    for (auto x : info_) {
+        std::cout << *x << "\n";
+    }
+}
+
 void CursorHoverWindow::Draw(sf::RenderWindow*& window) {
     sf::RectangleShape chw;
     chw.setPosition(sf::Vector2f(x_, y_));
     chw.setSize(sf::Vector2f(size_x_, size_y_));
+    chw.setFillColor(sf::Color::Black);
+    window->draw(chw);
+    for (size_t it = 0; it < info_.size(); ++it) {
+        sf::Text line;
+        line.setString(*info_[it]);
+        line.setFont(font_);
+        line.setCharacterSize(15);
+        line.setFillColor(sf::Color::White);
+        line.setPosition(sf::Vector2f(x_, y_ + size_y_ / info_.size() * it));
+        window->draw(line);
+    }
 }

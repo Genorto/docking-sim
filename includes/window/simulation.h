@@ -12,4 +12,5 @@ class Simulation : public Window {
  private:
      Crane* crane_;
      Ship* ship_;
+     CursorHoverWindow* chw_;
 };
