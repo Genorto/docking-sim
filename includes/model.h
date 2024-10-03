@@ -18,7 +18,8 @@ class Model final {
      std::vector<Ship*> GetTankers();
      void NextStep();
      void PreviousStep();
-     int GetStep();
+     std::pair<int, int> GetTime();
+     void SortNewShips();
 
  private:
      std::vector<Crane*> bulk_cranes_;
@@ -26,5 +27,5 @@ class Model final {
      std::vector<Crane*> container_cranes_;
      std::vector<Ship*> cargo_ships_;
      std::vector<Ship*> tankers_;
-     int step_;
+     int day_, hour_;
 };

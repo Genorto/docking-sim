@@ -1,50 +1,37 @@
 #include "../../includes/window/simulation.h"
+#include "iostream"
 
 Simulation::Simulation() {
     window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
     event_ = new sf::Event;
+    model_ = new Model;
+    /* these arguments are set by user */
+    model_->CreateCranes(1, 1, 1);
+    model_->CreateShips(1, 1);
 
-    Crane* crane_ = new BulkCrane;
-    crane_->SetPos(50, 50);
-    crane_->SetSize(100, 100);
-    crane_->SetName("Red impostor");
-    crane_->SetModel("assets/sprites/default_crane.png");
-    cranes_.push_back(crane_);
+    model_->GetBulkCranes()[0]->SetPos(50, 50);
+    model_->GetBulkCranes()[0]->SetSize(100, 100);
+    model_->GetBulkCranes()[0]->SetName("Red impostor");
+    model_->GetBulkCranes()[0]->SetModel("assets/sprites/default_crane.png");
 
-    crane_ = new FluidCrane;
-    crane_->SetPos(150, 50);
-    crane_->SetSize(100, 100);
-    crane_->SetName("Best crane ever");
-    crane_->SetModel("assets/sprites/default_crane.png");
-    cranes_.push_back(crane_);
+    model_->GetFluidCranes()[0]->SetPos(150, 50);
+    model_->GetFluidCranes()[0]->SetSize(100, 100);
+    model_->GetFluidCranes()[0]->SetName("Best crane ever");
+    model_->GetFluidCranes()[0]->SetModel("assets/sprites/default_crane.png");
 
-    crane_ = new ContainerCrane;
-    crane_->SetPos(250, 50);
-    crane_->SetSize(100, 100);
-    crane_->SetName("lol kek cheburek kek lol arbidol");
-    crane_->SetModel("assets/sprites/default_crane.png");
-    cranes_.push_back(crane_);
+    model_->GetContainerCranes()[0]->SetPos(250, 50);
+    model_->GetContainerCranes()[0]->SetSize(100, 100);
+    model_->GetContainerCranes()[0]->SetName("lol kek cheburek kek lol arbidol");
+    model_->GetContainerCranes()[0]->SetModel("assets/sprites/default_crane.png");
+    
 
-    Ship* ship_ = new CargoShip(100, { 0, 0 }, "Cargo Green");
-    ship_->SetPos(90, 90);
-    ship_->SetSize(80, 150);
-    ship_->SetModel("assets/sprites/default_ship.png");
-    cranes_[0]->AddToQueue(ship_);
-    ships_.push_back(ship_);
+    model_->GetCargoShips()[0]->SetPos(90, 90);
+    model_->GetCargoShips()[0]->SetSize(80, 150);
+    model_->GetCargoShips()[0]->SetModel("assets/sprites/default_ship.png");
 
-    ship_ = new Tanker(100, { 0, 0 }, "Tank Sausages");
-    ship_->SetPos(190, 90);
-    ship_->SetSize(80, 150);
-    ship_->SetModel("assets/sprites/default_ship.png");
-    cranes_[1]->AddToQueue(ship_);
-    ships_.push_back(ship_);
-
-    ship_ = new Tanker(100, { 0, 0 }, "Lebron James");
-    ship_->SetPos(290, 90);
-    ship_->SetSize(80, 150);
-    ship_->SetModel("assets/sprites/default_ship.png");
-    cranes_[2]->AddToQueue(ship_);
-    ships_.push_back(ship_);
+    model_->GetTankers()[0]->SetPos(190, 90);
+    model_->GetTankers()[0]->SetSize(80, 150);
+    model_->GetTankers()[0]->SetModel("assets/sprites/default_ship.png");
 
     chw_ = new CursorHoverWindow;
     chw_->SetSize(200, 150);
@@ -57,6 +44,11 @@ void Simulation::CheckEvents() {
         case sf::Event::Closed:
             window_->close();
             break;
+
+        case sf::Event::KeyPressed:
+            if (event_->key.scancode == sf::Keyboard::Right) {
+
+            }
         }
     }
     /* check all objects if they are hovered */
@@ -64,32 +56,71 @@ void Simulation::CheckEvents() {
     chw_->SetInfo(empty);
     chw_->SetPos(-1000, -1000);
     sf::Vector2i cursor = sf::Mouse::getPosition(*window_);
-    bool checking = true;
-    if (checking)
-        for (auto crane : cranes_) {
-            if (crane->isHovered(cursor)) {
-                chw_->SetInfo(crane->GetInfo());
-                chw_->SetPos(cursor.x, cursor.y);
-                checking = false;
-                break;
-            }
-        }
 
-    if (checking)
-        for (auto ship : ships_) {
-            if (ship->isHovered(cursor)) {
-                chw_->SetInfo(ship->GetInfo());
-                chw_->SetPos(cursor.x, cursor.y);
-                checking = false;
-                break;
-            }
+    for (auto ship : model_->GetCargoShips()) {
+        if (ship->isHovered(cursor)) {
+            chw_->SetInfo(ship->GetInfo());
+            chw_->SetPos(cursor.x, cursor.y);
+            return;
         }
+    }
+
+    for (auto ship : model_->GetTankers()) {
+        if (ship->isHovered(cursor)) {
+            chw_->SetInfo(ship->GetInfo());
+            chw_->SetPos(cursor.x, cursor.y);
+            return;
+        }
+    }
+
+    for (auto crane : model_->GetBulkCranes()) {
+        if (crane->isHovered(cursor)) {
+            chw_->SetInfo(crane->GetInfo());
+            chw_->SetPos(cursor.x, cursor.y);
+            return;
+        }
+    }
+
+    for (auto crane : model_->GetFluidCranes()) {
+        if (crane->isHovered(cursor)) {
+            chw_->SetInfo(crane->GetInfo());
+            chw_->SetPos(cursor.x, cursor.y);
+            return;
+        }
+    }
+
+    for (auto crane : model_->GetContainerCranes()) {
+        if (crane->isHovered(cursor)) {
+            chw_->SetInfo(crane->GetInfo());
+            chw_->SetPos(cursor.x, cursor.y);
+            return;
+        }
+    }
 }
 
 void Simulation::Draw() {
     window_->clear(sf::Color::Cyan);
-    for (auto ship : ships_) ship->Draw(window_);
-    for (auto crane : cranes_) crane->Draw(window_);
+
+    for (auto ship : model_->GetCargoShips()) {
+        ship->Draw(window_);
+    }
+
+    for (auto ship : model_->GetTankers()) {
+        ship->Draw(window_);
+    }
+
+    for (auto crane : model_->GetBulkCranes()) {
+        crane->Draw(window_);
+    }
+
+    for (auto crane : model_->GetFluidCranes()) {
+        crane->Draw(window_);
+    }
+
+    for (auto crane : model_->GetContainerCranes()) {
+        crane->Draw(window_);
+    }
+
     chw_->Draw(window_);
     window_->display();
 }

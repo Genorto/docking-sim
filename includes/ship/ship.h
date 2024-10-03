@@ -16,7 +16,9 @@ public:
 	void SetType(ShipType type);
 	void set_weight(int);
 	int get_weight();
+	void set_arrival_rejection(int);
 	int get_arrival_rejection();
+	void set_arrival_time(std::pair<int, int>);
 	std::pair<int, int> get_arrival_time();
 	std::string get_ship_name();
 	ShipType get_type();

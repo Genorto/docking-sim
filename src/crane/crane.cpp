@@ -30,6 +30,10 @@ Crane& Crane::operator=(const Crane& other) {
     return *this;
 }
 
+size_t Crane::GetQueueSize() {
+    return queue_.size();
+}
+
 bool Crane::isHovered(sf::Vector2i cursor_pos) {
     return (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
 }

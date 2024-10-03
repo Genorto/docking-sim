@@ -11,6 +11,7 @@ class Crane {
      Crane(const Crane& other);
      Crane& operator=(const Crane& other);
      virtual void AddToQueue(Ship*& target) = 0;
+     size_t GetQueueSize();
      virtual bool isHovered(sf::Vector2i cursor_pos) final;
      virtual std::vector<std::string*> GetInfo() = 0;
      bool isEmpty();

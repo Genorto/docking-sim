@@ -32,15 +32,59 @@ std::vector<Ship*> Model::GetTankers() {
 }
 
 void Model::NextStep() {
-    if (step_ > 30) throw std::runtime_error("The month is over");
-    ++step_;
+    if (day_ > 30) throw std::runtime_error("The month is over");
+    ++day_;
 }
 
 void Model::PreviousStep() {
-    if (step_ < 1) throw std::runtime_error("It is the beginning of the month");
-    --step_;
+    if (day_ < 1) throw std::runtime_error("It is the beginning of the month");
+    --day_;
 }
 
-int Model::GetStep() {
-    return step_;
+std::pair<int, int> Model::GetTime() {
+    return { day_, hour_ };
+}
+
+void Model::SortNewShips() {
+    std::pair<int, int> cur_tm = { day_, hour_ };
+    for (auto ship : cargo_ships_) {
+        std::pair<int, int> arr_tm = ship->get_arrival_time();
+        ShipType type = ship->get_type();
+        if (cur_tm == arr_tm) {
+            size_t smallest_queue = INT_MAX, best_option = 0;
+            switch (type) {
+                case ShipType::CargoShip:
+                    for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
+                        if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
+                            smallest_queue = bulk_cranes_[it]->GetQueueSize();
+                            best_option = it;
+                        }
+                    }
+                    bulk_cranes_[best_option]->AddToQueue(ship);
+                    break;
+
+                case ShipType::Tanker:
+                    bool fluid = true;
+                    for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
+                        if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
+                            smallest_queue = fluid_cranes_[it]->GetQueueSize();
+                            best_option = it;
+                        }
+                    }
+                    for (size_t it = 0; it < container_cranes_.size(); ++it) {
+                        if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
+                            smallest_queue = container_cranes_[it]->GetQueueSize();
+                            best_option = it;
+                            fluid = false;
+                        }
+                    }
+                    if (fluid) {
+                        fluid_cranes_[best_option]->AddToQueue(ship);
+                    } else {
+                        container_cranes_[best_option]->AddToQueue(ship);
+                    }
+                    break;
+            }
+        }
+    }
 }
