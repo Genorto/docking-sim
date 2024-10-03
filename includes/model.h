@@ -27,5 +27,5 @@ class Model final {
      std::vector<Crane*> container_cranes_;
      std::vector<Ship*> cargo_ships_;
      std::vector<Ship*> tankers_;
-     int day_, hour_;
+     int day_ = 0, hour_ = 0;
 };

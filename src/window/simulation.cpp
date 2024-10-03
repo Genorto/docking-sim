@@ -1,5 +1,4 @@
 #include "../../includes/window/simulation.h"
-#include "iostream"
 
 Simulation::Simulation() {
     window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
@@ -24,11 +23,16 @@ Simulation::Simulation() {
     model_->GetContainerCranes()[0]->SetName("lol kek cheburek kek lol arbidol");
     model_->GetContainerCranes()[0]->SetModel("assets/sprites/default_crane.png");
     
-
+    model_->GetCargoShips()[0]->set_weight(100);
+    model_->GetCargoShips()[0]->set_arrival_time({ 1, 0 });
+    model_->GetCargoShips()[0]->set_ship_name("Green Sausages");
     model_->GetCargoShips()[0]->SetPos(90, 90);
     model_->GetCargoShips()[0]->SetSize(80, 150);
     model_->GetCargoShips()[0]->SetModel("assets/sprites/default_ship.png");
 
+    model_->GetTankers()[0]->set_weight(500);
+    model_->GetTankers()[0]->set_arrival_time({ 2, 0 });
+    model_->GetTankers()[0]->set_ship_name("Lebron James");
     model_->GetTankers()[0]->SetPos(190, 90);
     model_->GetTankers()[0]->SetSize(80, 150);
     model_->GetTankers()[0]->SetModel("assets/sprites/default_ship.png");
@@ -46,8 +50,8 @@ void Simulation::CheckEvents() {
             break;
 
         case sf::Event::KeyPressed:
-            if (event_->key.scancode == sf::Keyboard::Right) {
-
+            if (event_->key.scancode == sf::Keyboard::Scan::Space) {
+                model_->NextStep();
             }
         }
     }

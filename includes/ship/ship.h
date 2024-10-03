@@ -20,6 +20,7 @@ public:
 	int get_arrival_rejection();
 	void set_arrival_time(std::pair<int, int>);
 	std::pair<int, int> get_arrival_time();
+	void set_ship_name(std::string);
 	std::string get_ship_name();
 	ShipType get_type();
 	virtual void SetPos(double x, double y) final;

@@ -1,4 +1,5 @@
 #include "../includes/model.h"
+#include "iostream"
 
 void Model::CreateCranes(size_t bulk_cnt, size_t fluid_cnt, size_t container_cnt) {
     bulk_cranes_.assign(bulk_cnt, new BulkCrane);
@@ -34,6 +35,7 @@ std::vector<Ship*> Model::GetTankers() {
 void Model::NextStep() {
     if (day_ > 30) throw std::runtime_error("The month is over");
     ++day_;
+    SortNewShips();
 }
 
 void Model::PreviousStep() {
@@ -46,7 +48,18 @@ std::pair<int, int> Model::GetTime() {
 }
 
 void Model::SortNewShips() {
+    std::cout << day_ << " : " << hour_ << "\n";
+    for (auto crane : bulk_cranes_) {
+        if (crane->GetQueueSize()) crane->UnloadFirst();
+    }
+    for (auto crane : fluid_cranes_) {
+        if (crane->GetQueueSize()) crane->UnloadFirst();
+    }
+    for (auto crane : container_cranes_) {
+        if (crane->GetQueueSize()) crane->UnloadFirst();
+    }
     std::pair<int, int> cur_tm = { day_, hour_ };
+    /* cargo ships */
     for (auto ship : cargo_ships_) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
         ShipType type = ship->get_type();
@@ -84,6 +97,47 @@ void Model::SortNewShips() {
                         container_cranes_[best_option]->AddToQueue(ship);
                     }
                     break;
+            }
+        }
+    }
+    /* tankers */
+    for (auto ship : tankers_) {
+        std::pair<int, int> arr_tm = ship->get_arrival_time();
+        ShipType type = ship->get_type();
+        if (cur_tm == arr_tm) {
+            size_t smallest_queue = INT_MAX, best_option = 0;
+            switch (type) {
+            case ShipType::CargoShip:
+                for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
+                    if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
+                        smallest_queue = bulk_cranes_[it]->GetQueueSize();
+                        best_option = it;
+                    }
+                }
+                bulk_cranes_[best_option]->AddToQueue(ship);
+                break;
+
+            case ShipType::Tanker:
+                bool fluid = true;
+                for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
+                    if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
+                        smallest_queue = fluid_cranes_[it]->GetQueueSize();
+                        best_option = it;
+                    }
+                }
+                for (size_t it = 0; it < container_cranes_.size(); ++it) {
+                    if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
+                        smallest_queue = container_cranes_[it]->GetQueueSize();
+                        best_option = it;
+                        fluid = false;
+                    }
+                }
+                if (fluid) {
+                    fluid_cranes_[best_option]->AddToQueue(ship);
+                } else {
+                    container_cranes_[best_option]->AddToQueue(ship);
+                }
+                break;
             }
         }
     }
