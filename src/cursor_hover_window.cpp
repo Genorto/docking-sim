@@ -57,7 +57,7 @@ void CursorHoverWindow::Draw(sf::RenderWindow*& window) {
         sf::Text line;
         line.setString(*info_[it]);
         line.setFont(font_);
-        line.setCharacterSize(size_x_ / max_size * 2);
+        line.setCharacterSize(size_x_ / max_size * 2 - 5);
         line.setFillColor(sf::Color::White);
         line.setPosition(sf::Vector2f(x_, y_ + size_y_ / info_.size() * it));
         window->draw(line);

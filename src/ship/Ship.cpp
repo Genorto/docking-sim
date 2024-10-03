@@ -34,6 +34,10 @@ Ship& Ship::operator= (const Ship& other) {
 	arrival_rejection_ = other.arrival_rejection_;
 	return *this;
 }
+
+bool Ship::isHovered(sf::Vector2i cursor_pos) {
+	return (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
+}
 	
 void Ship::SetType(ShipType type) {
 	type_ = type;

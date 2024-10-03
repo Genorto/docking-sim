@@ -7,44 +7,47 @@ Simulation::Simulation() {
     Crane* crane_ = new BulkCrane;
     crane_->SetPos(50, 50);
     crane_->SetSize(100, 100);
+    crane_->SetName("Red impostor");
     crane_->SetModel("assets/sprites/default_crane.png");
     cranes_.push_back(crane_);
 
     crane_ = new FluidCrane;
     crane_->SetPos(150, 50);
     crane_->SetSize(100, 100);
+    crane_->SetName("Best crane ever");
     crane_->SetModel("assets/sprites/default_crane.png");
     cranes_.push_back(crane_);
 
     crane_ = new ContainerCrane;
     crane_->SetPos(250, 50);
     crane_->SetSize(100, 100);
+    crane_->SetName("lol kek cheburek kek lol arbidol");
     crane_->SetModel("assets/sprites/default_crane.png");
     cranes_.push_back(crane_);
 
-    Ship* ship_ = new CargoShip(100, { 0, 0 }, "GreenSausages");
+    Ship* ship_ = new CargoShip(100, { 0, 0 }, "Cargo Green");
     ship_->SetPos(90, 90);
     ship_->SetSize(80, 150);
     ship_->SetModel("assets/sprites/default_ship.png");
     cranes_[0]->AddToQueue(ship_);
     ships_.push_back(ship_);
 
-    ship_ = new CargoShip(100, { 0, 0 }, "GreenSausages");
+    ship_ = new Tanker(100, { 0, 0 }, "Tank Sausages");
     ship_->SetPos(190, 90);
     ship_->SetSize(80, 150);
     ship_->SetModel("assets/sprites/default_ship.png");
-    // cranes_[1]->AddToQueue(ship_);
+    cranes_[1]->AddToQueue(ship_);
     ships_.push_back(ship_);
 
-    ship_ = new CargoShip(100, { 0, 0 }, "GreenSausages");
+    ship_ = new Tanker(100, { 0, 0 }, "Lebron James");
     ship_->SetPos(290, 90);
     ship_->SetSize(80, 150);
     ship_->SetModel("assets/sprites/default_ship.png");
-    // cranes_[2]->AddToQueue(ship_);
+    cranes_[2]->AddToQueue(ship_);
     ships_.push_back(ship_);
 
     chw_ = new CursorHoverWindow;
-    chw_->SetSize(300, 150);
+    chw_->SetSize(300, 180);
     chw_->SetFont("assets/fonts/roboto.ttf");
 }
 
@@ -71,7 +74,7 @@ void Simulation::CheckEvents() {
                 break;
             }
         }
-    /*
+
     if (checking)
         for (auto ship : ships_) {
             if (ship->isHovered(cursor)) {
@@ -81,7 +84,6 @@ void Simulation::CheckEvents() {
                 break;
             }
         }
-    */
 }
 
 void Simulation::Draw() {
