@@ -47,7 +47,7 @@ void CursorHoverWindow::Draw(sf::RenderWindow*& window) {
     sf::RectangleShape chw;
     chw.setPosition(sf::Vector2f(x_, y_));
     chw.setSize(sf::Vector2f(size_x_, size_y_));
-    chw.setFillColor(sf::Color::Black);
+    chw.setFillColor(sf::Color(0, 0, 0, 155));
     window->draw(chw);
     size_t max_size = 0;
     for (auto x : info_) {
