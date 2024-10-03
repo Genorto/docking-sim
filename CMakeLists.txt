@@ -37,6 +37,8 @@ file(GLOB CPP_H
      "src/crane/fluid_crane.cpp"
      "includes/crane/container_crane.h"
      "src/crane/container_crane.cpp"
+     "includes/cursor_hover_window.h"
+     "src/cursor_hover_window.cpp"
 )
 
 add_executable(main ${CPP_H})
