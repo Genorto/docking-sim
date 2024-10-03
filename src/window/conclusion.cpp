@@ -1,4 +1,4 @@
-#include "conclusion.h"
+#include "../../includes/window/conclusion.h"
 
 Conclusion::Conclusion() {
     window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Conclusion");

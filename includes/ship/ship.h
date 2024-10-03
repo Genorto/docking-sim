@@ -11,6 +11,8 @@ public:
 	Ship(const Ship& other);
 	Ship& operator= (const Ship& other);
 	~Ship() = default;
+	virtual bool isHovered(sf::Vector2i cursor_pos) final;
+	virtual std::vector<std::string*> GetInfo() = 0;
 	void SetType(ShipType type);
 	void set_weight(int);
 	int get_weight();

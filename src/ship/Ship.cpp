@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Ship.h"
+#include "../../includes/ship/ship.h"
 
 Ship::Ship() : weight_(0), arrival_time_({ 0, 0 }), arrival_rejection_(0), fine_(0) {}
 
@@ -33,6 +33,10 @@ Ship& Ship::operator= (const Ship& other) {
 	ship_name_ = other.ship_name_;
 	arrival_rejection_ = other.arrival_rejection_;
 	return *this;
+}
+
+bool Ship::isHovered(sf::Vector2i cursor_pos) {
+	return (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
 }
 	
 void Ship::SetType(ShipType type) {
@@ -74,7 +78,7 @@ void Ship::SetSize(double size_x, double size_y) {
 }
 
 void Ship::SetModel(std::string path) {
-	if (!model_.loadFromFile(path)) model_.loadFromFile("src/assets/sprites/error.png");
+	if (!model_.loadFromFile(path)) model_.loadFromFile("assets/sprites/error.png");
 }
 
 void Ship::Draw(sf::RenderWindow*& window) {
