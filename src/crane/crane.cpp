@@ -1,11 +1,11 @@
-#include "crane.h"
+#include "../../includes/crane/crane.h"
 
 Crane::Crane() {
     x_ = 0;
     y_ = 0;
     size_x_ = 0;
     size_y_ = 0;
-    model_.loadFromFile("src/assets/sprites/error.png");
+    model_.loadFromFile("assets/sprites/error.png");
 }
 
 Crane::Crane(const Crane& other) {
@@ -48,7 +48,7 @@ void Crane::SetSize(double size_x, double size_y) {
 }
 
 void Crane::SetModel(std::string path) {
-    if (!model_.loadFromFile(path)) model_.loadFromFile("src/assets/sprites/error.png");
+    if (!model_.loadFromFile(path)) model_.loadFromFile("assets/sprites/error.png");
 }
 
 void Crane::Draw(sf::RenderWindow*& window) {

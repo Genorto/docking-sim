@@ -1,4 +1,4 @@
-#include "CargoShip.h"
+#include "../../includes/ship/cargo_ship.h"
 
 CargoShip::CargoShip() :Ship() { SetType(ShipType::CargoShip); };
 	

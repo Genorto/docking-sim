@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Ship.h"
+#include "../../includes/ship/ship.h"
 
 Ship::Ship() : weight_(0), arrival_time_({ 0, 0 }), arrival_rejection_(0), fine_(0) {}
 
@@ -74,7 +74,7 @@ void Ship::SetSize(double size_x, double size_y) {
 }
 
 void Ship::SetModel(std::string path) {
-	if (!model_.loadFromFile(path)) model_.loadFromFile("src/assets/sprites/error.png");
+	if (!model_.loadFromFile(path)) model_.loadFromFile("assets/sprites/error.png");
 }
 
 void Ship::Draw(sf::RenderWindow*& window) {

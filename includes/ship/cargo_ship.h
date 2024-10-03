@@ -1,5 +1,5 @@
 #pragma once
-#include "Ship.h"
+#include "ship.h"
 
 class CargoShip : public Ship {
 public:

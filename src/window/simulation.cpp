@@ -1,4 +1,4 @@
-#include "simulation.h"
+#include "../../includes/window/simulation.h"
 
 Simulation::Simulation() {
     window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
@@ -6,11 +6,11 @@ Simulation::Simulation() {
     crane_ = new BulkCrane;
     crane_->SetPos(100, 100);
     crane_->SetSize(300, 300);
-    crane_->SetModel("src/assets/sprites/default_crane.png");
+    crane_->SetModel("assets/sprites/default_crane.png");
     ship_ = new CargoShip(100, { 0, 0 }, "GreenSausages");
     ship_->SetPos(250, 300);
     ship_->SetSize(300, 300);
-    ship_->SetModel("src/assets/sprites/default_ship.png");
+    ship_->SetModel("assets/sprites/default_ship.png");
     crane_->AddToQueue(ship_);
 }
 
@@ -22,6 +22,8 @@ void Simulation::CheckEvents() {
             break;
         }
     }
+    /* check all objects if they are hovered */
+    sf::Vector2i cursor = sf::Mouse::getPosition();
 }
 
 void Simulation::Draw() {

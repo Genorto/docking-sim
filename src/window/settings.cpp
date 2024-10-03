@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "../../includes/window/settings.h"
 
 Settings::Settings() {
     window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Settings");

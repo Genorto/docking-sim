@@ -1,6 +1,4 @@
-#include "window/settings.h"
-#include "window/simulation.h"
-#include "window/conclusion.h"
+#include "../includes/window/simulation.h"
 
 int main() {
     Window* window = new Simulation;

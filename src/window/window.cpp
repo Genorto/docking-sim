@@ -1,4 +1,4 @@
-#include "window.h"
+#include "../../includes/window/window.h"
 
 Window::~Window() {
     delete window_;
