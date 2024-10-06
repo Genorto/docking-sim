@@ -20,9 +20,8 @@ class Model final {
      void SetStepSize(int);
      void SetWeightLimits(std::pair<int, int>);
      void SetWeightLimits(int, int);
-     void SetTimeLimits(std::pair<std::pair<int, int>, std::pair<int, int>>);
-     void SetTimeLimits(std::pair<int, int>, std::pair<int, int>);
-     void SetTimeLimits(int, int, int, int);
+     void SetTimeLimits(std::pair<int, int>);
+     void SetTimeLimits(int, int);
      void SetRejectionLimits(std::pair<int, int>);
      void SetRejectionLimits(int, int);
      void SetFineLimits(std::pair<int, int>);
@@ -41,7 +40,7 @@ class Model final {
      std::vector<Ship*> cargo_ships_;
      std::vector<Ship*> tankers_;
      std::pair<int, int> weight_limits_;
-     std::pair<std::pair<int, int>, std::pair<int, int>> time_limits_; // day, hour && day, hour
+     std::pair<int, int> time_limits_; // day, hour
      std::pair<int, int> rejection_limits_;
      std::pair<int, int> fine_limits_;
      std::pair<int, int> speed_limits_;

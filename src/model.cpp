@@ -51,16 +51,12 @@ void Model::SetWeightLimits(int lim_l, int lim_r) {
     weight_limits_ = { lim_l, lim_r };
 }
 
-void Model::SetTimeLimits(std::pair<std::pair<int, int>, std::pair<int, int>> lim) {
+void Model::SetTimeLimits(std::pair<int, int> lim) {
     time_limits_ = lim;
 }
 
-void Model::SetTimeLimits(std::pair<int, int> lim_l, std::pair<int, int> lim_r) {
+void Model::SetTimeLimits(int lim_l, int lim_r) {
     time_limits_ = { lim_l, lim_r };
-}
-
-void Model::SetTimeLimits(int lim_l_l, int lim_l_r, int lim_r_l, int lim_r_r) {
-    time_limits_ = { { lim_l_l, lim_l_r }, { lim_r_l, lim_r_r } };
 }
 
 void Model::SetRejectionLimits(std::pair<int, int> lim) {
@@ -83,12 +79,15 @@ void Model::NextStep() {
     hour_ += step_size_;
     day_ += hour_ / 24;
     hour_ %= 24;
-    if (day_ == time_limits_.second.first && hour_ > time_limits_.second.second
-        || day_ > time_limits_.second.first) throw std::runtime_error("Time limit reached");
+    if (day_ == time_limits_.first && hour_ > time_limits_.second
+        || day_ > time_limits_.first) throw std::runtime_error("Time limit reached");
 }
 
 void Model::PreviousStep() {
-    if (day_ < 1) throw std::runtime_error("It is the beginning of the month");
+    hour_ -= step_size_;
+    day_ -= (abs(hour_) + 23) / 24;
+    hour_ = 24 + hour_ % 24;
+    if (day_ ) throw std::runtime_error("It is the beginning of the month");
     --hour_;
 }
 
