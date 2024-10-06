@@ -12,6 +12,13 @@ void Model::CreateShips(size_t cargo_cnt, size_t tanker_cnt) {
     tankers_.assign(tanker_cnt, new Tanker);
 }
 
+void Model::RandomizeShipsData() {
+    for (auto ship : cargo_ships_) {
+        ship->set_arrival_rejection(rand() % (rejection_limits_.second - 
+            rejection_limits_.first + 1) + rejection_limits_.first);
+    }
+}
+
 std::vector<Crane*> Model::GetBulkCranes() {
     return bulk_cranes_;
 }
@@ -32,15 +39,57 @@ std::vector<Ship*> Model::GetTankers() {
     return tankers_;
 }
 
+void Model::SetStepSize(int size) {
+    step_size_ = size;
+}
+
+void Model::SetWeightLimits(std::pair<int, int> lim) {
+    weight_limits_ = lim;
+}
+
+void Model::SetWeightLimits(int lim_l, int lim_r) {
+    weight_limits_ = { lim_l, lim_r };
+}
+
+void Model::SetTimeLimits(std::pair<std::pair<int, int>, std::pair<int, int>> lim) {
+    time_limits_ = lim;
+}
+
+void Model::SetTimeLimits(std::pair<int, int> lim_l, std::pair<int, int> lim_r) {
+    time_limits_ = { lim_l, lim_r };
+}
+
+void Model::SetTimeLimits(int lim_l_l, int lim_l_r, int lim_r_l, int lim_r_r) {
+    time_limits_ = { { lim_l_l, lim_l_r }, { lim_r_l, lim_r_r } };
+}
+
+void Model::SetRejectionLimits(std::pair<int, int> lim) {
+    rejection_limits_ = lim;
+}
+
+void Model::SetRejectionLimits(int lim_l, int lim_r) {
+    rejection_limits_ = { lim_l, lim_r };
+}
+
+void Model::SetFineLimits(std::pair<int, int> lim) {
+    fine_limits_ = lim;
+}
+
+void Model::SetFineLimits(int lim_l, int lim_r) {
+    fine_limits_ = { lim_l, lim_r };
+}
+
 void Model::NextStep() {
-    if (day_ > 30) throw std::runtime_error("The month is over");
-    ++day_;
-    SortNewShips();
+    hour_ += step_size_;
+    day_ += hour_ / 24;
+    hour_ %= 24;
+    if (day_ == time_limits_.second.first && hour_ > time_limits_.second.second
+        || day_ > time_limits_.second.first) throw std::runtime_error("Time limit reached");
 }
 
 void Model::PreviousStep() {
     if (day_ < 1) throw std::runtime_error("It is the beginning of the month");
-    --day_;
+    --hour_;
 }
 
 std::pair<int, int> Model::GetTime() {
@@ -49,15 +98,6 @@ std::pair<int, int> Model::GetTime() {
 
 void Model::SortNewShips() {
     std::cout << day_ << " : " << hour_ << "\n";
-    for (auto crane : bulk_cranes_) {
-        if (crane->GetQueueSize()) crane->UnloadFirst();
-    }
-    for (auto crane : fluid_cranes_) {
-        if (crane->GetQueueSize()) crane->UnloadFirst();
-    }
-    for (auto crane : container_cranes_) {
-        if (crane->GetQueueSize()) crane->UnloadFirst();
-    }
     std::pair<int, int> cur_tm = { day_, hour_ };
     /* cargo ships */
     for (auto ship : cargo_ships_) {

@@ -31,8 +31,8 @@ public:
 protected:
 	// installed before the start
 	int weight_;
-	int fine_; //penalty for an hour of delay
-	int arrival_rejection_; // delay (measured in days)
+	int fine_; // penalty for an hour of delay
+	int arrival_rejection_; // delay
 	std::pair<int, int> arrival_time_; // first - day, second - hour
 	std::string ship_name_;
 	ShipType type_;

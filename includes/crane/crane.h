@@ -28,4 +28,5 @@ class Crane {
      sf::Texture model_;
      std::queue<Ship*> queue_;
      std::string name_;
+     int day_rejection, hour_rejection;
 };
