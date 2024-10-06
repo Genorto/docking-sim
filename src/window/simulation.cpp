@@ -7,6 +7,13 @@ Simulation::Simulation() {
     /* these arguments are set by user */
     model_->CreateCranes(1, 1, 1);
     model_->CreateShips(1, 1);
+    model_->SetStepSize(24);
+    model_->SetFont("assets/fonts/roboto.ttf");
+    model_->SetTimeLimits(5, 0);
+    model_->SetWeightLimits(100, 500);
+    model_->SetRejectionLimits(1, 6);
+    model_->SetFineLimits(20, 100);
+    model_->SetSpeedLimits(1, 3);
 
     model_->GetBulkCranes()[0]->SetPos(50, 50);
     model_->GetBulkCranes()[0]->SetSize(100, 100);
@@ -50,8 +57,12 @@ void Simulation::CheckEvents() {
             break;
 
         case sf::Event::KeyPressed:
-            if (event_->key.scancode == sf::Keyboard::Scan::Space) {
+            if (event_->key.scancode == sf::Keyboard::Scan::Right) {
                 model_->NextStep();
+                model_->SortNewShips();
+            } else if (event_->key.scancode == sf::Keyboard::Scan::Left) {
+                model_->PreviousStep();
+                model_->SortNewShips();
             }
         }
     }
@@ -125,6 +136,9 @@ void Simulation::Draw() {
         crane->Draw(window_);
     }
 
+    model_->DisplayTime(window_);
+    model_->DisplayShips(window_);
+    model_->DisplayCranes(window_);
     chw_->Draw(window_);
     window_->display();
 }

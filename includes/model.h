@@ -28,10 +28,14 @@ class Model final {
      void SetFineLimits(int, int);
      void SetSpeedLimits(std::pair<int, int>);
      void SetSpeedLimits(int, int);
+     void SetFont(std::string font_dir);
      void NextStep();
      void PreviousStep();
      std::pair<int, int> GetTime();
      void SortNewShips();
+     void DisplayTime(sf::RenderWindow*& window);
+     void DisplayShips(sf::RenderWindow*& window);
+     void DisplayCranes(sf::RenderWindow*& window);
 
  private:
      std::vector<Crane*> bulk_cranes_;
@@ -46,4 +50,5 @@ class Model final {
      std::pair<int, int> speed_limits_;
      int step_size_; // in hours
      int day_ = 0, hour_ = 0;
+     sf::Font font_;
 };

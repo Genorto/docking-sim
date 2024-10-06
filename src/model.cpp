@@ -75,6 +75,18 @@ void Model::SetFineLimits(int lim_l, int lim_r) {
     fine_limits_ = { lim_l, lim_r };
 }
 
+void Model::SetSpeedLimits(std::pair<int, int> lim) {
+    fine_limits_ = lim;
+}
+
+void Model::SetSpeedLimits(int lim_l, int lim_r) {
+    fine_limits_ = { lim_l, lim_r };
+}
+
+void Model::SetFont(std::string font_dir) {
+    font_.loadFromFile(font_dir);
+}
+
 void Model::NextStep() {
     hour_ += step_size_;
     day_ += hour_ / 24;
@@ -86,9 +98,8 @@ void Model::NextStep() {
 void Model::PreviousStep() {
     hour_ -= step_size_;
     day_ -= (abs(hour_) + 23) / 24;
-    hour_ = 24 + hour_ % 24;
-    if (day_ ) throw std::runtime_error("It is the beginning of the month");
-    --hour_;
+    hour_ = (24 + hour_ % 24) % 24;
+    if (day_ < 0) throw std::runtime_error("Time limit reached");
 }
 
 std::pair<int, int> Model::GetTime() {
@@ -180,4 +191,22 @@ void Model::SortNewShips() {
             }
         }
     }
+}
+
+void Model::DisplayTime(sf::RenderWindow*& window) {
+    sf::Text time;
+    time.setFont(font_);
+    time.setCharacterSize(30);
+    time.setFillColor(sf::Color::White);
+    time.setString(std::to_string(day_) + " : " + std::to_string(hour_));
+    time.setPosition(window->getSize().x - time.getLocalBounds().width - 15, 10);
+    window->draw(time);
+}
+
+void Model::DisplayShips(sf::RenderWindow*& window) {
+
+}
+
+void Model::DisplayCranes(sf::RenderWindow*& window) {
+
 }
