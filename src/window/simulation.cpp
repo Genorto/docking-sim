@@ -67,15 +67,11 @@ void Simulation::CheckEvents() {
         case sf::Event::Closed:
             window_->close();
             break;
-
-        case sf::Event::KeyPressed:
-            if (event_->key.scancode == sf::Keyboard::Scan::Right) {
-                model_->NextStep();
-                model_->UpdateRejections();
-                model_->UpdateQueues();
-                model_->UpdateUnloads();
-            }
         }
+    }
+    if (model_->GetClock() == 3) {
+        model_->NextStep();
+        model_->Update();
     }
     /* check all objects if they are hovered */
     std::vector<std::string*> empty(0);

@@ -1,6 +1,10 @@
 #include "../includes/model.h"
 #include "iostream"
 
+Model::Model() {
+    clock_ = new sf::Clock;
+}
+
 void Model::CreateCranes(size_t bulk_cnt, size_t fluid_cnt, size_t container_cnt) {
     bulk_cranes_.assign(bulk_cnt, new BulkCrane);
     fluid_cranes_.assign(fluid_cnt, new FluidCrane);
@@ -61,6 +65,10 @@ std::vector<Ship*> Model::GetCargoShips() {
 
 std::vector<Ship*> Model::GetTankers() {
     return tankers_;
+}
+
+int Model::GetClock() {
+    return (int)clock_->getElapsedTime().asSeconds();
 }
 
 void Model::SetStepSize(int size) {
@@ -124,6 +132,13 @@ void Model::NextStep() {
 
 std::pair<int, int> Model::GetTime() {
     return { day_, hour_ };
+}
+
+void Model::Update() {
+    UpdateRejections();
+    UpdateQueues();
+    UpdateUnloads();
+    clock_->restart();
 }
 
 void Model::UpdateRejections() {
