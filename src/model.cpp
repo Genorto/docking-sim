@@ -17,6 +17,30 @@ void Model::RandomizeShipsData() {
         ship->set_arrival_rejection(rand() % (rejection_limits_.second - 
             rejection_limits_.first + 1) + rejection_limits_.first);
     }
+    for (auto ship : tankers_) {
+        ship->set_arrival_rejection(rand() % (rejection_limits_.second -
+            rejection_limits_.first + 1) + rejection_limits_.first);
+    }
+}
+
+void Model::AddBulkCrane(Crane*& crane) {
+    bulk_cranes_.push_back(crane);
+}
+
+void Model::AddFluidCrane(Crane*& crane) {
+    fluid_cranes_.push_back(crane);
+}
+
+void Model::AddContainerCrane(Crane*& crane) {
+    container_cranes_.push_back(crane);
+}
+
+void Model::AddCargoShip(Ship*& ship) {
+    cargo_ships_.push_back(ship);
+}
+
+void Model::AddTanker(Ship*& ship) {
+    tankers_.push_back(ship);
 }
 
 std::vector<Crane*> Model::GetBulkCranes() {
@@ -114,12 +138,41 @@ std::pair<int, int> Model::GetTime() {
     return { day_, hour_ };
 }
 
-void Model::SortNewShips() {
-    std::cout << day_ << " : " << hour_ << "\n";
+void Model::UpdateRejections() {
+    std::string* message;
+    std::pair<int, int> cur_tm = { day_, hour_ };
+    for (auto ship : cargo_ships_) {
+        if (ship->get_arrival_time() == cur_tm) {
+            int day = ship->get_arrival_time().first;
+            int hour = ship->get_arrival_time().second + ship->get_arrival_rejection();
+            day += hour / 24;
+            hour %= 24;
+            message = new std::string;
+            *message = ship->get_ship_name() + "'s arrival is postponed to " + std::to_string(day) + " : " + std::to_string(hour);
+            log.push_back(message);
+            std::cout << *message << "\n";
+        }
+    }
+    for (auto ship : tankers_) {
+        if (ship->get_arrival_time() == cur_tm) {
+            int day = ship->get_arrival_time().first;
+            int hour = ship->get_arrival_time().second + ship->get_arrival_rejection();
+            day += hour / 24;
+            hour %= 24;
+            message = new std::string;
+            *message = ship->get_ship_name() + "'s arrival is postponed to " + std::to_string(day) + " : " + std::to_string(hour);
+            log.push_back(message);
+            std::cout << *message << "\n";
+        }
+    }
+ }
+
+void Model::UpdateQueues() {
     std::pair<int, int> cur_tm = { day_, hour_ };
     /* cargo ships */
     for (auto ship : cargo_ships_) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
+        int rej_tm = ship->get_arrival_rejection();
         ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;

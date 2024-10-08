@@ -12,6 +12,11 @@ class Model final {
      void CreateCranes(size_t bulk_cnt, size_t fluid_cnt, size_t container_cnt);
      void CreateShips(size_t cargo_cnt, size_t tanker_cnt);
      void RandomizeShipsData();
+     void AddBulkCrane(Crane*&);
+     void AddFluidCrane(Crane*&);
+     void AddContainerCrane(Crane*&);
+     void AddCargoShip(Ship*&);
+     void AddTanker(Ship*&);
      std::vector<Crane*> GetBulkCranes();
      std::vector<Crane*> GetFluidCranes();
      std::vector<Crane*> GetContainerCranes();
@@ -32,7 +37,8 @@ class Model final {
      void NextStep();
      void PreviousStep();
      std::pair<int, int> GetTime();
-     void SortNewShips();
+     void UpdateRejections();
+     void UpdateQueues();
      void DisplayTime(sf::RenderWindow*& window);
      void DisplayShips(sf::RenderWindow*& window);
      void DisplayCranes(sf::RenderWindow*& window);
@@ -51,4 +57,5 @@ class Model final {
      int step_size_; // in hours
      int day_ = 0, hour_ = 0;
      sf::Font font_;
+     std::vector<std::string*> log;
 };

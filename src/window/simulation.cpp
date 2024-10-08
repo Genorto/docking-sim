@@ -5,8 +5,6 @@ Simulation::Simulation() {
     event_ = new sf::Event;
     model_ = new Model;
     /* these arguments are set by user */
-    model_->CreateCranes(1, 1, 1);
-    model_->CreateShips(1, 1);
     model_->SetStepSize(1);
     model_->SetFont("assets/fonts/roboto.ttf");
     model_->SetTimeLimits(30, 12);
@@ -15,34 +13,48 @@ Simulation::Simulation() {
     model_->SetFineLimits(20, 100);
     model_->SetSpeedLimits(1, 3);
 
-    model_->GetBulkCranes()[0]->SetPos(50, 50);
-    model_->GetBulkCranes()[0]->SetSize(100, 100);
-    model_->GetBulkCranes()[0]->SetName("Red impostor");
-    model_->GetBulkCranes()[0]->SetModel("assets/sprites/default_crane.png");
+    Crane* temp_crane;
+    temp_crane = new BulkCrane;
+    temp_crane->SetPos(50, 50);
+    temp_crane->SetSize(100, 100);
+    temp_crane->SetName("Red impostor");
+    temp_crane->SetModel("assets/sprites/default_crane.png");
+    model_->AddBulkCrane(temp_crane);
 
-    model_->GetFluidCranes()[0]->SetPos(150, 50);
-    model_->GetFluidCranes()[0]->SetSize(100, 100);
-    model_->GetFluidCranes()[0]->SetName("Best crane ever");
-    model_->GetFluidCranes()[0]->SetModel("assets/sprites/default_crane.png");
+    temp_crane = new FluidCrane;
+    temp_crane->SetPos(150, 50);
+    temp_crane->SetSize(100, 100);
+    temp_crane->SetName("Best crane ever");
+    temp_crane->SetModel("assets/sprites/default_crane.png");
+    model_->AddFluidCrane(temp_crane);
 
-    model_->GetContainerCranes()[0]->SetPos(250, 50);
-    model_->GetContainerCranes()[0]->SetSize(100, 100);
-    model_->GetContainerCranes()[0]->SetName("lol kek cheburek kek lol arbidol");
-    model_->GetContainerCranes()[0]->SetModel("assets/sprites/default_crane.png");
+    temp_crane = new ContainerCrane;
+    temp_crane->SetPos(250, 50);
+    temp_crane->SetSize(100, 100);
+    temp_crane->SetName("lol kek cheburek kek lol arbidol");
+    temp_crane->SetModel("assets/sprites/default_crane.png");
+    model_->AddContainerCrane(temp_crane);
     
-    model_->GetCargoShips()[0]->set_weight(100);
-    model_->GetCargoShips()[0]->set_arrival_time({ 1, 0 });
-    model_->GetCargoShips()[0]->set_ship_name("Green Sausages");
-    model_->GetCargoShips()[0]->SetPos(90, 90);
-    model_->GetCargoShips()[0]->SetSize(80, 150);
-    model_->GetCargoShips()[0]->SetModel("assets/sprites/default_ship.png");
+    Ship* temp_ship;
+    temp_ship = new CargoShip;
+    temp_ship->set_weight(100);
+    temp_ship->set_arrival_time({ 1, 0 });
+    temp_ship->set_ship_name("Green Sausages");
+    temp_ship->SetPos(90, 90);
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddCargoShip(temp_ship);
 
-    model_->GetTankers()[0]->set_weight(500);
-    model_->GetTankers()[0]->set_arrival_time({ 2, 0 });
-    model_->GetTankers()[0]->set_ship_name("Lebron James");
-    model_->GetTankers()[0]->SetPos(190, 90);
-    model_->GetTankers()[0]->SetSize(80, 150);
-    model_->GetTankers()[0]->SetModel("assets/sprites/default_ship.png");
+    temp_ship = new Tanker;
+    temp_ship->set_weight(500);
+    temp_ship->set_arrival_time({ 2, 0 });
+    temp_ship->set_ship_name("Lebron James");
+    temp_ship->SetPos(190, 90);
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddTanker(temp_ship);
+
+    model_->RandomizeShipsData();
 
     chw_ = new CursorHoverWindow;
     chw_->SetSize(200, 150);
@@ -59,10 +71,12 @@ void Simulation::CheckEvents() {
         case sf::Event::KeyPressed:
             if (event_->key.scancode == sf::Keyboard::Scan::Right) {
                 model_->NextStep();
-                model_->SortNewShips();
+                model_->UpdateRejections();
+                model_->UpdateQueues();
             } else if (event_->key.scancode == sf::Keyboard::Scan::Left) {
                 model_->PreviousStep();
-                model_->SortNewShips();
+                model_->UpdateRejections();
+                model_->UpdateQueues();
             }
         }
     }
