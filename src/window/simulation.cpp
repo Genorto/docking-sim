@@ -7,9 +7,9 @@ Simulation::Simulation() {
     /* these arguments are set by user */
     model_->CreateCranes(1, 1, 1);
     model_->CreateShips(1, 1);
-    model_->SetStepSize(24);
+    model_->SetStepSize(1);
     model_->SetFont("assets/fonts/roboto.ttf");
-    model_->SetTimeLimits(5, 0);
+    model_->SetTimeLimits(30, 12);
     model_->SetWeightLimits(100, 500);
     model_->SetRejectionLimits(1, 6);
     model_->SetFineLimits(20, 100);

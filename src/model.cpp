@@ -88,18 +88,26 @@ void Model::SetFont(std::string font_dir) {
 }
 
 void Model::NextStep() {
-    hour_ += step_size_;
-    day_ += hour_ / 24;
-    hour_ %= 24;
-    if (day_ == time_limits_.first && hour_ > time_limits_.second
-        || day_ > time_limits_.first) throw std::runtime_error("Time limit reached");
+    int temp_day = day_, temp_hour = hour_;
+    temp_hour += step_size_;
+    temp_day += temp_hour / 24;
+    temp_hour %= 24;
+    if (temp_day == time_limits_.first && temp_hour > time_limits_.second ||
+        temp_day > time_limits_.first) return;
+    day_ = temp_day;
+    hour_ = temp_hour;
 }
 
 void Model::PreviousStep() {
-    hour_ -= step_size_;
-    day_ -= (abs(hour_) + 23) / 24;
-    hour_ = (24 + hour_ % 24) % 24;
-    if (day_ < 0) throw std::runtime_error("Time limit reached");
+    int temp_day = day_, temp_hour = hour_;
+    temp_hour -= step_size_;
+    if (temp_hour < 0) {
+        temp_day -= (abs(temp_hour) + 23) / 24;
+        temp_hour = 24 + temp_hour % 24;
+    }
+    if (temp_day < 0) return;
+    day_ = temp_day;
+    hour_ = temp_hour;
 }
 
 std::pair<int, int> Model::GetTime() {
