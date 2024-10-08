@@ -172,7 +172,9 @@ void Model::UpdateQueues() {
     /* cargo ships */
     for (auto ship : cargo_ships_) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
-        int rej_tm = ship->get_arrival_rejection();
+        arr_tm.second += ship->get_arrival_rejection();
+        arr_tm.first += arr_tm.second / 24;
+        arr_tm.second %= 24;
         ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;
@@ -214,6 +216,9 @@ void Model::UpdateQueues() {
     /* tankers */
     for (auto ship : tankers_) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
+        arr_tm.second += ship->get_arrival_rejection();
+        arr_tm.first += arr_tm.second / 24;
+        arr_tm.second %= 24;
         ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;
