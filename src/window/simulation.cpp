@@ -37,7 +37,7 @@ Simulation::Simulation() {
     
     Ship* temp_ship;
     temp_ship = new CargoShip;
-    temp_ship->set_weight(100);
+    temp_ship->set_weight(1000);
     temp_ship->set_arrival_time({ 1, 0 });
     temp_ship->set_ship_name("Green Sausages");
     temp_ship->SetPos(90, 90);
@@ -46,7 +46,7 @@ Simulation::Simulation() {
     model_->AddCargoShip(temp_ship);
 
     temp_ship = new Tanker;
-    temp_ship->set_weight(500);
+    temp_ship->set_weight(10000);
     temp_ship->set_arrival_time({ 2, 0 });
     temp_ship->set_ship_name("Lebron James");
     temp_ship->SetPos(190, 90);
@@ -73,10 +73,12 @@ void Simulation::CheckEvents() {
                 model_->NextStep();
                 model_->UpdateRejections();
                 model_->UpdateQueues();
+                model_->UpdateUnloads();
             } else if (event_->key.scancode == sf::Keyboard::Scan::Left) {
                 model_->PreviousStep();
                 model_->UpdateRejections();
                 model_->UpdateQueues();
+                model_->UpdateUnloads();
             }
         }
     }

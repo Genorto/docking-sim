@@ -141,6 +141,7 @@ std::pair<int, int> Model::GetTime() {
 void Model::UpdateRejections() {
     std::string* message;
     std::pair<int, int> cur_tm = { day_, hour_ };
+    /* cargo ships */
     for (auto ship : cargo_ships_) {
         if (ship->get_arrival_time() == cur_tm) {
             int day = ship->get_arrival_time().first;
@@ -153,6 +154,7 @@ void Model::UpdateRejections() {
             std::cout << *message << "\n";
         }
     }
+    /* tankers */
     for (auto ship : tankers_) {
         if (ship->get_arrival_time() == cur_tm) {
             int day = ship->get_arrival_time().first;
@@ -178,39 +180,13 @@ void Model::UpdateQueues() {
         ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;
-            switch (type) {
-                case ShipType::CargoShip:
-                    for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
-                        if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
-                            smallest_queue = bulk_cranes_[it]->GetQueueSize();
-                            best_option = it;
-                        }
-                    }
-                    bulk_cranes_[best_option]->AddToQueue(ship);
-                    break;
-
-                case ShipType::Tanker:
-                    bool fluid = true;
-                    for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
-                        if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
-                            smallest_queue = fluid_cranes_[it]->GetQueueSize();
-                            best_option = it;
-                        }
-                    }
-                    for (size_t it = 0; it < container_cranes_.size(); ++it) {
-                        if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
-                            smallest_queue = container_cranes_[it]->GetQueueSize();
-                            best_option = it;
-                            fluid = false;
-                        }
-                    }
-                    if (fluid) {
-                        fluid_cranes_[best_option]->AddToQueue(ship);
-                    } else {
-                        container_cranes_[best_option]->AddToQueue(ship);
-                    }
-                    break;
+            for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
+                if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
+                    smallest_queue = bulk_cranes_[it]->GetQueueSize();
+                    best_option = it;
+                }
             }
+            bulk_cranes_[best_option]->AddToQueue(ship);
         }
     }
     /* tankers */
@@ -222,37 +198,94 @@ void Model::UpdateQueues() {
         ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;
-            switch (type) {
-            case ShipType::CargoShip:
-                for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
-                    if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
-                        smallest_queue = bulk_cranes_[it]->GetQueueSize();
-                        best_option = it;
-                    }
+            bool fluid = true;
+            for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
+                if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
+                    smallest_queue = fluid_cranes_[it]->GetQueueSize();
+                    best_option = it;
                 }
-                bulk_cranes_[best_option]->AddToQueue(ship);
-                break;
+            }
+            for (size_t it = 0; it < container_cranes_.size(); ++it) {
+                if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
+                    smallest_queue = container_cranes_[it]->GetQueueSize();
+                    best_option = it;
+                    fluid = false;
+                }
+            }
+            if (fluid) {
+                fluid_cranes_[best_option]->AddToQueue(ship);
+            } else {
+                container_cranes_[best_option]->AddToQueue(ship);
+            }
+        }
+    }
+}
 
-            case ShipType::Tanker:
-                bool fluid = true;
-                for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
-                    if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
-                        smallest_queue = fluid_cranes_[it]->GetQueueSize();
-                        best_option = it;
-                    }
-                }
-                for (size_t it = 0; it < container_cranes_.size(); ++it) {
-                    if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
-                        smallest_queue = container_cranes_[it]->GetQueueSize();
-                        best_option = it;
-                        fluid = false;
-                    }
-                }
-                if (fluid) {
-                    fluid_cranes_[best_option]->AddToQueue(ship);
-                } else {
-                    container_cranes_[best_option]->AddToQueue(ship);
-                }
+void Model::UpdateUnloads() {
+    std::pair<int, int> cur_tm = { day_, hour_ };
+    std::string* message;
+    /* bulk cranes */
+    for (auto crane : bulk_cranes_) {
+        while (!crane->isEmpty()) {
+            Ship* ship = crane->GetFirstShip();
+            int weight = ship->get_weight();
+            int speed = crane->GetSpeed();
+            int hours = ((weight / (speed * 5)) + 59) / 60;
+            std::pair<int, int> unload_tm = ship->get_arrival_time();
+            unload_tm.second += ship->get_arrival_rejection() + hours;
+            unload_tm.first += unload_tm.second / 24;
+            unload_tm.second %= 24;
+            if (unload_tm <= cur_tm) {
+                crane->UnloadFirst();
+                message = new std::string;
+                *message = ship->get_ship_name() + " is unloaded";
+                log.push_back(message);
+                std::cout << *message << "\n";
+            } else {
+                break;
+            }
+        }
+    }
+    /* fluid cranes */
+    for (auto crane : fluid_cranes_) {
+        while (!crane->isEmpty()) {
+            Ship* ship = crane->GetFirstShip();
+            int weight = ship->get_weight();
+            int speed = crane->GetSpeed();
+            int hours = ((weight / (speed * 5)) + 59) / 60;
+            std::pair<int, int> unload_tm = ship->get_arrival_time();
+            unload_tm.second += ship->get_arrival_rejection() + hours;
+            unload_tm.first += unload_tm.second / 24;
+            unload_tm.second %= 24;
+            if (unload_tm <= cur_tm) {
+                crane->UnloadFirst();
+                message = new std::string;
+                *message = ship->get_ship_name() + " is unloaded";
+                log.push_back(message);
+                std::cout << *message << "\n";
+            } else {
+                break;
+            }
+        }
+    }
+    /* container cranes */
+    for (auto crane : container_cranes_) {
+        while (!crane->isEmpty()) {
+            Ship* ship = crane->GetFirstShip();
+            int weight = ship->get_weight();
+            int speed = crane->GetSpeed();
+            int hours = ((weight / (speed * 5)) + 59) / 60;
+            std::pair<int, int> unload_tm = ship->get_arrival_time();
+            unload_tm.second += ship->get_arrival_rejection() + hours;
+            unload_tm.first += unload_tm.second / 24;
+            unload_tm.second %= 24;
+            if (unload_tm <= cur_tm) {
+                crane->UnloadFirst();
+                message = new std::string;
+                *message = ship->get_ship_name() + " is unloaded";
+                log.push_back(message);
+                std::cout << *message << "\n";
+            } else {
                 break;
             }
         }

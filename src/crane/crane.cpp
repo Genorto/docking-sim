@@ -7,6 +7,7 @@ Crane::Crane() {
     size_y_ = 0;
     model_.loadFromFile("assets/sprites/error.png");
     name_ = "John Doe";
+    speed_ = 5;
 }
 
 Crane::Crane(const Crane& other) {
@@ -17,6 +18,7 @@ Crane::Crane(const Crane& other) {
     model_ = other.model_;
     queue_ = other.queue_;
     name_ = other.name_;
+    speed_ = other.speed_;
 }
 
 Crane& Crane::operator=(const Crane& other) {
@@ -27,6 +29,7 @@ Crane& Crane::operator=(const Crane& other) {
     model_ = other.model_;
     queue_ = other.queue_;
     name_ = other.name_;
+    speed_ = other.speed_;
     return *this;
 }
 
@@ -42,10 +45,23 @@ bool Crane::isEmpty() {
     return queue_.empty();
 }
 
+Ship* Crane::GetFirstShip() {
+    if (isEmpty()) throw std::runtime_error("Ship* GetFirstShip();");
+    return queue_.front();
+}
+
 void Crane::UnloadFirst() {
     if (isEmpty()) throw std::runtime_error("Queue is empty");
     queue_.front()->set_weight(0);
     queue_.pop();
+}
+
+void Crane::SetSpeed(int speed) {
+    speed_ = speed;
+}
+
+int Crane::GetSpeed() {
+    return speed_;
 }
 
 void Crane::SetPos(double x, double y) {

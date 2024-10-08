@@ -15,7 +15,10 @@ class Crane {
      virtual bool isHovered(sf::Vector2i cursor_pos) final;
      virtual std::vector<std::string*> GetInfo() = 0;
      bool isEmpty();
+     Ship* GetFirstShip();
      void UnloadFirst();
+     void SetSpeed(int);
+     int GetSpeed();
      virtual void SetPos(double x, double y) final;
      virtual void SetSize(double size_x, double size_y) final;
      virtual void SetModel(std::string path) final;
@@ -28,5 +31,5 @@ class Crane {
      sf::Texture model_;
      std::queue<Ship*> queue_;
      std::string name_;
-     int day_rejection, hour_rejection;
+     int speed_; // in minutes per 5 kg
 };

@@ -39,6 +39,7 @@ class Model final {
      std::pair<int, int> GetTime();
      void UpdateRejections();
      void UpdateQueues();
+     void UpdateUnloads();
      void DisplayTime(sf::RenderWindow*& window);
      void DisplayShips(sf::RenderWindow*& window);
      void DisplayCranes(sf::RenderWindow*& window);
