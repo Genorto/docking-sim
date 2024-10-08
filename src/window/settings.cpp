@@ -32,8 +32,6 @@ void Settings::CheckEvents() {
             window_->close();
             break;
         case sf::Event::MouseButtonPressed:
-
-            std::cout << x << " " << y << std::endl;
             if (x > 30 && x < 30 + 640 && y > 30 + 0 * 80 && y < 30 + 60 + 0 * 80) {
                 status = mouse_status::graph1;
             }
