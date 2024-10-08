@@ -35,7 +35,6 @@ class Model final {
      void SetSpeedLimits(int, int);
      void SetFont(std::string font_dir);
      void NextStep();
-     void PreviousStep();
      std::pair<int, int> GetTime();
      void UpdateRejections();
      void UpdateQueues();

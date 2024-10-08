@@ -122,18 +122,6 @@ void Model::NextStep() {
     hour_ = temp_hour;
 }
 
-void Model::PreviousStep() {
-    int temp_day = day_, temp_hour = hour_;
-    temp_hour -= step_size_;
-    if (temp_hour < 0) {
-        temp_day -= (abs(temp_hour) + 23) / 24;
-        temp_hour = 24 + temp_hour % 24;
-    }
-    if (temp_day < 0) return;
-    day_ = temp_day;
-    hour_ = temp_hour;
-}
-
 std::pair<int, int> Model::GetTime() {
     return { day_, hour_ };
 }
@@ -187,6 +175,7 @@ void Model::UpdateQueues() {
                 }
             }
             bulk_cranes_[best_option]->AddToQueue(ship);
+            ship->Show();
         }
     }
     /* tankers */
@@ -217,6 +206,7 @@ void Model::UpdateQueues() {
             } else {
                 container_cranes_[best_option]->AddToQueue(ship);
             }
+            ship->Show();
         }
     }
 }
@@ -226,7 +216,7 @@ void Model::UpdateUnloads() {
     std::string* message;
     /* bulk cranes */
     for (auto crane : bulk_cranes_) {
-        while (!crane->isEmpty()) {
+        if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
             int weight = ship->get_weight();
             int speed = crane->GetSpeed();
@@ -236,19 +226,18 @@ void Model::UpdateUnloads() {
             unload_tm.first += unload_tm.second / 24;
             unload_tm.second %= 24;
             if (unload_tm <= cur_tm) {
+                crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
-            } else {
-                break;
             }
         }
     }
     /* fluid cranes */
     for (auto crane : fluid_cranes_) {
-        while (!crane->isEmpty()) {
+        if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
             int weight = ship->get_weight();
             int speed = crane->GetSpeed();
@@ -270,7 +259,7 @@ void Model::UpdateUnloads() {
     }
     /* container cranes */
     for (auto crane : container_cranes_) {
-        while (!crane->isEmpty()) {
+        if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
             int weight = ship->get_weight();
             int speed = crane->GetSpeed();

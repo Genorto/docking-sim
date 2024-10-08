@@ -45,14 +45,14 @@ Simulation::Simulation() {
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddCargoShip(temp_ship);
 
-    temp_ship = new Tanker;
+    temp_ship = new CargoShip;
     temp_ship->set_weight(10000);
-    temp_ship->set_arrival_time({ 2, 0 });
+    temp_ship->set_arrival_time({ 1, 0 });
     temp_ship->set_ship_name("Lebron James");
-    temp_ship->SetPos(190, 90);
+    temp_ship->SetPos(190, 170);
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddTanker(temp_ship);
+    model_->AddCargoShip(temp_ship);
 
     model_->RandomizeShipsData();
 
@@ -71,11 +71,6 @@ void Simulation::CheckEvents() {
         case sf::Event::KeyPressed:
             if (event_->key.scancode == sf::Keyboard::Scan::Right) {
                 model_->NextStep();
-                model_->UpdateRejections();
-                model_->UpdateQueues();
-                model_->UpdateUnloads();
-            } else if (event_->key.scancode == sf::Keyboard::Scan::Left) {
-                model_->PreviousStep();
                 model_->UpdateRejections();
                 model_->UpdateQueues();
                 model_->UpdateUnloads();

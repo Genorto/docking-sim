@@ -36,7 +36,7 @@ Ship& Ship::operator= (const Ship& other) {
 }
 
 bool Ship::isHovered(sf::Vector2i cursor_pos) {
-	return (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
+	return is_shown_ && (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
 }
 	
 void Ship::SetType(ShipType type) {
@@ -93,10 +93,18 @@ void Ship::SetModel(std::string path) {
 	if (!model_.loadFromFile(path)) model_.loadFromFile("assets/sprites/error.png");
 }
 
+void Ship::Show() {
+	is_shown_ = true;
+}
+
+void Ship::Hide() {
+	is_shown_ = false;
+}
+
 void Ship::Draw(sf::RenderWindow*& window) {
 	sf::Sprite ship(model_);
 	ship.setPosition(sf::Vector2f(x_, y_));
 	ship.setScale(size_x_ / model_.getSize().x, size_y_ / model_.getSize().y);
-	window->draw(ship);
+	if (is_shown_) window->draw(ship);
 }
 
