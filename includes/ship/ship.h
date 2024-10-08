@@ -21,6 +21,7 @@ public:
 	std::string get_ship_name();
 	ShipType get_type();
 	virtual void SetPos(double x, double y) final;
+	virtual void SetArrivalTime(std::pair<int, int> data);
 	virtual void SetSize(double size_x, double size_y) final;
 	virtual void SetModel(std::string path) final;
 	virtual void Draw(sf::RenderWindow*& window) final;

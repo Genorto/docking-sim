@@ -1,12 +1,12 @@
 ﻿#include "../../includes/window/settings.h"
-
+#include <iostream>
 Settings::Settings() {
-    window_ = new sf::RenderWindow(sf::VideoMode(500, 800), "Settings");
+    window_ = new sf::RenderWindow(sf::VideoMode(700, 800), "Settings");
     event_ = new sf::Event;
     /* implement objects */
     font.loadFromFile("../../../../assets/fonts/roboto.ttf");
     background_.setFillColor(sf::Color::White);
-    background_.setSize({ 440, 60 });
+    background_.setSize({ 640, 60 });
     text_.setCharacterSize(20);
     text_.setFillColor(sf::Color::Black);
     text_.setFont(font);
@@ -23,33 +23,39 @@ Settings::Settings() {
 void Settings::CheckEvents() {
     while (window_->pollEvent(*event_)) {
         int x = event_->mouseButton.x, y = event_->mouseButton.y;
+        bool which_button;
+        if (event_->type == sf::Event::MouseButtonPressed) {
+            which_button = event_->mouseButton.button == sf::Mouse::Right;
+        }
         switch (event_->type) {
         case sf::Event::Closed:
             window_->close();
             break;
         case sf::Event::MouseButtonPressed:
-            if (x > 30 && x < 30 + 440 && y > 30 + 0 * 80 && y < 30 + 60 + 0 * 80) {
+
+            std::cout << x << " " << y << std::endl;
+            if (x > 30 && x < 30 + 640 && y > 30 + 0 * 80 && y < 30 + 60 + 0 * 80) {
                 status = mouse_status::graph1;
             }
             else {
-                if (x > 30 && x < 30 + 440 && y > 30 + 1 * 80 && y < 30 + 60 + 1 * 80) {
+                if (x > 30 && x < 30 + 640 && y > 30 + 1 * 80 && y < 30 + 60 + 1 * 80) {
                     status = mouse_status::graph2;
                 }
                 else {
-                    if (x > 30 && x < 30 + 440 && y > 30 + 2 * 80 && y < 30 + 60 + 2 * 80) {
+                    if (x > 30 && x < 30 + 640 && y > 30 + 2 * 80 && y < 30 + 60 + 2 * 80) {
                         status = mouse_status::graph3;
                     }
                     else {
-                        if (x > 30 && x < 30 + 440 && y > 30 + 3 * 80 && y < 30 + 60 + 3 * 80) {
+                        if (x > 30 && x < 30 + 640 && y > 30 + 3 * 80 && y < 30 + 60 + 3 * 80) {
                             status = mouse_status::graph4;
                         }
                         else {
-                            if (x > 30 && x < 30 + 440 && y > 30 + 4 * 80 && y < 30 + 60 + 4 * 80) {
+                            if (x > 30 && x < 30 + 640 && y > 30 + 4 * 80 && y < 30 + 40 + 4 * 80) {
                                 if (status == mouse_status::graph5) {
-                                    if (x > 30 + 440 - 70 && x < 30 + 440) {
+                                    if (x > 340 && x < 340 + 50) {
                                         vector_ship.push_back(new Tanker);
                                     }
-                                    if (x > 30 + 440 - 140 && x < 30 + 440 - 70) {
+                                    if (x > 420 && x < 420 + 50) {
                                         vector_ship.push_back(new CargoShip);
                                     }
                                 }
@@ -58,7 +64,28 @@ void Settings::CheckEvents() {
                                 }
                             }
                             else {
-                                status = mouse_status::nothing;
+                                bool in = false;
+                                for (int i = 0; i < vector_ship.size(); ++i) {
+                                    if (x > 260 && x < 260 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
+                                        vector_ship[i]->set_weight(std::min(std::max(0, vector_ship[i]->get_weight() + (which_button ? 1: -1) * 100), 900));
+                                        in = true;
+                                    }
+                                    if (x > 460 && x < 460 + 40 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
+                                        std::pair<int, int> copy = vector_ship[i]->get_arrival_time();
+                                        copy.first = (31 + copy.first + (which_button ? 1 : -1)) % 31;
+                                        vector_ship[i]->SetArrivalTime(copy);
+                                        in = true;
+                                    }
+                                    if (x > 540 && x < 540 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
+                                        std::pair<int, int> copy = vector_ship[i]->get_arrival_time();
+                                        copy.second = (24 + copy.second + (which_button ? 1 : -1)) % 24;
+                                        vector_ship[i]->SetArrivalTime(copy);
+                                        in = true;
+                                    }
+                                }
+                                if (!in) {
+                                    status = mouse_status::nothing;
+                                }
                             }
                         }
                     }
@@ -107,7 +134,7 @@ void Settings::Draw() {
     /* draw objects */
     int x = 30, y = 30;
     for (int i = 0; i < 5; ++i) {
-        if (i == int(status)) {
+        if (i == int(status) && i < 4) {
             background_.setFillColor(sf::Color{120, 120, 120});
         }
         else {
@@ -132,6 +159,23 @@ void Settings::Draw() {
                 type += (vector_ship[j]->get_type() == ShipType::CargoShip) ? "CargoShip  " : "Tanker        ";
                 type += L"Вес: ";
                 type += std::to_wstring(vector_ship[j]->get_weight());
+                if (vector_ship[j]->get_weight() / 100 > 0) {
+                    type += L" ";
+                }
+                else {
+                    type += L"     ";
+                }
+                type += L" Время: день ";
+                if (vector_ship[j]->get_arrival_time().first / 10 < 1) {
+                    type += L"  ";
+                }
+                type += std::to_wstring(vector_ship[j]->get_arrival_time().first);
+                type += L" часы ";
+                if (vector_ship[j]->get_arrival_time().second / 10 < 1) {
+                    type+= L"0";
+                }
+                type += std::to_wstring(vector_ship[j]->get_arrival_time().second);
+                type += L":00";
                 text_answer_.setString(type);
                 text_answer_.setPosition(x, y);
                 window_->draw(text_answer_);

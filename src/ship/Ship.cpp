@@ -72,6 +72,10 @@ void Ship::SetPos(double x, double y) {
 	y_ = y;
 }
 
+void Ship::SetArrivalTime(std::pair<int, int> data) {
+	arrival_time_ = data;
+}
+
 void Ship::SetSize(double size_x, double size_y) {
 	size_x_ = size_x;
 	size_y_ = size_y;
