@@ -91,7 +91,7 @@ void Settings::CheckEvents() {
             }
             break;
         case sf::Event::TextEntered:
-            if (event_->text.unicode > 47 && event_->text.unicode < 58 || event_->text.unicode == 47) {
+            if (event_->text.unicode > 47 && event_->text.unicode < 58 || event_->text.unicode == 47 || event_->text.unicode == 45) {
                 switch (status) {
                 case mouse_status::graph1:
                     answer_text[0] += (event_->text.unicode);
