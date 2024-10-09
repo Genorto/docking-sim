@@ -33,4 +33,6 @@ public:
 
     sf::RectangleShape background_button_;
     sf::Text text_button_;
+
+    int up_border_ = 0, bottom_border_ = -1;
 };

@@ -87,14 +87,14 @@ void Settings::CheckEvents() {
                             if (x > 30 && x < 30 + 640 && y > 30 + 4 * 80 && y < 30 + 40 + 4 * 80) {
                                 if (status == mouse_status::graph5) {
                                     if (x > 340 && x < 340 + 50) {
-                                        if (vector_ship_.size() < 9) {
-                                            vector_ship_.push_back(new Tanker);
-                                        }
+                                        vector_ship_.push_back(new Tanker);
+                                        up_border_ = std::max(0, (int)vector_ship_.size() - 9);
+                                        bottom_border_ = (int)vector_ship_.size() - 1;
                                     }
                                     if (x > 420 && x < 420 + 50) {
-                                        if (vector_ship_.size() < 9) {
-                                            vector_ship_.push_back(new CargoShip);
-                                        }
+                                        vector_ship_.push_back(new CargoShip);
+                                        up_border_ = std::max(0, (int)vector_ship_.size() - 9);
+                                        bottom_border_ = (int)vector_ship_.size() - 1;
                                     }
                                 }
                                 else {
@@ -103,21 +103,21 @@ void Settings::CheckEvents() {
                             }
                             else {
                                 bool in = false;
-                                for (int i = 0; i < vector_ship_.size(); ++i) {
+                                for (int i = 0, j = up_border_; j <= bottom_border_; ++i, ++j) {
                                     if (x > 260 && x < 260 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        vector_ship_[i]->set_weight(std::min(std::max(0, vector_ship_[i]->get_weight() + (which_button ? 1: -1) * 100), 900));
+                                        vector_ship_[j]->set_weight(std::min(std::max(0, vector_ship_[j]->get_weight() + (which_button ? 1: -1) * 100), 900));
                                         in = true;
                                     }
                                     if (x > 460 && x < 460 + 40 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        std::pair<int, int> copy = vector_ship_[i]->get_arrival_time();
+                                        std::pair<int, int> copy = vector_ship_[j]->get_arrival_time();
                                         copy.first = (31 + copy.first + (which_button ? 1 : -1)) % 31;
-                                        vector_ship_[i]->SetArrivalTime(copy);
+                                        vector_ship_[j]->SetArrivalTime(copy);
                                         in = true;
                                     }
                                     if (x > 540 && x < 540 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        std::pair<int, int> copy = vector_ship_[i]->get_arrival_time();
+                                        std::pair<int, int> copy = vector_ship_[j]->get_arrival_time();
                                         copy.second = (24 + copy.second + (which_button ? 1 : -1)) % 24;
-                                        vector_ship_[i]->SetArrivalTime(copy);
+                                        vector_ship_[j]->SetArrivalTime(copy);
                                         in = true;
                                     }
                                 }
@@ -137,6 +137,7 @@ void Settings::CheckEvents() {
                 }
             }
             break;
+
         case sf::Event::TextEntered:
             if (event_->text.unicode > 47 && event_->text.unicode < 58 || event_->text.unicode == 47 || event_->text.unicode == 45) {
                 switch (status) {
@@ -170,6 +171,16 @@ void Settings::CheckEvents() {
                     break;
                 }
             }
+            break;
+
+        case sf::Event::MouseWheelScrolled:
+            if (event_->mouseWheelScroll.delta > 0) {
+                up_border_ = std::max(0, up_border_ - (int)event_->mouseWheelScroll.delta);
+                bottom_border_ = std::min((int)vector_ship_.size() - 1, up_border_ + 8);
+            } else {
+                bottom_border_ = std::min((int)vector_ship_.size() - 1, bottom_border_ - (int)event_->mouseWheelScroll.delta);
+                up_border_ = std::max(0, bottom_border_ - 8);
+            }
         }
     }
 }
@@ -200,7 +211,7 @@ void Settings::Draw() {
         }
         else {
             y += 40;
-            for (int j = 0; j < vector_ship_.size(); ++j) {
+            for (int j = up_border_; j <= bottom_border_; ++j) {
                 background_.setPosition(x, y);
                 window_->draw(background_);
                 sf::String type = L"Тип корабля: ";
