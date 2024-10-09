@@ -67,8 +67,24 @@ std::vector<Ship*> Model::GetTankers() {
     return tankers_;
 }
 
-int Model::GetClock() {
-    return (int)clock_->getElapsedTime().asSeconds();
+double Model::GetClock() {
+    return clock_->getElapsedTime().asSeconds();
+}
+
+void Model::SetFPS(int fps) {
+    fps_ = fps;
+}
+
+int Model::GetFPS() {
+    return fps_;
+}
+
+void Model::SetStepLength(int step_length) {
+    step_length_ = step_length;
+}
+
+int Model::GetStepLength() {
+    return step_length_;
 }
 
 void Model::SetStepSize(int size) {

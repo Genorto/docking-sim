@@ -24,6 +24,9 @@ public:
 	std::string get_ship_name();
 	ShipType get_type();
 	virtual void SetPos(double x, double y) final;
+	virtual void SetStartPos(double x, double y) final;
+	virtual void SetEndPos(double x, double y) final;
+	virtual void Animate(double time, int fps, int duration) final;
 	virtual void SetSize(double size_x, double size_y) final;
 	virtual void SetModel(std::string path) final;
 	virtual void Show() final;
@@ -43,6 +46,8 @@ protected:
 	int service_time_;
 	// frontend variables
 	double x_ = 0, y_ = 0;
+	double start_x_ = 0, start_y_ = 0;
+	double end_x_ = 0, end_y_ = 0;
 	double size_x_ = 0, size_y_ = 0;
 	sf::Texture model_;
 	bool is_shown_ = false;

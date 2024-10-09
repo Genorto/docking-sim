@@ -12,6 +12,8 @@ Simulation::Simulation() {
     model_->SetRejectionLimits(1, 6);
     model_->SetFineLimits(20, 100);
     model_->SetSpeedLimits(1, 3);
+    model_->SetFPS(240);
+    model_->SetStepLength(3);
 
     Crane* temp_crane;
     temp_crane = new BulkCrane;
@@ -37,19 +39,23 @@ Simulation::Simulation() {
     
     Ship* temp_ship;
     temp_ship = new CargoShip;
-    temp_ship->set_weight(1000);
-    temp_ship->set_arrival_time({ 1, 0 });
+    temp_ship->set_weight(100000000);
+    temp_ship->set_arrival_time({ 0, 1 });
     temp_ship->set_ship_name("Green Sausages");
     temp_ship->SetPos(90, 90);
+    temp_ship->SetStartPos(90, 290);
+    temp_ship->SetEndPos(90, 90);
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddCargoShip(temp_ship);
 
     temp_ship = new CargoShip;
-    temp_ship->set_weight(10000);
-    temp_ship->set_arrival_time({ 1, 0 });
+    temp_ship->set_weight(100000000);
+    temp_ship->set_arrival_time({ 0, 1 });
     temp_ship->set_ship_name("Lebron James");
     temp_ship->SetPos(190, 170);
+    temp_ship->SetStartPos(190, 370);
+    temp_ship->SetEndPos(190, 170);
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddCargoShip(temp_ship);
@@ -69,7 +75,7 @@ void Simulation::CheckEvents() {
             break;
         }
     }
-    if (model_->GetClock() == 3) {
+    if ((int)model_->GetClock() >= model_->GetStepLength()) {
         model_->NextStep();
         model_->Update();
     }
@@ -124,6 +130,7 @@ void Simulation::Draw() {
     window_->clear(sf::Color::Cyan);
 
     for (auto ship : model_->GetCargoShips()) {
+        ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
         ship->Draw(window_);
     }
 

@@ -23,7 +23,11 @@ class Model final {
      std::vector<Crane*> GetContainerCranes();
      std::vector<Ship*> GetCargoShips();
      std::vector<Ship*> GetTankers();
-     int GetClock();
+     double GetClock();
+     void SetFPS(int);
+     int GetFPS();
+     void SetStepLength(int);
+     int GetStepLength();
      void SetStepSize(int);
      void SetWeightLimits(std::pair<int, int>);
      void SetWeightLimits(int, int);
@@ -58,7 +62,9 @@ class Model final {
      std::pair<int, int> fine_limits_;
      std::pair<int, int> speed_limits_;
      int step_size_; // in hours
+     int step_length_;
      int day_ = 0, hour_ = 0;
+     int fps_ = 60;
      sf::Font font_;
      std::vector<std::string*> log;
      sf::Clock* clock_;

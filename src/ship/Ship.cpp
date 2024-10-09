@@ -84,6 +84,22 @@ void Ship::SetPos(double x, double y) {
 	y_ = y;
 }
 
+void Ship::SetStartPos(double x, double y) {
+	start_x_ = x;
+	start_y_ = y;
+}
+
+void Ship::SetEndPos(double x, double y) {
+	end_x_ = x;
+	end_y_ = y;
+}
+
+void Ship::Animate(double time, int fps, int duration) {
+	int step = time / (1.0f / (double)fps);
+	x_ = start_x_ + step * (abs(end_x_ - start_x_) / (fps * duration));
+	y_ = start_y_ - step * (abs(end_y_ - start_y_) / (fps * duration));
+}
+
 void Ship::SetSize(double size_x, double size_y) {
 	size_x_ = size_x;
 	size_y_ = size_y;
