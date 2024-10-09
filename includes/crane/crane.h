@@ -11,14 +11,20 @@ class Crane {
      Crane(const Crane& other);
      Crane& operator=(const Crane& other);
      virtual void AddToQueue(Ship*& target) = 0;
+     size_t GetQueueSize();
      virtual bool isHovered(sf::Vector2i cursor_pos) final;
      virtual std::vector<std::string*> GetInfo() = 0;
      bool isEmpty();
+     Ship* GetFirstShip();
      void UnloadFirst();
+     void SetSpeed(int);
+     int GetSpeed();
      virtual void SetPos(double x, double y) final;
      virtual void SetSize(double size_x, double size_y) final;
      virtual void SetModel(std::string path) final;
      virtual void SetName(std::string name) final;
+     virtual void SetSpace(double space) final;
+     virtual double& GetUnloadTime() final;
      virtual void Draw(sf::RenderWindow*& window) final;
 
  protected:
@@ -27,4 +33,8 @@ class Crane {
      sf::Texture model_;
      std::queue<Ship*> queue_;
      std::string name_;
+     int speed_; // in minutes per 5 kg
+     double last_ship_pos_;
+     double space_;
+     double unload_time_ = -1;
 };

@@ -1,11 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include "../ship/cargo_ship.h"
-#include "../ship/tanker.h"
-#include "../crane/bulk_crane.h"
-#include "../crane/fluid_crane.h"
-#include "../crane/container_crane.h"
-#include "../cursor_hover_window.h"
+#include "../model.h"
 
 class Window {
  public:
