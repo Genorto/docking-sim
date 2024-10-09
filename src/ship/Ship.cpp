@@ -82,6 +82,10 @@ ShipType Ship::get_type() {
 void Ship::SetPos(double x, double y) {
 	x_ = x;
 	y_ = y;
+	start_x_ = x;
+	start_y_ = y;
+	end_x_ = x;
+	end_y_ = y;
 }
 
 std::pair<double, double> Ship::GetPos() {
@@ -93,9 +97,17 @@ void Ship::SetStartPos(double x, double y) {
 	start_y_ = y;
 }
 
+std::pair<double, double> Ship::GetStartPos() {
+	return { start_x_, start_y_ };
+}
+
 void Ship::SetEndPos(double x, double y) {
 	end_x_ = x;
 	end_y_ = y;
+}
+
+std::pair<double, double> Ship::GetEndPos() {
+	return { end_x_, end_y_ };
 }
 
 void Ship::Animate(double time, int fps, double duration) {

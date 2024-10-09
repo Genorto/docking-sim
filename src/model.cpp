@@ -206,7 +206,6 @@ void Model::UpdateQueues() {
                 }
             }
             bulk_cranes_[best_option]->AddToQueue(ship);
-            std::cout << "huy\n";
             ship->Show();
         }
     }
@@ -250,20 +249,20 @@ void Model::UpdateUnloads() {
     for (auto crane : bulk_cranes_) {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
-            int weight = ship->get_weight();
-            int speed = crane->GetSpeed();
-            int hours = ((weight / (speed * 5)) + 59) / 60;
-            std::pair<int, int> unload_tm = ship->get_arrival_time();
-            unload_tm.second += ship->get_arrival_rejection() + hours;
-            unload_tm.first += unload_tm.second / 24;
-            unload_tm.second %= 24;
-            if (unload_tm <= cur_tm) {
+            if (unload_time_ == -1) {
+                ship = crane->GetFirstShip();
+                unload_time_ = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+            }
+            if (!unload_time_) {
                 // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
+                unload_time_ = -1;
+            } else {
+                --unload_time_;
             }
         }
     }
@@ -271,21 +270,20 @@ void Model::UpdateUnloads() {
     for (auto crane : fluid_cranes_) {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
-            int weight = ship->get_weight();
-            int speed = crane->GetSpeed();
-            int hours = ((weight / (speed * 5)) + 59) / 60;
-            std::pair<int, int> unload_tm = ship->get_arrival_time();
-            unload_tm.second += ship->get_arrival_rejection() + hours;
-            unload_tm.first += unload_tm.second / 24;
-            unload_tm.second %= 24;
-            if (unload_tm <= cur_tm) {
+            if (unload_time_ == -1) {
+                ship = crane->GetFirstShip();
+                unload_time_ = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+            }
+            if (!unload_time_) {
+                // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
+                unload_time_ = -1;
             } else {
-                break;
+                --unload_time_;
             }
         }
     }
@@ -293,23 +291,32 @@ void Model::UpdateUnloads() {
     for (auto crane : container_cranes_) {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
-            int weight = ship->get_weight();
-            int speed = crane->GetSpeed();
-            int hours = ((weight / (speed * 5)) + 59) / 60;
-            std::pair<int, int> unload_tm = ship->get_arrival_time();
-            unload_tm.second += ship->get_arrival_rejection() + hours;
-            unload_tm.first += unload_tm.second / 24;
-            unload_tm.second %= 24;
-            if (unload_tm <= cur_tm) {
+            if (unload_time_ == -1) {
+                ship = crane->GetFirstShip();
+                unload_time_ = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+            }
+            if (!unload_time_) {
+                // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
+                unload_time_ = -1;
             } else {
-                break;
+                --unload_time_;
             }
         }
+    }
+}
+
+void Model::UpdateShipsPos() {
+    for (auto ship : cargo_ships_) {
+        ship->SetPos(ship->GetEndPos().first, ship->GetEndPos().second);
+    }
+
+    for (auto ship : tankers_) {
+        ship->SetPos(ship->GetEndPos().first, ship->GetEndPos().second);
     }
 }
 

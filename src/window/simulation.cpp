@@ -98,7 +98,7 @@ void Simulation::CheckEvents() {
 
         case sf::Event::KeyPressed:
             if (event_->key.scancode == sf::Keyboard::Scan::Right) {
-                Draw();
+                model_->UpdateShipsPos();
                 model_->NextStep();
                 model_->Update();
             }

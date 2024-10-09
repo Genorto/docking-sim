@@ -43,14 +43,15 @@ class Model final {
      void NextStep();
      std::pair<int, int> GetTime();
      void Update();
-     void UpdateRejections();
-     void UpdateQueues();
-     void UpdateUnloads();
      void DisplayTime(sf::RenderWindow*& window);
      void DisplayShips(sf::RenderWindow*& window);
      void DisplayCranes(sf::RenderWindow*& window);
+     void UpdateShipsPos(); // only when switches by key
 
  private:
+     void UpdateRejections();
+     void UpdateQueues();
+     void UpdateUnloads();
      std::vector<Crane*> bulk_cranes_;
      std::vector<Crane*> fluid_cranes_;
      std::vector<Crane*> container_cranes_;
@@ -63,6 +64,7 @@ class Model final {
      std::pair<int, int> speed_limits_;
      int step_size_; // in hours
      double step_length_;
+     int unload_time_ = -1; // in hours
      int day_ = 0, hour_ = 0;
      int fps_ = 60;
      sf::Font font_;

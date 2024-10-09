@@ -26,7 +26,9 @@ public:
 	virtual void SetPos(double x, double y) final;
 	virtual std::pair<double, double> GetPos() final;
 	virtual void SetStartPos(double x, double y) final;
+	virtual std::pair<double, double> GetStartPos() final;
 	virtual void SetEndPos(double x, double y) final;
+	virtual std::pair<double, double> GetEndPos() final;
 	virtual void Animate(double time, int fps, double duration) final;
 	virtual void SetSize(double size_x, double size_y) final;
 	virtual std::pair<double, double> GetSize() final;
