@@ -26,8 +26,8 @@ class Model final {
      double GetClock();
      void SetFPS(int);
      int GetFPS();
-     void SetStepLength(int);
-     int GetStepLength();
+     void SetStepLength(double);
+     double GetStepLength();
      void SetStepSize(int);
      void SetWeightLimits(std::pair<int, int>);
      void SetWeightLimits(int, int);
@@ -62,7 +62,7 @@ class Model final {
      std::pair<int, int> fine_limits_;
      std::pair<int, int> speed_limits_;
      int step_size_; // in hours
-     int step_length_;
+     double step_length_;
      int day_ = 0, hour_ = 0;
      int fps_ = 60;
      sf::Font font_;

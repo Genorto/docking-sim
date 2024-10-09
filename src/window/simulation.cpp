@@ -1,4 +1,5 @@
 #include "../../includes/window/simulation.h"
+#include "iostream"
 
 Simulation::Simulation() {
     window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
@@ -21,6 +22,7 @@ Simulation::Simulation() {
     temp_crane->SetSize(100, 100);
     temp_crane->SetName("Red impostor");
     temp_crane->SetModel("assets/sprites/default_crane.png");
+    temp_crane->SetSpace(10);
     model_->AddBulkCrane(temp_crane);
 
     temp_crane = new FluidCrane;
@@ -28,6 +30,7 @@ Simulation::Simulation() {
     temp_crane->SetSize(100, 100);
     temp_crane->SetName("Best crane ever");
     temp_crane->SetModel("assets/sprites/default_crane.png");
+    temp_crane->SetSpace(10);
     model_->AddFluidCrane(temp_crane);
 
     temp_crane = new ContainerCrane;
@@ -35,27 +38,46 @@ Simulation::Simulation() {
     temp_crane->SetSize(100, 100);
     temp_crane->SetName("lol kek cheburek kek lol arbidol");
     temp_crane->SetModel("assets/sprites/default_crane.png");
+    temp_crane->SetSpace(10);
     model_->AddContainerCrane(temp_crane);
     
     Ship* temp_ship;
     temp_ship = new CargoShip;
-    temp_ship->set_weight(100000000);
+    temp_ship->set_weight(5000);
     temp_ship->set_arrival_time({ 0, 1 });
     temp_ship->set_ship_name("Green Sausages");
-    temp_ship->SetPos(90, 90);
-    temp_ship->SetStartPos(90, 290);
-    temp_ship->SetEndPos(90, 90);
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddCargoShip(temp_ship);
 
     temp_ship = new CargoShip;
-    temp_ship->set_weight(100000000);
+    temp_ship->set_weight(5000);
     temp_ship->set_arrival_time({ 0, 1 });
     temp_ship->set_ship_name("Lebron James");
-    temp_ship->SetPos(190, 170);
-    temp_ship->SetStartPos(190, 370);
-    temp_ship->SetEndPos(190, 170);
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddCargoShip(temp_ship);
+
+    temp_ship = new CargoShip;
+    temp_ship->set_weight(5000);
+    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->set_ship_name("KKK");
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddCargoShip(temp_ship);
+
+    temp_ship = new CargoShip;
+    temp_ship->set_weight(5000);
+    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->set_ship_name("Evergreen");
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddCargoShip(temp_ship);
+
+    temp_ship = new CargoShip;
+    temp_ship->set_weight(5000);
+    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->set_ship_name("Yeei 52");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddCargoShip(temp_ship);
@@ -73,9 +95,17 @@ void Simulation::CheckEvents() {
         case sf::Event::Closed:
             window_->close();
             break;
+
+        case sf::Event::KeyPressed:
+            if (event_->key.scancode == sf::Keyboard::Scan::Right) {
+                Draw();
+                model_->NextStep();
+                model_->Update();
+            }
         }
     }
-    if ((int)model_->GetClock() >= model_->GetStepLength()) {
+    if (model_->GetClock() >= model_->GetStepLength()) {
+        Draw(); /* KOCTbl/|b axaxaxaxxax */
         model_->NextStep();
         model_->Update();
     }

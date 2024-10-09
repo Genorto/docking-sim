@@ -79,11 +79,11 @@ int Model::GetFPS() {
     return fps_;
 }
 
-void Model::SetStepLength(int step_length) {
+void Model::SetStepLength(double step_length) {
     step_length_ = step_length;
 }
 
-int Model::GetStepLength() {
+double Model::GetStepLength() {
     return step_length_;
 }
 
@@ -206,6 +206,7 @@ void Model::UpdateQueues() {
                 }
             }
             bulk_cranes_[best_option]->AddToQueue(ship);
+            std::cout << "huy\n";
             ship->Show();
         }
     }
@@ -257,7 +258,7 @@ void Model::UpdateUnloads() {
             unload_tm.first += unload_tm.second / 24;
             unload_tm.second %= 24;
             if (unload_tm <= cur_tm) {
-                crane->GetFirstShip()->Hide();
+                // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";

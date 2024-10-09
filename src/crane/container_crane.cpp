@@ -4,6 +4,9 @@ void ContainerCrane::AddToQueue(Ship*& target) {
     if (!(target->get_type() == ShipType::Tanker))
         throw std::runtime_error("Container crane is incompatible with received ship");
     queue_.push(target);
+    target->SetStartPos(x_, last_ship_pos_ + 200);
+    target->SetEndPos(x_, last_ship_pos_);
+    last_ship_pos_ += target->GetSize().second + space_;
 }
 
 std::vector<std::string*> ContainerCrane::GetInfo() {

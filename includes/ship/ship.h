@@ -24,10 +24,12 @@ public:
 	std::string get_ship_name();
 	ShipType get_type();
 	virtual void SetPos(double x, double y) final;
+	virtual std::pair<double, double> GetPos() final;
 	virtual void SetStartPos(double x, double y) final;
 	virtual void SetEndPos(double x, double y) final;
-	virtual void Animate(double time, int fps, int duration) final;
+	virtual void Animate(double time, int fps, double duration) final;
 	virtual void SetSize(double size_x, double size_y) final;
+	virtual std::pair<double, double> GetSize() final;
 	virtual void SetModel(std::string path) final;
 	virtual void Show() final;
 	virtual void Hide() final;
