@@ -59,8 +59,8 @@ int Ship::get_arrival_rejection() {
 	return arrival_rejection_;
 }
 
-void Ship::set_arrival_time(std::pair<int, int> arr_tm) {
-	arrival_time_ = arr_tm;
+void Ship::SetArrivalTime(std::pair<int, int> data) {
+	arrival_time_ = data;
 }
 
 std::pair<int, int> Ship::get_arrival_time() {
