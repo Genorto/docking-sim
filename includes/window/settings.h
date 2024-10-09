@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "window.h"
 enum class mouse_status { graph1, graph2, graph3, graph4, graph5, nothing};
+
 class Settings : public Window {
 public:
     Settings();
@@ -8,6 +9,7 @@ public:
     virtual void Draw() override;
     virtual bool isOpen() override;
     virtual ~Settings();
+    void FillingFields();
 
     int penalty_waiting_; // штраф, который мы платим за час ожидания
     std::pair<int, int> shift_in_arrival_; //насколько поезд прибыл раньше/позже в днях
@@ -21,4 +23,7 @@ public:
     
     sf::Font font;
     mouse_status status;
+
+    sf::RectangleShape background_button_;
+    sf::Text text_button_;
 };

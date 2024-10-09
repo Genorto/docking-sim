@@ -6,18 +6,25 @@ Settings::Settings() {
     /* implement objects */
     font.loadFromFile("../../../../assets/fonts/roboto.ttf");
     background_.setFillColor(sf::Color::White);
-    background_.setSize({ 640, 60 });
+    background_.setSize({ 640, 45 });
+    background_button_.setFillColor(sf::Color::White);
+    background_button_.setSize({ 200, 30 });
     text_.setCharacterSize(20);
     text_.setFillColor(sf::Color::Black);
     text_.setFont(font);
     text_answer_.setCharacterSize(20);
     text_answer_.setFillColor(sf::Color::Black);
     text_answer_.setFont(font);
+    text_button_.setCharacterSize(20);
+    text_button_.setFillColor(sf::Color::Black);
+    text_button_.setFont(font);
+    text_button_.setString("Start simulation");
+    background_button_.setPosition(240, 760);
+    text_button_.setPosition(270, 760);
     vector_text = { L"Укажите размер штрафа:", L"Укажите диапазон опозданий:", L"Укажите шаг моделирования:",
         L"Укажите кол-во кранов каждого вида:",  L"Введите расписание кораблей:      (+)          (+)" };
     answer_text = { L"", L"", L"", L"" };
     status = mouse_status::nothing;
-    vector_ship = { new Tanker(), new CargoShip()};
 }
 
 void Settings::CheckEvents() {
@@ -29,6 +36,7 @@ void Settings::CheckEvents() {
         }
         switch (event_->type) {
         case sf::Event::Closed:
+            FillingFields();
             window_->close();
             break;
         case sf::Event::MouseButtonPressed:
@@ -51,10 +59,14 @@ void Settings::CheckEvents() {
                             if (x > 30 && x < 30 + 640 && y > 30 + 4 * 80 && y < 30 + 40 + 4 * 80) {
                                 if (status == mouse_status::graph5) {
                                     if (x > 340 && x < 340 + 50) {
-                                        vector_ship.push_back(new Tanker);
+                                        if (vector_ship.size() < 9) {
+                                            vector_ship.push_back(new Tanker);
+                                        }
                                     }
                                     if (x > 420 && x < 420 + 50) {
-                                        vector_ship.push_back(new CargoShip);
+                                        if (vector_ship.size() < 9) {
+                                            vector_ship.push_back(new CargoShip);
+                                        }
                                     }
                                 }
                                 else {
@@ -82,7 +94,14 @@ void Settings::CheckEvents() {
                                     }
                                 }
                                 if (!in) {
-                                    status = mouse_status::nothing;
+                                    if (x > background_button_.getPosition().x && x < background_button_.getPosition().x + background_button_.getSize().x &&
+                                        y > background_button_.getPosition().y && y < background_button_.getPosition().y + background_button_.getSize().y) {
+                                        FillingFields();
+                                        window_->close();
+                                    }
+                                    else {
+                                        status = mouse_status::nothing;
+                                    }
                                 }
                             }
                         }
@@ -143,6 +162,9 @@ void Settings::Draw() {
         text_.setPosition(x, y);
         window_->draw(background_);
         window_->draw(text_);
+        window_->draw(background_button_);
+        window_->draw(text_button_);
+
         if (i < 4) {
             text_answer_.setString(answer_text[i]);
             text_answer_.setPosition(x, y + 20);
@@ -187,6 +209,77 @@ void Settings::Draw() {
 
 bool Settings::isOpen() {
     return window_->isOpen();
+}
+
+int TranslatorFromStringToNumber(sf::String str) {
+    if (str.getSize() == 0) {
+        return 0;
+    }
+    int i = 0, sign = 1;;
+    if (str[0] == L'+') {
+        sign = 1;
+        i++;
+    }
+    if (str[0] == L'-') {
+        sign = -1;
+        i++;
+    }
+    int answer = 0;
+    for (; i < str.getSize(); ++i) {
+        answer = answer * 10 + (str[i] - L'0');
+    }
+    return sign * answer;
+}
+
+std::pair<int, int> OneSeparator(sf::String str) {
+    sf::String first = L"", second = L"";
+    bool flag = true;
+    for (int i = 0; i < str.getSize(); ++i) {
+        if (str[i] == L'/') {
+            flag = !flag;
+            continue;
+        }
+        if (flag) {
+            first += str[i];
+        }
+        else {
+            second += str[i];
+        }
+    }
+    return { TranslatorFromStringToNumber(first), TranslatorFromStringToNumber(second) };
+}
+
+std::pair<std::pair<int, int>, int> TwoSeparator(sf::String str) {
+    sf::String first = L"", second = L"", third = L"";
+    int flag = 1;
+    for (int i = 0; i < str.getSize(); ++i) {
+        if (str[i] == L'/') {
+            flag++;
+            continue;
+        }
+        switch (flag) {
+        case 1:
+            first += str[i];
+            break;
+        case 2:
+            second += str[i];
+            break;
+        case 3:
+            third += str[i];
+            break;
+        }
+    }
+    return { {TranslatorFromStringToNumber(first), TranslatorFromStringToNumber(second) }, TranslatorFromStringToNumber(third) };
+}
+
+void Settings::FillingFields() {
+    penalty_waiting_ = TranslatorFromStringToNumber(answer_text[0]); // штраф, который мы платим за час ожидания
+    std::pair<int, int> shift_in_arrival_ = OneSeparator(answer_text[1]); //насколько поезд прибыл раньше/позже в днях
+    modeling_step_ = TranslatorFromStringToNumber(answer_text[2]); // подается в часах
+    std::pair<std::pair<int, int>, int> crane_ = TwoSeparator(answer_text[3]);
+    number_bulk_crane_ = crane_.first.first; //кол-во кранов
+    number_fluid_crane_ = crane_.first.second; //кол-во кранов
+    number_container_crane_ = crane_.second; //кол-во кранов
 }
 
 Settings::~Settings() {}
