@@ -107,6 +107,7 @@ Simulation::Simulation() {
     model_->AddTanker(temp_ship);
 
     model_->RandomizeShipsData();
+    model_->Update();
 
     chw_ = new CursorHoverWindow;
     chw_->SetSize(200, 150);
@@ -174,6 +175,7 @@ Simulation::Simulation(Settings* sett) {
     }
 
     model_->RandomizeShipsData();
+    model_->Update();
 
     chw_ = new CursorHoverWindow;
     chw_->SetSize(200, 150);
