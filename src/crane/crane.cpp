@@ -99,6 +99,10 @@ void Crane::SetSpace(double space) {
     space_ = space;
 }
 
+double& Crane::GetUnloadTime() {
+    return unload_time_;
+}
+
 void Crane::Draw(sf::RenderWindow*& window) {
     sf::Sprite crane(model_);
     crane.setPosition(sf::Vector2f(x_, y_));

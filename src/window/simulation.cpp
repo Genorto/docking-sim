@@ -82,6 +82,30 @@ Simulation::Simulation() {
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddCargoShip(temp_ship);
 
+    temp_ship = new Tanker;
+    temp_ship->set_weight(5000);
+    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->set_ship_name("First tanker ever");
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddTanker(temp_ship);
+
+    temp_ship = new Tanker;
+    temp_ship->set_weight(5000);
+    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->set_ship_name("Big tanker");
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddTanker(temp_ship);
+
+    temp_ship = new Tanker;
+    temp_ship->set_weight(5000);
+    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->set_ship_name("Gorillaz");
+    temp_ship->SetSize(80, 150);
+    temp_ship->SetModel("assets/sprites/default_ship.png");
+    model_->AddTanker(temp_ship);
+
     model_->RandomizeShipsData();
 
     chw_ = new CursorHoverWindow;
@@ -165,6 +189,7 @@ void Simulation::Draw() {
     }
 
     for (auto ship : model_->GetTankers()) {
+        ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
         ship->Draw(window_);
     }
 

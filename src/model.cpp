@@ -151,9 +151,9 @@ std::pair<int, int> Model::GetTime() {
 }
 
 void Model::Update() {
-    UpdateRejections();
-    UpdateQueues();
     UpdateUnloads();
+    UpdateQueues();
+    UpdateRejections();
     clock_->restart();
 }
 
@@ -196,7 +196,6 @@ void Model::UpdateQueues() {
         arr_tm.second += ship->get_arrival_rejection();
         arr_tm.first += arr_tm.second / 24;
         arr_tm.second %= 24;
-        ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;
             for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
@@ -215,7 +214,6 @@ void Model::UpdateQueues() {
         arr_tm.second += ship->get_arrival_rejection();
         arr_tm.first += arr_tm.second / 24;
         arr_tm.second %= 24;
-        ShipType type = ship->get_type();
         if (cur_tm == arr_tm) {
             size_t smallest_queue = INT_MAX, best_option = 0;
             bool fluid = true;
@@ -249,20 +247,20 @@ void Model::UpdateUnloads() {
     for (auto crane : bulk_cranes_) {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
-            if (unload_time_ == -1) {
+            if (crane->GetUnloadTime() == -1) {
                 ship = crane->GetFirstShip();
-                unload_time_ = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
             }
-            if (!unload_time_) {
+            if (!crane->GetUnloadTime()) {
                 // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
-                unload_time_ = -1;
+                crane->GetUnloadTime() = -1;
             } else {
-                --unload_time_;
+                --crane->GetUnloadTime();
             }
         }
     }
@@ -270,20 +268,20 @@ void Model::UpdateUnloads() {
     for (auto crane : fluid_cranes_) {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
-            if (unload_time_ == -1) {
+            if (crane->GetUnloadTime() == -1) {
                 ship = crane->GetFirstShip();
-                unload_time_ = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
             }
-            if (!unload_time_) {
+            if (!crane->GetUnloadTime()) {
                 // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
-                unload_time_ = -1;
+                crane->GetUnloadTime() = -1;
             } else {
-                --unload_time_;
+                --crane->GetUnloadTime();
             }
         }
     }
@@ -291,20 +289,20 @@ void Model::UpdateUnloads() {
     for (auto crane : container_cranes_) {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
-            if (unload_time_ == -1) {
+            if (crane->GetUnloadTime() == -1) {
                 ship = crane->GetFirstShip();
-                unload_time_ = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
             }
-            if (!unload_time_) {
+            if (!crane->GetUnloadTime()) {
                 // crane->GetFirstShip()->Hide();
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
-                unload_time_ = -1;
+                crane->GetUnloadTime() = -1;
             } else {
-                --unload_time_;
+                --crane->GetUnloadTime();
             }
         }
     }
