@@ -18,12 +18,12 @@ public:
 	int get_weight();
 	void set_arrival_rejection(int);
 	int get_arrival_rejection();
-	virtual void SetArrivalTime(std::pair<int, int> data);
 	std::pair<int, int> get_arrival_time();
 	void set_ship_name(std::string);
 	std::string get_ship_name();
 	ShipType get_type();
 	virtual void SetPos(double x, double y) final;
+	virtual void SetArrivalTime(std::pair<int, int> data);
 	virtual std::pair<double, double> GetPos() final;
 	virtual void SetStartPos(double x, double y) final;
 	virtual std::pair<double, double> GetStartPos() final;
