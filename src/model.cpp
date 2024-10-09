@@ -5,17 +5,6 @@ Model::Model() {
     clock_ = new sf::Clock;
 }
 
-void Model::CreateCranes(size_t bulk_cnt, size_t fluid_cnt, size_t container_cnt) {
-    bulk_cranes_.assign(bulk_cnt, new BulkCrane);
-    fluid_cranes_.assign(fluid_cnt, new FluidCrane);
-    container_cranes_.assign(container_cnt, new ContainerCrane);
-}
-
-void Model::CreateShips(size_t cargo_cnt, size_t tanker_cnt) {
-    cargo_ships_.assign(cargo_cnt, new CargoShip);
-    tankers_.assign(tanker_cnt, new Tanker);
-}
-
 void Model::RandomizeShipsData() {
     for (auto ship : cargo_ships_) {
         ship->set_arrival_rejection(rand() % (rejection_limits_.second - 
@@ -115,20 +104,16 @@ void Model::SetRejectionLimits(int lim_l, int lim_r) {
     rejection_limits_ = { lim_l, lim_r };
 }
 
-void Model::SetFineLimits(std::pair<int, int> lim) {
-    fine_limits_ = lim;
-}
-
-void Model::SetFineLimits(int lim_l, int lim_r) {
-    fine_limits_ = { lim_l, lim_r };
+void Model::SetFine(int fine) {
+    fine_ = fine;
 }
 
 void Model::SetSpeedLimits(std::pair<int, int> lim) {
-    fine_limits_ = lim;
+    speed_limits_ = lim;
 }
 
 void Model::SetSpeedLimits(int lim_l, int lim_r) {
-    fine_limits_ = { lim_l, lim_r };
+    speed_limits_ = { lim_l, lim_r };
 }
 
 void Model::SetFont(std::string font_dir) {

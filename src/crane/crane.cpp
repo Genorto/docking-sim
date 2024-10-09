@@ -7,7 +7,7 @@ Crane::Crane() {
     size_y_ = 0;
     model_.loadFromFile("assets/sprites/error.png");
     name_ = "John Doe";
-    speed_ = 5;
+    speed_ = 1;
     last_ship_pos_ = 0;
 }
 

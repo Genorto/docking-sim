@@ -2,17 +2,17 @@
 #include "iostream"
 
 Simulation::Simulation() {
-    window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation");
+    window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation", sf::Style::Close);
     event_ = new sf::Event;
     model_ = new Model;
     /* these arguments are set by user */
     model_->SetStepSize(1);
     model_->SetFont("assets/fonts/roboto.ttf");
-    model_->SetTimeLimits(30, 12);
+    model_->SetTimeLimits(31, 0);
     model_->SetWeightLimits(100, 500);
     model_->SetRejectionLimits(1, 6);
-    model_->SetFineLimits(20, 100);
-    model_->SetSpeedLimits(1, 3);
+    model_->SetFine(100);
+    model_->SetSpeedLimits(1, 5);
     model_->SetFPS(240);
     model_->SetStepLength(3);
 
@@ -40,11 +40,11 @@ Simulation::Simulation() {
     temp_crane->SetModel("assets/sprites/default_crane.png");
     temp_crane->SetSpace(10);
     model_->AddContainerCrane(temp_crane);
-    
+
     Ship* temp_ship;
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("Green Sausages");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -52,7 +52,7 @@ Simulation::Simulation() {
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("Lebron James");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -60,7 +60,7 @@ Simulation::Simulation() {
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("KKK");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -68,7 +68,7 @@ Simulation::Simulation() {
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("Evergreen");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -76,7 +76,7 @@ Simulation::Simulation() {
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("Yeei 52");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -84,7 +84,7 @@ Simulation::Simulation() {
 
     temp_ship = new Tanker;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("First tanker ever");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -92,7 +92,7 @@ Simulation::Simulation() {
 
     temp_ship = new Tanker;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("Big tanker");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
@@ -100,11 +100,78 @@ Simulation::Simulation() {
 
     temp_ship = new Tanker;
     temp_ship->set_weight(5000);
-    temp_ship->set_arrival_time({ 0, 1 });
+    temp_ship->SetArrivalTime({ 0, 1 });
     temp_ship->set_ship_name("Gorillaz");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
     model_->AddTanker(temp_ship);
+
+    model_->RandomizeShipsData();
+
+    chw_ = new CursorHoverWindow;
+    chw_->SetSize(200, 150);
+    chw_->SetFont("assets/fonts/roboto.ttf");
+}
+
+Simulation::Simulation(Settings* sett) {
+    window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation", sf::Style::Close);
+    event_ = new sf::Event;
+    model_ = new Model;
+    /* these arguments are set by user */
+    model_->SetStepSize(sett->GetStepSize());
+    model_->SetFont("assets/fonts/roboto.ttf");
+    model_->SetTimeLimits(31, 0);
+    // model_->SetWeightLimits(100, 500);
+    std::cout << sett->GetRejectionLimits().first << " " << sett->GetRejectionLimits().second << "\n";
+    model_->SetRejectionLimits(sett->GetRejectionLimits());
+    model_->SetFine(sett->GetFine());
+    model_->SetSpeedLimits(1, 5);
+    model_->SetFPS(240);
+    model_->SetStepLength(3);
+
+    int bulk_cnt = sett->GetBulkCranesNumber();
+    int fluid_cnt = sett->GetFluidCranesNumber();
+    int container_cnt = sett->GetContainerCranesNumber();
+    int crane_x = 0, crane_y = 0;
+    int crane_size_x = 100, crane_size_y = 100;
+    while (bulk_cnt--) {
+        Crane* temp_crane = new BulkCrane;
+        temp_crane->SetPos(crane_x, crane_y);
+        temp_crane->SetSize(crane_size_x, crane_size_y);
+        temp_crane->SetModel("assets/sprites/default_crane.png");
+        temp_crane->SetSpace(10);
+        model_->AddBulkCrane(temp_crane);
+        crane_x += crane_size_x + 10;
+    }
+    while (fluid_cnt--) {
+        Crane* temp_crane = new FluidCrane;
+        temp_crane->SetPos(crane_x, crane_y);
+        temp_crane->SetSize(crane_size_x, crane_size_y);
+        temp_crane->SetModel("assets/sprites/default_crane.png");
+        temp_crane->SetSpace(10);
+        model_->AddFluidCrane(temp_crane);
+        crane_x += crane_size_x + 10;
+    }
+    while (container_cnt--) {
+        Crane* temp_crane = new ContainerCrane;
+        temp_crane->SetPos(crane_x, crane_y);
+        temp_crane->SetSize(crane_size_x, crane_size_y);
+        temp_crane->SetModel("assets/sprites/default_crane.png");
+        temp_crane->SetSpace(10);
+        model_->AddContainerCrane(temp_crane);
+        crane_x += crane_size_x + 10;
+    }
+
+    std::vector<Ship*> ships = sett->GetShips();
+    for (auto ship : ships) {
+        ship->SetSize(80, 100 + ship->get_weight() / 10);
+        ship->SetModel("assets/sprites/default_ship.png");
+        if (ship->get_type() == ShipType::CargoShip) {
+            model_->AddCargoShip(ship);
+        } else {
+            model_->AddTanker(ship);
+        }
+    }
 
     model_->RandomizeShipsData();
 

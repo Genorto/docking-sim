@@ -10,8 +10,6 @@
 class Model final {
  public:
      Model();
-     void CreateCranes(size_t bulk_cnt, size_t fluid_cnt, size_t container_cnt);
-     void CreateShips(size_t cargo_cnt, size_t tanker_cnt);
      void RandomizeShipsData();
      void AddBulkCrane(Crane*&);
      void AddFluidCrane(Crane*&);
@@ -35,8 +33,7 @@ class Model final {
      void SetTimeLimits(int, int);
      void SetRejectionLimits(std::pair<int, int>);
      void SetRejectionLimits(int, int);
-     void SetFineLimits(std::pair<int, int>);
-     void SetFineLimits(int, int);
+     void SetFine(int);
      void SetSpeedLimits(std::pair<int, int>);
      void SetSpeedLimits(int, int);
      void SetFont(std::string font_dir);
@@ -60,7 +57,7 @@ class Model final {
      std::pair<int, int> weight_limits_;
      std::pair<int, int> time_limits_; // day, hour
      std::pair<int, int> rejection_limits_;
-     std::pair<int, int> fine_limits_;
+     int fine_;
      std::pair<int, int> speed_limits_;
      int step_size_; // in hours
      double step_length_;

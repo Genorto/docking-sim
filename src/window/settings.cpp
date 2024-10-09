@@ -1,10 +1,10 @@
 ﻿#include "../../includes/window/settings.h"
 #include <iostream>
 Settings::Settings() {
-    window_ = new sf::RenderWindow(sf::VideoMode(700, 800), "Settings");
+    window_ = new sf::RenderWindow(sf::VideoMode(700, 800), "Settings", sf::Style::Close);
     event_ = new sf::Event;
     /* implement objects */
-    font.loadFromFile("../../../../assets/fonts/roboto.ttf");
+    font.loadFromFile("assets/fonts/roboto.ttf");
     background_.setFillColor(sf::Color::White);
     background_.setSize({ 640, 45 });
     background_button_.setFillColor(sf::Color::White);
@@ -27,6 +27,34 @@ Settings::Settings() {
     status = mouse_status::nothing;
 }
 
+int Settings::GetStepSize() {
+    return modeling_step_;
+}
+
+std::pair<int, int> Settings::GetRejectionLimits() {
+    return shift_in_arrival_;
+}
+
+int Settings::GetFine() {
+    return penalty_waiting_;
+}
+
+int Settings::GetBulkCranesNumber() {
+    return number_bulk_crane_;
+}
+
+int Settings::GetFluidCranesNumber() {
+    return number_fluid_crane_;
+}
+
+int Settings::GetContainerCranesNumber() {
+    return number_container_crane_;
+}
+
+std::vector<Ship*> Settings::GetShips() {
+    return vector_ship_;
+}
+
 void Settings::CheckEvents() {
     while (window_->pollEvent(*event_)) {
         int x = event_->mouseButton.x, y = event_->mouseButton.y;
@@ -36,7 +64,7 @@ void Settings::CheckEvents() {
         }
         switch (event_->type) {
         case sf::Event::Closed:
-            FillingFields();
+            
             window_->close();
             break;
         case sf::Event::MouseButtonPressed:
@@ -59,13 +87,13 @@ void Settings::CheckEvents() {
                             if (x > 30 && x < 30 + 640 && y > 30 + 4 * 80 && y < 30 + 40 + 4 * 80) {
                                 if (status == mouse_status::graph5) {
                                     if (x > 340 && x < 340 + 50) {
-                                        if (vector_ship.size() < 9) {
-                                            vector_ship.push_back(new Tanker);
+                                        if (vector_ship_.size() < 9) {
+                                            vector_ship_.push_back(new Tanker);
                                         }
                                     }
                                     if (x > 420 && x < 420 + 50) {
-                                        if (vector_ship.size() < 9) {
-                                            vector_ship.push_back(new CargoShip);
+                                        if (vector_ship_.size() < 9) {
+                                            vector_ship_.push_back(new CargoShip);
                                         }
                                     }
                                 }
@@ -75,21 +103,21 @@ void Settings::CheckEvents() {
                             }
                             else {
                                 bool in = false;
-                                for (int i = 0; i < vector_ship.size(); ++i) {
+                                for (int i = 0; i < vector_ship_.size(); ++i) {
                                     if (x > 260 && x < 260 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        vector_ship[i]->set_weight(std::min(std::max(0, vector_ship[i]->get_weight() + (which_button ? 1: -1) * 100), 900));
+                                        vector_ship_[i]->set_weight(std::min(std::max(0, vector_ship_[i]->get_weight() + (which_button ? 1: -1) * 100), 900));
                                         in = true;
                                     }
                                     if (x > 460 && x < 460 + 40 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        std::pair<int, int> copy = vector_ship[i]->get_arrival_time();
+                                        std::pair<int, int> copy = vector_ship_[i]->get_arrival_time();
                                         copy.first = (31 + copy.first + (which_button ? 1 : -1)) % 31;
-                                        vector_ship[i]->SetArrivalTime(copy);
+                                        vector_ship_[i]->SetArrivalTime(copy);
                                         in = true;
                                     }
                                     if (x > 540 && x < 540 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        std::pair<int, int> copy = vector_ship[i]->get_arrival_time();
+                                        std::pair<int, int> copy = vector_ship_[i]->get_arrival_time();
                                         copy.second = (24 + copy.second + (which_button ? 1 : -1)) % 24;
-                                        vector_ship[i]->SetArrivalTime(copy);
+                                        vector_ship_[i]->SetArrivalTime(copy);
                                         in = true;
                                     }
                                 }
@@ -172,29 +200,29 @@ void Settings::Draw() {
         }
         else {
             y += 40;
-            for (int j = 0; j < vector_ship.size(); ++j) {
+            for (int j = 0; j < vector_ship_.size(); ++j) {
                 background_.setPosition(x, y);
                 window_->draw(background_);
                 sf::String type = L"Тип корабля: ";
-                type += (vector_ship[j]->get_type() == ShipType::CargoShip) ? "CargoShip  " : "Tanker        ";
+                type += (vector_ship_[j]->get_type() == ShipType::CargoShip) ? "CargoShip  " : "Tanker        ";
                 type += L"Вес: ";
-                type += std::to_wstring(vector_ship[j]->get_weight());
-                if (vector_ship[j]->get_weight() / 100 > 0) {
+                type += std::to_wstring(vector_ship_[j]->get_weight());
+                if (vector_ship_[j]->get_weight() / 100 > 0) {
                     type += L" ";
                 }
                 else {
                     type += L"     ";
                 }
                 type += L" Время: день ";
-                if (vector_ship[j]->get_arrival_time().first / 10 < 1) {
+                if (vector_ship_[j]->get_arrival_time().first / 10 < 1) {
                     type += L"  ";
                 }
-                type += std::to_wstring(vector_ship[j]->get_arrival_time().first);
+                type += std::to_wstring(vector_ship_[j]->get_arrival_time().first);
                 type += L" часы ";
-                if (vector_ship[j]->get_arrival_time().second / 10 < 1) {
+                if (vector_ship_[j]->get_arrival_time().second / 10 < 1) {
                     type+= L"0";
                 }
-                type += std::to_wstring(vector_ship[j]->get_arrival_time().second);
+                type += std::to_wstring(vector_ship_[j]->get_arrival_time().second);
                 type += L":00";
                 text_answer_.setString(type);
                 text_answer_.setPosition(x, y);
@@ -274,7 +302,7 @@ std::pair<std::pair<int, int>, int> TwoSeparator(sf::String str) {
 
 void Settings::FillingFields() {
     penalty_waiting_ = TranslatorFromStringToNumber(answer_text[0]); // штраф, который мы платим за час ожидания
-    std::pair<int, int> shift_in_arrival_ = OneSeparator(answer_text[1]); //насколько поезд прибыл раньше/позже в днях
+    shift_in_arrival_ = OneSeparator(answer_text[1]); //насколько поезд прибыл раньше/позже в днях
     modeling_step_ = TranslatorFromStringToNumber(answer_text[2]); // подается в часах
     std::pair<std::pair<int, int>, int> crane_ = TwoSeparator(answer_text[3]);
     number_bulk_crane_ = crane_.first.first; //кол-во кранов
