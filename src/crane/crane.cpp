@@ -95,6 +95,10 @@ void Crane::SetName(std::string name) {
     name_ = name;
 }
 
+std::string Crane::GetName() {
+    return name_;
+}
+
 void Crane::SetSpace(double space) {
     space_ = space;
 }

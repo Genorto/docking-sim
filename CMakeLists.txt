@@ -14,33 +14,14 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 file(GLOB CPP_H
-     "src/main.cpp"
-     "includes/window/window.h"
-     "src/window/window.cpp"
-     "includes/window/settings.h"
-     "src/window/settings.cpp"
-     "includes/window/simulation.h"
-     "src/window/simulation.cpp"
-     "includes/window/conclusion.h"
-     "src/window/conclusion.cpp"
-     "includes/ship/ship.h"
-     "src/ship/ship.cpp"
-     "includes/ship/cargo_ship.h"
-     "src/ship/cargo_ship.cpp"
-     "includes/ship/tanker.h"
-     "src/ship/tanker.cpp"
-     "includes/crane/crane.h"
-     "src/crane/crane.cpp"
-     "includes/crane/bulk_crane.h"
-     "src/crane/bulk_crane.cpp"
-     "includes/crane/fluid_crane.h"
-     "src/crane/fluid_crane.cpp"
-     "includes/crane/container_crane.h"
-     "src/crane/container_crane.cpp"
-     "includes/cursor_hover_window.h"
-     "src/cursor_hover_window.cpp"
-     "includes/model.h"
-     "src/model.cpp"
+     src/*.cpp
+     src/crane/*.cpp
+     src/ship/*.cpp
+     src/window/*.cpp
+     includes/*.h
+     src/crane/*.h
+     src/ship/*.h
+     src/window/*.h
 )
 
 add_executable(main ${CPP_H})

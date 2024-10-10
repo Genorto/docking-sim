@@ -23,6 +23,7 @@ class Crane {
      virtual void SetSize(double size_x, double size_y) final;
      virtual void SetModel(std::string path) final;
      virtual void SetName(std::string name) final;
+     virtual std::string GetName() final;
      virtual void SetSpace(double space) final;
      virtual double& GetUnloadTime() final;
      virtual void Draw(sf::RenderWindow*& window) final;

@@ -13,6 +13,7 @@ Simulation::Simulation() {
     model_->SetRejectionLimits(1, 6);
     model_->SetFine(100);
     model_->SetSpeedLimits(1, 5);
+    model_->SetUnloadRejectionLimits(1, 5);
     model_->SetFPS(240);
     model_->SetStepLength(3);
 
@@ -127,6 +128,7 @@ Simulation::Simulation(Settings* sett) {
     model_->SetRejectionLimits(sett->GetRejectionLimits());
     model_->SetFine(sett->GetFine());
     model_->SetSpeedLimits(1, 5);
+    model_->SetUnloadRejectionLimits(1, 5); // may be modified
     model_->SetFPS(240);
     model_->SetStepLength(3);
 

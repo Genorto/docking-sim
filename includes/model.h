@@ -33,6 +33,8 @@ class Model final {
      void SetTimeLimits(int, int);
      void SetRejectionLimits(std::pair<int, int>);
      void SetRejectionLimits(int, int);
+     void SetUnloadRejectionLimits(std::pair<int, int>);
+     void SetUnloadRejectionLimits(int, int);
      void SetFine(int);
      void SetSpeedLimits(std::pair<int, int>);
      void SetSpeedLimits(int, int);
@@ -57,6 +59,7 @@ class Model final {
      std::pair<int, int> weight_limits_;
      std::pair<int, int> time_limits_; // day, hour
      std::pair<int, int> rejection_limits_;
+     std::pair<int, int> unload_rejection_limits_;
      int fine_;
      std::pair<int, int> speed_limits_;
      int step_size_; // in hours

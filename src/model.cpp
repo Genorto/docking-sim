@@ -7,12 +7,16 @@ Model::Model() {
 
 void Model::RandomizeShipsData() {
     for (auto ship : cargo_ships_) {
-        ship->set_arrival_rejection(rand() % (rejection_limits_.second - 
-            rejection_limits_.first + 1) + rejection_limits_.first);
+        if (rand() % 2) {
+            ship->set_arrival_rejection(rand() % (rejection_limits_.second -
+                rejection_limits_.first + 1) + rejection_limits_.first);
+        }
     }
     for (auto ship : tankers_) {
-        ship->set_arrival_rejection(rand() % (rejection_limits_.second -
-            rejection_limits_.first + 1) + rejection_limits_.first);
+        if (rand() % 2) {
+            ship->set_arrival_rejection(rand() % (rejection_limits_.second -
+                rejection_limits_.first + 1) + rejection_limits_.first);
+        }
     }
 }
 
@@ -102,6 +106,14 @@ void Model::SetRejectionLimits(std::pair<int, int> lim) {
 
 void Model::SetRejectionLimits(int lim_l, int lim_r) {
     rejection_limits_ = { lim_l, lim_r };
+}
+
+void Model::SetUnloadRejectionLimits(std::pair<int, int> lim) {
+    unload_rejection_limits_ = lim;
+}
+
+void Model::SetUnloadRejectionLimits(int lim_l, int lim_r) {
+    unload_rejection_limits_ = { lim_l, lim_r };
 }
 
 void Model::SetFine(int fine) {
@@ -226,68 +238,52 @@ void Model::UpdateQueues() {
 }
 
 void Model::UpdateUnloads() {
-    std::pair<int, int> cur_tm = { day_, hour_ };
     std::string* message;
-    /* bulk cranes */
-    for (auto crane : bulk_cranes_) {
+    std::vector<Crane*> cranes(0);
+    for (auto crane : bulk_cranes_) cranes.push_back(crane);
+    for (auto crane : fluid_cranes_) cranes.push_back(crane);
+    for (auto crane : container_cranes_) cranes.push_back(crane);
+
+    for (auto crane : cranes) {
         if (!crane->isEmpty()) {
+            int hours_of_work = step_size_;
             Ship* ship = crane->GetFirstShip();
-            if (crane->GetUnloadTime() == -1) {
-                ship = crane->GetFirstShip();
-                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+            while (hours_of_work > 0) {
+                if (crane->isEmpty()) break;
+                if (crane->GetUnloadTime() == -INT_MAX + 1) {
+                    ship = crane->GetFirstShip();
+                    crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+                    if (rand() % 2) {
+                        int postpone_number = rand() % (unload_rejection_limits_.second -
+                            unload_rejection_limits_.first + 1) + unload_rejection_limits_.first;
+                        crane->GetUnloadTime() += postpone_number;
+                        message = new std::string;
+                        *message = crane->GetName() + " postpones the unloading by " + std::to_string(postpone_number);
+                        log.push_back(message);
+                        std::cout << *message << "\n";
+                    }
+                }
+                if (crane->GetUnloadTime() <= 0) {
+                    crane->UnloadFirst();
+                    message = new std::string;
+                    *message = ship->get_ship_name() + " is unloaded";
+                    log.push_back(message);
+                    std::cout << *message << "\n";
+                    crane->GetUnloadTime() = -INT_MAX + 1;
+                    if (hours_of_work > 0) UpdateShipsPos();
+                } else {
+                    int curr_min = std::min(crane->GetUnloadTime(), (double)hours_of_work);
+                    crane->GetUnloadTime() -= curr_min;
+                    hours_of_work -= curr_min;
+                }
             }
-            if (!crane->GetUnloadTime()) {
-                // crane->GetFirstShip()->Hide();
+            if (!crane->isEmpty() && crane->GetUnloadTime() <= 0) {
                 crane->UnloadFirst();
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
-                crane->GetUnloadTime() = -1;
-            } else {
-                --crane->GetUnloadTime();
-            }
-        }
-    }
-    /* fluid cranes */
-    for (auto crane : fluid_cranes_) {
-        if (!crane->isEmpty()) {
-            Ship* ship = crane->GetFirstShip();
-            if (crane->GetUnloadTime() == -1) {
-                ship = crane->GetFirstShip();
-                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
-            }
-            if (!crane->GetUnloadTime()) {
-                // crane->GetFirstShip()->Hide();
-                crane->UnloadFirst();
-                message = new std::string;
-                *message = ship->get_ship_name() + " is unloaded";
-                log.push_back(message);
-                std::cout << *message << "\n";
-                crane->GetUnloadTime() = -1;
-            } else {
-                --crane->GetUnloadTime();
-            }
-        }
-    }
-    /* container cranes */
-    for (auto crane : container_cranes_) {
-        if (!crane->isEmpty()) {
-            Ship* ship = crane->GetFirstShip();
-            if (crane->GetUnloadTime() == -1) {
-                ship = crane->GetFirstShip();
-                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
-            }
-            if (!crane->GetUnloadTime()) {
-                // crane->GetFirstShip()->Hide();
-                crane->UnloadFirst();
-                message = new std::string;
-                *message = ship->get_ship_name() + " is unloaded";
-                log.push_back(message);
-                std::cout << *message << "\n";
-                crane->GetUnloadTime() = -1;
-            } else {
-                --crane->GetUnloadTime();
+                crane->GetUnloadTime() = -INT_MAX + 1;
             }
         }
     }
