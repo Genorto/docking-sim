@@ -165,7 +165,7 @@ void Model::UpdateRejections() {
             day += hour / 24;
             hour %= 24;
             message = new std::string;
-            *message = ship->get_ship_name() + "'s arrival is postponed to " + std::to_string(day) + " : " + std::to_string(hour);
+            *message = ship->get_ship_name() + "'s arrival is postponed to day " + std::to_string(day) + " time " + std::to_string(hour) + " : 00";
             log.push_back(message);
             std::cout << *message << "\n";
         }
@@ -178,7 +178,7 @@ void Model::UpdateRejections() {
             day += hour / 24;
             hour %= 24;
             message = new std::string;
-            *message = ship->get_ship_name() + "'s arrival is postponed to " + std::to_string(day) + " : " + std::to_string(hour);
+            *message = ship->get_ship_name() + "'s arrival is postponed to day " + std::to_string(day) + " time " + std::to_string(hour) + " : 00";
             log.push_back(message);
             std::cout << *message << "\n";
         }
@@ -304,7 +304,7 @@ void Model::DisplayTime(sf::RenderWindow*& window) {
     time.setFont(font_);
     time.setCharacterSize(30);
     time.setFillColor(sf::Color::White);
-    time.setString(std::to_string(day_) + " : " + std::to_string(hour_));
+    time.setString("day " + std::to_string(day_) + " time " + std::to_string(hour_) + " : 00");
     time.setPosition(window->getSize().x - time.getLocalBounds().width - 15, 10);
     window->draw(time);
 }

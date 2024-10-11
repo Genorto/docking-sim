@@ -1,5 +1,6 @@
 ﻿#include "../../includes/window/settings.h"
 #include <iostream>
+
 Settings::Settings() {
     window_ = new sf::RenderWindow(sf::VideoMode(700, 800), "Settings", sf::Style::Close);
     event_ = new sf::Event;
@@ -25,6 +26,7 @@ Settings::Settings() {
         L"Укажите кол-во кранов каждого вида:",  L"Введите расписание кораблей:      (+)          (+)" };
     answer_text = { L"", L"", L"", L"" };
     status = mouse_status::nothing;
+    count_ship_ = 0;
 }
 
 int Settings::GetStepSize() {
@@ -64,7 +66,7 @@ void Settings::CheckEvents() {
         }
         switch (event_->type) {
         case sf::Event::Closed:
-            
+            FillingFields();
             window_->close();
             break;
         case sf::Event::MouseButtonPressed:
@@ -88,11 +90,15 @@ void Settings::CheckEvents() {
                                 if (status == mouse_status::graph5) {
                                     if (x > 340 && x < 340 + 50) {
                                         vector_ship_.push_back(new Tanker);
+                                        vector_ship_[count_ship_]->set_ship_name("#" + std::to_string(count_ship_ + 1));
+                                        count_ship_++;
                                         up_border_ = std::max(0, (int)vector_ship_.size() - 9);
                                         bottom_border_ = (int)vector_ship_.size() - 1;
                                     }
                                     if (x > 420 && x < 420 + 50) {
                                         vector_ship_.push_back(new CargoShip);
+                                        vector_ship_[count_ship_]->set_ship_name("#" + std::to_string(count_ship_ + 1));
+                                        count_ship_++;
                                         up_border_ = std::max(0, (int)vector_ship_.size() - 9);
                                         bottom_border_ = (int)vector_ship_.size() - 1;
                                     }
@@ -214,8 +220,8 @@ void Settings::Draw() {
             for (int j = up_border_; j <= bottom_border_; ++j) {
                 background_.setPosition(x, y);
                 window_->draw(background_);
-                sf::String type = L"Тип корабля: ";
-                type += (vector_ship_[j]->get_type() == ShipType::CargoShip) ? "CargoShip  " : "Tanker        ";
+                sf::String type = L"Тип корабля:";
+                type += (vector_ship_[j]->get_type() == ShipType::CargoShip) ? ("CargoShip " + vector_ship_[j]->get_ship_name() + "  ") : ("Tanker       " + vector_ship_[j]->get_ship_name() + "  ");
                 type += L"Вес: ";
                 type += std::to_wstring(vector_ship_[j]->get_weight());
                 if (vector_ship_[j]->get_weight() / 100 > 0) {

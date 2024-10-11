@@ -51,6 +51,14 @@ int Ship::get_weight() {
 	return weight_;
 }
 
+void Ship::set_ship_name(std::string name) {
+	ship_name_ = name;
+}
+
+std::string Ship::get_ship_name() {
+	return ship_name_;
+}
+
 void Ship::set_arrival_rejection(int rej) {
 	arrival_rejection_ = rej;
 }
@@ -65,14 +73,6 @@ void Ship::SetArrivalTime(std::pair<int, int> data) {
 
 std::pair<int, int> Ship::get_arrival_time() {
 	return arrival_time_;
-}
-
-void Ship::set_ship_name(std::string name) {
-	ship_name_ = name;
-}
-
-std::string Ship::get_ship_name() {
-	return ship_name_;
 }
 
 ShipType Ship::get_type() {

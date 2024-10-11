@@ -23,6 +23,7 @@ public:
     int modeling_step_; // подается в часах
     int number_bulk_crane_, number_fluid_crane_, number_container_crane_; //кол-во кранов
     std::vector<Ship*> vector_ship_; //расписание в виде вектора кораблей
+    int count_ship_;
 
     sf::RectangleShape background_;
     sf::Text text_, text_answer_;
