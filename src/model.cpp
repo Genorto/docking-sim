@@ -232,7 +232,7 @@ void Model::UpdateUnloads() {
                         log.push_back(message);
                         std::cout << *message << "\n";
                     }
-                    if (hours_of_work > crane->GetUnloadTime()) UpdateShipsPos();
+                    if (hours_of_work >= crane->GetUnloadTime()) UpdateShipsPos();
                 }
                 if (crane->GetUnloadTime() <= 0) {
                     crane->UnloadFirst();

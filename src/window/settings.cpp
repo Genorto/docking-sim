@@ -318,10 +318,10 @@ std::pair<std::pair<int, int>, int> TwoSeparator(sf::String str) {
 }
 
 void Settings::FillingFields() {
-    penalty_waiting_ = TranslatorFromStringToNumber(answer_text[0]); // штраф, который мы платим за час ожидания
-    shift_in_arrival_ = OneSeparator(answer_text[1]); //насколько поезд прибыл раньше/позже в днях
-    modeling_step_ = TranslatorFromStringToNumber(answer_text[2]); // подается в часах
-    std::pair<std::pair<int, int>, int> crane_ = TwoSeparator(answer_text[3]);
+    penalty_waiting_ = answer_text[0] == L"" ? 0 : TranslatorFromStringToNumber(answer_text[0]); // штраф, который мы платим за час ожидания
+    shift_in_arrival_ = answer_text[1] == L"" ? std::make_pair(0, 0) : OneSeparator(answer_text[1]); //насколько поезд прибыл раньше/позже в днях
+    modeling_step_ = answer_text[2] == L"" ? 0 : TranslatorFromStringToNumber(answer_text[2]); // подается в часах
+    std::pair<std::pair<int, int>, int> crane_ = answer_text[3] == L"" ? std::make_pair(std::make_pair(0, 0), 0) : TwoSeparator(answer_text[3]);
     number_bulk_crane_ = crane_.first.first; //кол-во кранов
     number_fluid_crane_ = crane_.first.second; //кол-во кранов
     number_container_crane_ = crane_.second; //кол-во кранов
