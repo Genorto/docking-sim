@@ -157,21 +157,11 @@ void Model::Update() {
 void Model::UpdateRejections() {
     std::string* message;
     std::pair<int, int> cur_tm = { day_, hour_ };
-    /* cargo ships */
-    for (auto ship : cargo_ships_) {
-        if (ship->get_arrival_time() == cur_tm) {
-            int day = ship->get_arrival_time().first;
-            int hour = ship->get_arrival_time().second + ship->get_arrival_rejection();
-            day += hour / 24;
-            hour %= 24;
-            message = new std::string;
-            *message = ship->get_ship_name() + "'s arrival is postponed to day " + std::to_string(day) + " time " + std::to_string(hour) + " : 00";
-            log.push_back(message);
-            std::cout << *message << "\n";
-        }
-    }
-    /* tankers */
-    for (auto ship : tankers_) {
+    std::vector<Ship*> ships;
+    for (auto ship : cargo_ships_) ships.push_back(ship);
+    for (auto ship : tankers_) ships.push_back(ship);
+
+    for (auto ship : ships) {
         if (ship->get_arrival_time() == cur_tm) {
             int day = ship->get_arrival_time().first;
             int hour = ship->get_arrival_time().second + ship->get_arrival_rejection();
@@ -190,7 +180,7 @@ void Model::UpdateQueues() {
     std::vector<Ship*> ships;
     for (auto ship : cargo_ships_) ships.push_back(ship);
     for (auto ship : tankers_) ships.push_back(ship);
-    /* cargo ships */
+
     for (auto ship : ships) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
         arr_tm.second += ship->get_arrival_rejection();
