@@ -6,13 +6,7 @@ Model::Model() {
 }
 
 void Model::RandomizeShipsData() {
-    for (auto ship : cargo_ships_) {
-        if (rand() % 2) {
-            ship->set_arrival_rejection(rand() % (rejection_limits_.second -
-                rejection_limits_.first + 1) + rejection_limits_.first);
-        }
-    }
-    for (auto ship : tankers_) {
+    for (auto ship : ships_) {
         if (rand() % 2) {
             ship->set_arrival_rejection(rand() % (rejection_limits_.second -
                 rejection_limits_.first + 1) + rejection_limits_.first);
@@ -32,12 +26,9 @@ void Model::AddContainerCrane(Crane*& crane) {
     container_cranes_.push_back(crane);
 }
 
-void Model::AddCargoShip(Ship*& ship) {
-    cargo_ships_.push_back(ship);
-}
-
-void Model::AddTanker(Ship*& ship) {
-    tankers_.push_back(ship);
+void Model::AddShip(Ship*& ship) {
+    ships_.push_back(ship);
+    ++ships_cnt;
 }
 
 std::vector<Crane*> Model::GetBulkCranes() {
@@ -52,12 +43,8 @@ std::vector<Crane*> Model::GetContainerCranes() {
     return container_cranes_;
 }
 
-std::vector<Ship*> Model::GetCargoShips() {
-    return cargo_ships_;
-}
-
-std::vector<Ship*> Model::GetTankers() {
-    return tankers_;
+std::vector<Ship*> Model::GetShips() {
+    return ships_;
 }
 
 double Model::GetClock() {
@@ -157,11 +144,7 @@ void Model::Update() {
 void Model::UpdateRejections() {
     std::string* message;
     std::pair<int, int> cur_tm = { day_, hour_ };
-    std::vector<Ship*> ships;
-    for (auto ship : cargo_ships_) ships.push_back(ship);
-    for (auto ship : tankers_) ships.push_back(ship);
-
-    for (auto ship : ships) {
+    for (auto ship : ships_) {
         if (ship->get_arrival_time() == cur_tm) {
             int day = ship->get_arrival_time().first;
             int hour = ship->get_arrival_time().second + ship->get_arrival_rejection();
@@ -177,11 +160,7 @@ void Model::UpdateRejections() {
 
 void Model::UpdateQueues() {
     std::pair<int, int> cur_tm = { day_, hour_ };
-    std::vector<Ship*> ships;
-    for (auto ship : cargo_ships_) ships.push_back(ship);
-    for (auto ship : tankers_) ships.push_back(ship);
-
-    for (auto ship : ships) {
+    for (auto ship : ships_) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
         arr_tm.second += ship->get_arrival_rejection();
         arr_tm.first += arr_tm.second / 24;
@@ -281,11 +260,7 @@ void Model::UpdateUnloads() {
 }
 
 void Model::UpdateShipsPos() {
-    for (auto ship : cargo_ships_) {
-        ship->SetPos(ship->GetEndPos().first, ship->GetEndPos().second);
-    }
-
-    for (auto ship : tankers_) {
+    for (auto ship : ships_) {
         ship->SetPos(ship->GetEndPos().first, ship->GetEndPos().second);
     }
 }

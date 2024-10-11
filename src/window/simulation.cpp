@@ -49,7 +49,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("Green Sausages");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddCargoShip(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
@@ -57,7 +57,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("Lebron James");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddCargoShip(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
@@ -65,7 +65,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("KKK");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddCargoShip(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
@@ -73,7 +73,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("Evergreen");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddCargoShip(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new CargoShip;
     temp_ship->set_weight(5000);
@@ -81,7 +81,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("Yeei 52");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddCargoShip(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new Tanker;
     temp_ship->set_weight(5000);
@@ -89,7 +89,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("First tanker ever");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddTanker(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new Tanker;
     temp_ship->set_weight(5000);
@@ -97,7 +97,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("Big tanker");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddTanker(temp_ship);
+    model_->AddShip(temp_ship);
 
     temp_ship = new Tanker;
     temp_ship->set_weight(5000);
@@ -105,7 +105,7 @@ Simulation::Simulation() {
     temp_ship->set_ship_name("Gorillaz");
     temp_ship->SetSize(80, 150);
     temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddTanker(temp_ship);
+    model_->AddShip(temp_ship);
 
     model_->RandomizeShipsData();
     model_->Update();
@@ -170,9 +170,9 @@ Simulation::Simulation(Settings* sett) {
         ship->SetSize(80, 100 + ship->get_weight() / 10);
         ship->SetModel("assets/sprites/default_ship.png");
         if (ship->get_type() == ShipType::CargoShip) {
-            model_->AddCargoShip(ship);
+            model_->AddShip(ship);
         } else {
-            model_->AddTanker(ship);
+            model_->AddShip(ship);
         }
     }
 
@@ -210,15 +210,7 @@ void Simulation::CheckEvents() {
     chw_->SetPos(-1000, -1000);
     sf::Vector2i cursor = sf::Mouse::getPosition(*window_);
 
-    for (auto ship : model_->GetCargoShips()) {
-        if (ship->isHovered(cursor)) {
-            chw_->SetInfo(ship->GetInfo());
-            chw_->SetPos(cursor.x, cursor.y);
-            return;
-        }
-    }
-
-    for (auto ship : model_->GetTankers()) {
+    for (auto ship : model_->GetShips()) {
         if (ship->isHovered(cursor)) {
             chw_->SetInfo(ship->GetInfo());
             chw_->SetPos(cursor.x, cursor.y);
@@ -254,12 +246,7 @@ void Simulation::CheckEvents() {
 void Simulation::Draw() {
     window_->clear(sf::Color::Cyan);
 
-    for (auto ship : model_->GetCargoShips()) {
-        ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
-        ship->Draw(window_);
-    }
-
-    for (auto ship : model_->GetTankers()) {
+    for (auto ship : model_->GetShips()) {
         ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
         ship->Draw(window_);
     }

@@ -14,13 +14,11 @@ class Model final {
      void AddBulkCrane(Crane*&);
      void AddFluidCrane(Crane*&);
      void AddContainerCrane(Crane*&);
-     void AddCargoShip(Ship*&);
-     void AddTanker(Ship*&);
+     void AddShip(Ship*&);
      std::vector<Crane*> GetBulkCranes();
      std::vector<Crane*> GetFluidCranes();
      std::vector<Crane*> GetContainerCranes();
-     std::vector<Ship*> GetCargoShips();
-     std::vector<Ship*> GetTankers();
+     std::vector<Ship*> GetShips();
      double GetClock();
      void SetFPS(int);
      int GetFPS();
@@ -54,8 +52,7 @@ class Model final {
      std::vector<Crane*> bulk_cranes_;
      std::vector<Crane*> fluid_cranes_;
      std::vector<Crane*> container_cranes_;
-     std::vector<Ship*> cargo_ships_;
-     std::vector<Ship*> tankers_;
+     std::vector<Ship*> ships_;
      std::pair<int, int> weight_limits_;
      std::pair<int, int> time_limits_; // day, hour
      std::pair<int, int> rejection_limits_;
@@ -70,4 +67,5 @@ class Model final {
      sf::Font font_;
      std::vector<std::string*> log;
      sf::Clock* clock_;
+     int ships_cnt;
 };
