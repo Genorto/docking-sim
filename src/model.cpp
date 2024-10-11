@@ -28,7 +28,7 @@ void Model::AddContainerCrane(Crane*& crane) {
 
 void Model::AddShip(Ship*& ship) {
     ships_.push_back(ship);
-    ++ships_cnt;
+    ++res_ships_cnt_;
 }
 
 std::vector<Crane*> Model::GetBulkCranes() {
@@ -71,12 +71,8 @@ void Model::SetStepSize(int size) {
     step_size_ = size;
 }
 
-void Model::SetWeightLimits(std::pair<int, int> lim) {
-    weight_limits_ = lim;
-}
-
-void Model::SetWeightLimits(int lim_l, int lim_r) {
-    weight_limits_ = { lim_l, lim_r };
+int Model::GetStepSize() {
+    return step_size_;
 }
 
 void Model::SetTimeLimits(std::pair<int, int> lim) {
@@ -119,9 +115,9 @@ void Model::SetFont(std::string font_dir) {
     font_.loadFromFile(font_dir);
 }
 
-void Model::NextStep() {
+void Model::NextHour() {
     int temp_day = day_, temp_hour = hour_;
-    temp_hour += step_size_;
+    ++temp_hour;
     temp_day += temp_hour / 24;
     temp_hour %= 24;
     if (temp_day == time_limits_.first && temp_hour > time_limits_.second ||
@@ -216,44 +212,31 @@ void Model::UpdateUnloads() {
 
     for (auto crane : cranes) {
         if (!crane->isEmpty()) {
-            int hours_of_work = step_size_;
             Ship* ship = crane->GetFirstShip();
-            while (hours_of_work > 0) {
-                if (crane->isEmpty()) break;
-                if (crane->GetUnloadTime() == -INT_MAX + 1) {
-                    ship = crane->GetFirstShip();
-                    crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
-                    if (rand() % 2) {
-                        int postpone_number = rand() % (unload_rejection_limits_.second -
-                            unload_rejection_limits_.first + 1) + unload_rejection_limits_.first;
-                        crane->GetUnloadTime() += postpone_number;
-                        message = new std::string;
-                        *message = crane->GetName() + " postpones the unloading by " + std::to_string(postpone_number);
-                        log.push_back(message);
-                        std::cout << *message << "\n";
-                    }
-                    if (hours_of_work >= crane->GetUnloadTime()) UpdateShipsPos();
-                }
-                if (crane->GetUnloadTime() <= 0) {
-                    crane->UnloadFirst();
+            if (crane->GetUnloadTime() == -INT_MAX + 1) {
+                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+                if (rand() % 2) {
+                    int postpone_number = rand() % ((unload_rejection_limits_.second -
+                        unload_rejection_limits_.first + 1) + unload_rejection_limits_.first);
+                    crane->GetUnloadTime() += postpone_number;
                     message = new std::string;
-                    *message = ship->get_ship_name() + " is unloaded";
+                    *message = crane->GetName() + " postpones the unloading by " + std::to_string(postpone_number);
                     log.push_back(message);
                     std::cout << *message << "\n";
-                    crane->GetUnloadTime() = -INT_MAX + 1;
-                } else {
-                    int curr_min = std::min(crane->GetUnloadTime(), (double)hours_of_work);
-                    crane->GetUnloadTime() -= curr_min;
-                    hours_of_work -= curr_min;
                 }
             }
-            if (!crane->isEmpty() && crane->GetUnloadTime() <= 0) {
+            if (!crane->GetUnloadTime()) {
                 crane->UnloadFirst();
+                std::pair<int, int> cur_tm = { day_, hour_ };
+                std::pair<int, int> arr_tm = ship->get_arrival_time();
+                res_total_fine_ = fine_ * (cur_tm.first * 24 + cur_tm.second - arr_tm.first * 24 - arr_tm.second);
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
                 crane->GetUnloadTime() = -INT_MAX + 1;
+            } else {
+                --crane->GetUnloadTime();
             }
         }
     }

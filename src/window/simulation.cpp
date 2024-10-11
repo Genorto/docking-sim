@@ -9,7 +9,6 @@ Simulation::Simulation() {
     model_->SetStepSize(1);
     model_->SetFont("assets/fonts/roboto.ttf");
     model_->SetTimeLimits(31, 0);
-    model_->SetWeightLimits(100, 500);
     model_->SetRejectionLimits(1, 6);
     model_->SetFine(100);
     model_->SetSpeedLimits(1, 5);
@@ -123,8 +122,6 @@ Simulation::Simulation(Settings* sett) {
     model_->SetStepSize(sett->GetStepSize());
     model_->SetFont("assets/fonts/roboto.ttf");
     model_->SetTimeLimits(31, 0);
-    // model_->SetWeightLimits(100, 500);
-    std::cout << sett->GetRejectionLimits().first << " " << sett->GetRejectionLimits().second << "\n";
     model_->SetRejectionLimits(sett->GetRejectionLimits());
     model_->SetFine(sett->GetFine());
     model_->SetSpeedLimits(1, 5);
@@ -193,16 +190,23 @@ void Simulation::CheckEvents() {
 
         case sf::Event::KeyPressed:
             if (event_->key.scancode == sf::Keyboard::Scan::Right) {
-                model_->UpdateShipsPos();
-                model_->NextStep();
-                model_->Update();
+                int cycles = model_->GetStepSize();
+                while (cycles--) {
+                    model_->UpdateShipsPos();
+                    model_->NextHour();
+                    model_->Update();
+                }
+                // Draw();
             }
         }
     }
     if (model_->GetClock() >= model_->GetStepLength()) {
-        Draw(); /* KOCTbl/|b axaxaxaxxax */
-        model_->NextStep();
-        model_->Update();
+        int cycles = model_->GetStepSize();
+        while (cycles--) {
+            model_->UpdateShipsPos();
+            model_->NextHour();
+            model_->Update();
+        }
     }
     /* check all objects if they are hovered */
     std::vector<std::string*> empty(0);

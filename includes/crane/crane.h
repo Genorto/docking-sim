@@ -37,5 +37,5 @@ class Crane {
      int speed_; // in minutes per 5 kg
      double last_ship_pos_;
      double space_;
-     double unload_time_ = -1;
+     double unload_time_ = -INT_MAX + 1;
 };

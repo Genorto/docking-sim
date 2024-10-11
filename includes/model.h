@@ -25,8 +25,7 @@ class Model final {
      void SetStepLength(double);
      double GetStepLength();
      void SetStepSize(int);
-     void SetWeightLimits(std::pair<int, int>);
-     void SetWeightLimits(int, int);
+     int GetStepSize();
      void SetTimeLimits(std::pair<int, int>);
      void SetTimeLimits(int, int);
      void SetRejectionLimits(std::pair<int, int>);
@@ -37,13 +36,15 @@ class Model final {
      void SetSpeedLimits(std::pair<int, int>);
      void SetSpeedLimits(int, int);
      void SetFont(std::string font_dir);
-     void NextStep();
+     void NextHour();
      std::pair<int, int> GetTime();
      void Update();
      void DisplayTime(sf::RenderWindow*& window);
      void DisplayShips(sf::RenderWindow*& window);
      void DisplayCranes(sf::RenderWindow*& window);
      void UpdateShipsPos(); // only when switches by key
+     int GetShipsCount();
+     int GetAverageQueueLength();
 
  private:
      void UpdateRejections();
@@ -67,5 +68,12 @@ class Model final {
      sf::Font font_;
      std::vector<std::string*> log;
      sf::Clock* clock_;
-     int ships_cnt;
+     /* results are sent to conclusion */
+     int res_ships_cnt_;
+     int res_total_queues_length_;
+     int res_queues_cnt_;
+     int res_total_waiting_time_;
+     int res_total_unload_rejection_time_;
+     int res_max_unload_rejection_time_;
+     int res_total_fine_;
 };

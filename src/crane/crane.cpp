@@ -9,6 +9,7 @@ Crane::Crane() {
     name_ = "John Doe";
     speed_ = 1;
     last_ship_pos_ = 25;
+    unload_time_ = -INT_MAX + 1;
 }
 
 Crane::Crane(const Crane& other) {
@@ -20,6 +21,7 @@ Crane::Crane(const Crane& other) {
     name_ = other.name_;
     speed_ = other.speed_;
     last_ship_pos_ = other.last_ship_pos_;
+    unload_time_ = other.unload_time_;
 }
 
 Crane& Crane::operator=(const Crane& other) {
@@ -31,6 +33,7 @@ Crane& Crane::operator=(const Crane& other) {
     name_ = other.name_;
     speed_ = other.speed_;
     last_ship_pos_ = other.last_ship_pos_;
+    other.unload_time_;
     return *this;
 }
 
