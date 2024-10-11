@@ -262,6 +262,7 @@ void Model::UpdateUnloads() {
                         log.push_back(message);
                         std::cout << *message << "\n";
                     }
+                    if (hours_of_work > crane->GetUnloadTime()) UpdateShipsPos();
                 }
                 if (crane->GetUnloadTime() <= 0) {
                     crane->UnloadFirst();
@@ -270,7 +271,6 @@ void Model::UpdateUnloads() {
                     log.push_back(message);
                     std::cout << *message << "\n";
                     crane->GetUnloadTime() = -INT_MAX + 1;
-                    if (hours_of_work > 0 && crane->GetQueueSize() > 0) UpdateShipsPos();
                 } else {
                     int curr_min = std::min(crane->GetUnloadTime(), (double)hours_of_work);
                     crane->GetUnloadTime() -= curr_min;
