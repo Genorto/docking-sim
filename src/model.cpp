@@ -187,52 +187,53 @@ void Model::UpdateRejections() {
 
 void Model::UpdateQueues() {
     std::pair<int, int> cur_tm = { day_, hour_ };
+    std::vector<Ship*> ships;
+    for (auto ship : cargo_ships_) ships.push_back(ship);
+    for (auto ship : tankers_) ships.push_back(ship);
     /* cargo ships */
-    for (auto ship : cargo_ships_) {
+    for (auto ship : ships) {
         std::pair<int, int> arr_tm = ship->get_arrival_time();
         arr_tm.second += ship->get_arrival_rejection();
         arr_tm.first += arr_tm.second / 24;
         arr_tm.second %= 24;
+        size_t smallest_queue = INT_MAX, best_option = 0;
         if (cur_tm == arr_tm) {
-            size_t smallest_queue = INT_MAX, best_option = 0;
-            for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
-                if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
-                    smallest_queue = bulk_cranes_[it]->GetQueueSize();
-                    best_option = it;
+            switch (ship->get_type()) {
+            case ShipType::CargoShip:
+                for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
+                    if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
+                        smallest_queue = bulk_cranes_[it]->GetQueueSize();
+                        best_option = it;
+                    }
                 }
-            }
-            bulk_cranes_[best_option]->AddToQueue(ship);
-            ship->Show();
-        }
-    }
-    /* tankers */
-    for (auto ship : tankers_) {
-        std::pair<int, int> arr_tm = ship->get_arrival_time();
-        arr_tm.second += ship->get_arrival_rejection();
-        arr_tm.first += arr_tm.second / 24;
-        arr_tm.second %= 24;
-        if (cur_tm == arr_tm) {
-            size_t smallest_queue = INT_MAX, best_option = 0;
-            bool fluid = true;
-            for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
-                if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
-                    smallest_queue = fluid_cranes_[it]->GetQueueSize();
-                    best_option = it;
+                bulk_cranes_[best_option]->AddToQueue(ship);
+                ship->Show();
+                break;
+
+
+            case ShipType::Tanker:
+                bool fluid = true;
+                for (size_t it = 0; it < fluid_cranes_.size(); ++it) {
+                    if (fluid_cranes_[it]->GetQueueSize() < smallest_queue) {
+                        smallest_queue = fluid_cranes_[it]->GetQueueSize();
+                        best_option = it;
+                    }
                 }
-            }
-            for (size_t it = 0; it < container_cranes_.size(); ++it) {
-                if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
-                    smallest_queue = container_cranes_[it]->GetQueueSize();
-                    best_option = it;
-                    fluid = false;
+                for (size_t it = 0; it < container_cranes_.size(); ++it) {
+                    if (container_cranes_[it]->GetQueueSize() < smallest_queue) {
+                        smallest_queue = container_cranes_[it]->GetQueueSize();
+                        best_option = it;
+                        fluid = false;
+                    }
                 }
+                if (fluid) {
+                    fluid_cranes_[best_option]->AddToQueue(ship);
+                } else {
+                    container_cranes_[best_option]->AddToQueue(ship);
+                }
+                ship->Show();
+                break;
             }
-            if (fluid) {
-                fluid_cranes_[best_option]->AddToQueue(ship);
-            } else {
-                container_cranes_[best_option]->AddToQueue(ship);
-            }
-            ship->Show();
         }
     }
 }
