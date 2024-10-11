@@ -25,7 +25,7 @@ class Crane {
      virtual void SetName(std::string name) final;
      virtual std::string GetName() final;
      virtual void SetSpace(double space) final;
-     virtual double& GetUnloadTime() final;
+     virtual int& GetUnloadTime() final;
      virtual void Draw(sf::RenderWindow*& window) final;
 
  protected:
@@ -37,5 +37,5 @@ class Crane {
      int speed_; // in minutes per 5 kg
      double last_ship_pos_;
      double space_;
-     double unload_time_ = -INT_MAX + 1;
+     int unload_time_ = -INT_MAX + 1;
 };

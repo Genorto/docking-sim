@@ -183,8 +183,23 @@ Simulation::Simulation(Settings* sett) {
 
 void Simulation::CheckEvents() {
     while (window_->pollEvent(*event_)) {
+        int curr_hours, end_hours;
         switch (event_->type) {
         case sf::Event::Closed:
+            curr_hours = model_->GetTime().first * 24 + model_->GetTime().second;
+            end_hours = model_->GetTimeLimits().first * 24 + model_->GetTimeLimits().second;
+            while (end_hours > curr_hours) {
+                model_->UpdateShipsPos();
+                model_->NextHour();
+                model_->Update();
+                ++curr_hours;
+            }
+            std::cout << model_->GetShipsCount() << "\n";
+            std::cout << model_->GetAverageQueueLength() << "\n";
+            std::cout << model_->GetAverageWaitingTime() << "\n";
+            std::cout << model_->GetMaxUnloadRejectionTime() << "\n";
+            std::cout << model_->GetAverageUnloadRejectionTime() << "\n";
+            std::cout << model_->GetTotalFine() << "\n";
             window_->close();
             break;
 
@@ -196,7 +211,6 @@ void Simulation::CheckEvents() {
                     model_->NextHour();
                     model_->Update();
                 }
-                // Draw();
             }
         }
     }
@@ -268,8 +282,6 @@ void Simulation::Draw() {
     }
 
     model_->DisplayTime(window_);
-    model_->DisplayShips(window_);
-    model_->DisplayCranes(window_);
     chw_->Draw(window_);
     window_->display();
 }

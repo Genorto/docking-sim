@@ -28,6 +28,7 @@ class Model final {
      int GetStepSize();
      void SetTimeLimits(std::pair<int, int>);
      void SetTimeLimits(int, int);
+     std::pair<int, int> GetTimeLimits();
      void SetRejectionLimits(std::pair<int, int>);
      void SetRejectionLimits(int, int);
      void SetUnloadRejectionLimits(std::pair<int, int>);
@@ -40,11 +41,13 @@ class Model final {
      std::pair<int, int> GetTime();
      void Update();
      void DisplayTime(sf::RenderWindow*& window);
-     void DisplayShips(sf::RenderWindow*& window);
-     void DisplayCranes(sf::RenderWindow*& window);
      void UpdateShipsPos(); // only when switches by key
      int GetShipsCount();
-     int GetAverageQueueLength();
+     double GetAverageQueueLength();
+     double GetAverageWaitingTime();
+     int GetMaxUnloadRejectionTime();
+     double GetAverageUnloadRejectionTime();
+     int GetTotalFine();
 
  private:
      void UpdateRejections();
@@ -69,11 +72,11 @@ class Model final {
      std::vector<std::string*> log;
      sf::Clock* clock_;
      /* results are sent to conclusion */
-     int res_ships_cnt_;
-     int res_total_queues_length_;
-     int res_queues_cnt_;
-     int res_total_waiting_time_;
-     int res_total_unload_rejection_time_;
-     int res_max_unload_rejection_time_;
-     int res_total_fine_;
+     int res_ships_cnt_ = 0;
+     int res_total_queues_length_ = 0;
+     int res_queues_cnt_ = 0;
+     int res_total_waiting_time_ = 0;
+     int res_total_unload_rejection_time_ = 0;
+     int res_max_unload_rejection_time_ = 0;
+     int res_total_fine_ = 0;
 };

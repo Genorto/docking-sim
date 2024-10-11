@@ -106,7 +106,7 @@ void Crane::SetSpace(double space) {
     space_ = space;
 }
 
-double& Crane::GetUnloadTime() {
+int& Crane::GetUnloadTime() {
     return unload_time_;
 }
 

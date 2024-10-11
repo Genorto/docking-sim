@@ -83,6 +83,10 @@ void Model::SetTimeLimits(int lim_l, int lim_r) {
     time_limits_ = { lim_l, lim_r };
 }
 
+std::pair<int, int> Model::GetTimeLimits() {
+    return time_limits_;
+}
+
 void Model::SetRejectionLimits(std::pair<int, int> lim) {
     rejection_limits_ = lim;
 }
@@ -201,6 +205,24 @@ void Model::UpdateQueues() {
             }
         }
     }
+    for (auto crane : bulk_cranes_) {
+        if (crane->GetQueueSize() > 0) {
+            res_total_queues_length_ += crane->GetQueueSize();
+            ++res_queues_cnt_;
+        }
+    }
+    for (auto crane : fluid_cranes_) {
+        if (crane->GetQueueSize() > 0) {
+            res_total_queues_length_ += crane->GetQueueSize();
+            ++res_queues_cnt_;
+        }
+    }
+    for (auto crane : container_cranes_) {
+        if (crane->GetQueueSize() > 0) {
+            res_total_queues_length_ += crane->GetQueueSize();
+            ++res_queues_cnt_;
+        }
+    }
 }
 
 void Model::UpdateUnloads() {
@@ -218,6 +240,12 @@ void Model::UpdateUnloads() {
                 if (rand() % 2) {
                     int postpone_number = rand() % ((unload_rejection_limits_.second -
                         unload_rejection_limits_.first + 1) + unload_rejection_limits_.first);
+
+                    /* for results */
+                    res_total_unload_rejection_time_ += postpone_number;
+                    res_max_unload_rejection_time_ = std::max(res_max_unload_rejection_time_, postpone_number);
+                    /* for results */
+
                     crane->GetUnloadTime() += postpone_number;
                     message = new std::string;
                     *message = crane->GetName() + " postpones the unloading by " + std::to_string(postpone_number);
@@ -227,9 +255,15 @@ void Model::UpdateUnloads() {
             }
             if (!crane->GetUnloadTime()) {
                 crane->UnloadFirst();
+
+                /* for results */
                 std::pair<int, int> cur_tm = { day_, hour_ };
                 std::pair<int, int> arr_tm = ship->get_arrival_time();
-                res_total_fine_ = fine_ * (cur_tm.first * 24 + cur_tm.second - arr_tm.first * 24 - arr_tm.second);
+                int waiting_time = (cur_tm.first * 24 + cur_tm.second - arr_tm.first * 24 - arr_tm.second);
+                res_total_fine_ = fine_ * waiting_time;
+                res_total_waiting_time_ += waiting_time;
+                /* for results */
+
                 message = new std::string;
                 *message = ship->get_ship_name() + " is unloaded";
                 log.push_back(message);
@@ -258,10 +292,26 @@ void Model::DisplayTime(sf::RenderWindow*& window) {
     window->draw(time);
 }
 
-void Model::DisplayShips(sf::RenderWindow*& window) {
-
+int Model::GetShipsCount() {
+    return ships_.size();
 }
 
-void Model::DisplayCranes(sf::RenderWindow*& window) {
+double Model::GetAverageQueueLength() {
+    return res_total_queues_length_ / res_queues_cnt_;
+}
 
+double Model::GetAverageWaitingTime() {
+    return res_total_waiting_time_ / GetShipsCount();
+}
+
+int Model::GetMaxUnloadRejectionTime() {
+    return res_max_unload_rejection_time_;
+}
+
+double Model::GetAverageUnloadRejectionTime() {
+    return res_total_unload_rejection_time_ / GetShipsCount();
+}
+
+int Model::GetTotalFine() {
+    return res_total_fine_;
 }
