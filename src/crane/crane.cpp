@@ -8,7 +8,7 @@ Crane::Crane() {
     model_.loadFromFile("assets/sprites/error.png");
     name_ = "John Doe";
     speed_ = 1;
-    last_ship_pos_ = 0;
+    last_ship_pos_ = 25;
 }
 
 Crane::Crane(const Crane& other) {
