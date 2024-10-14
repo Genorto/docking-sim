@@ -132,7 +132,7 @@ Simulation::Simulation(Settings* sett) {
     int bulk_cnt = sett->GetBulkCranesNumber();
     int fluid_cnt = sett->GetFluidCranesNumber();
     int container_cnt = sett->GetContainerCranesNumber();
-    int crane_x = 0, crane_y = 0;
+    int crane_x = 0, crane_y = 100;
     int crane_size_x = 100, crane_size_y = 100;
     while (bulk_cnt--) {
         Crane* temp_crane = new BulkCrane;

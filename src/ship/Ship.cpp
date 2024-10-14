@@ -36,7 +36,7 @@ Ship& Ship::operator= (const Ship& other) {
 }
 
 bool Ship::isHovered(sf::Vector2i cursor_pos) {
-	return is_shown_ && (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
+	return (animation_ != ColorAnimation::Invisible) && (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
 }
 	
 void Ship::SetType(ShipType type) {
@@ -86,6 +86,8 @@ void Ship::SetPos(double x, double y) {
 	start_y_ = y;
 	end_x_ = x;
 	end_y_ = y;
+	if (animation_ == ColorAnimation::FadeOut) animation_ = ColorAnimation::Invisible;
+	else if (animation_ == ColorAnimation::FadeIn) animation_ = ColorAnimation::Visible;
 }
 
 std::pair<double, double> Ship::GetPos() {
@@ -114,11 +116,17 @@ void Ship::Animate(double time, int fps, double duration) {
 	int step = time * (double)fps;
 	x_ = start_x_ + step * (abs(end_x_ - start_x_) / (fps * duration));
 	y_ = start_y_ - step * (abs(end_y_ - start_y_) / (fps * duration));
+	if (animation_ == ColorAnimation::FadeIn) {
+		color_ = sf::Color(255, 255, 255, step * (255 / ((double)fps * duration)));
+	} else if (animation_ == ColorAnimation::FadeOut) {
+		color_ = sf::Color(255, 255, 255, 255 - step * (255 / ((double)fps * duration)));
+	} else if (animation_ == ColorAnimation::Visible) {
+		color_ = sf::Color(255, 255, 255, 255);
+	} else {
+		color_ = sf::Color(255, 255, 255, 0);
+	}
 	if (time >= duration) {
-		start_x_ = x_;
-		start_y_ = y_;
-		end_x_ = x_;
-		end_y_ = y_;
+		SetPos(x_, y_);
 	}
 }
 
@@ -136,17 +144,26 @@ void Ship::SetModel(std::string path) {
 }
 
 void Ship::Show() {
-	is_shown_ = true;
+	animation_ = ColorAnimation::Visible;
 }
 
 void Ship::Hide() {
-	is_shown_ = false;
+	animation_ = ColorAnimation::Invisible;
+}
+
+void Ship::FadeIn() {
+	animation_ = ColorAnimation::FadeIn;
+}
+
+void Ship::FadeOut() {
+	animation_ = ColorAnimation::FadeOut;
 }
 
 void Ship::Draw(sf::RenderWindow*& window) {
 	sf::Sprite ship(model_);
 	ship.setPosition(sf::Vector2f(x_, y_));
 	ship.setScale(size_x_ / model_.getSize().x, size_y_ / model_.getSize().y);
-	if (is_shown_) window->draw(ship);
+	ship.setColor(color_);
+	window->draw(ship);
 }
 

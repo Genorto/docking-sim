@@ -6,6 +6,7 @@ void ContainerCrane::AddToQueue(Ship*& target) {
     queue_.push(target);
     target->SetStartPos(x_ + 25, last_ship_pos_ + 200);
     target->SetEndPos(x_ + 25, last_ship_pos_);
+    target->FadeIn();
     last_ship_pos_ += target->GetSize().second + space_;
 }
 

@@ -176,7 +176,6 @@ void Model::UpdateQueues() {
                     }
                 }
                 bulk_cranes_[best_option]->AddToQueue(ship);
-                ship->Show();
                 break;
 
 
@@ -200,7 +199,6 @@ void Model::UpdateQueues() {
                 } else {
                     container_cranes_[best_option]->AddToQueue(ship);
                 }
-                ship->Show();
                 break;
             }
         }

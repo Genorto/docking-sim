@@ -8,7 +8,7 @@ Crane::Crane() {
     model_.loadFromFile("assets/sprites/error.png");
     name_ = "John Doe";
     speed_ = 1;
-    last_ship_pos_ = 25;
+    last_ship_pos_ = y_ + 25;
     unload_time_ = -INT_MAX + 1;
 }
 
@@ -60,6 +60,7 @@ void Crane::UnloadFirst() {
     ship->set_weight(0);
     ship->SetStartPos(ship->GetPos().first, ship->GetPos().second);
     ship->SetEndPos(ship->GetPos().first, ship->GetPos().second - 200);
+    ship->FadeOut();
     double offset = ship->GetSize().second + space_;
     queue_.pop();
     last_ship_pos_ -= offset;
@@ -83,6 +84,7 @@ int Crane::GetSpeed() {
 void Crane::SetPos(double x, double y) {
     x_ = x;
     y_ = y;
+    last_ship_pos_ = y_ + 25;
 }
 
 void Crane::SetSize(double size_x, double size_y) {
