@@ -165,7 +165,8 @@ Simulation::Simulation(Settings* sett) {
     std::vector<Ship*> ships = sett->GetShips();
     for (auto ship : ships) {
         ship->SetSize(80, 100 + ship->get_weight() / 10);
-        ship->SetModel("assets/sprites/default_ship.png");
+        if (ship->get_type() == ShipType::CargoShip) ship->SetModel("assets/sprites/default_ship.png");
+        else ship->SetModel("assets/sprites/default_tanker.png");
         if (ship->get_type() == ShipType::CargoShip) {
             model_->AddShip(ship);
         } else {
