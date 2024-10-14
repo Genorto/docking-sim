@@ -4,8 +4,8 @@ void BulkCrane::AddToQueue(Ship*& target) {
     if (!(target->get_type() == ShipType::CargoShip))
         throw std::runtime_error("Bulk crane is incompatible with received ship");
     queue_.push(target);
-    target->SetStartPos(x_ + 25, last_ship_pos_ + 200);
-    target->SetEndPos(x_ + 25, last_ship_pos_);
+    target->SetStartPos(x_ + 45, last_ship_pos_ + 200);
+    target->SetEndPos(x_ + 45, last_ship_pos_);
     target->FadeIn();
     last_ship_pos_ += target->GetSize().second + space_;
 }

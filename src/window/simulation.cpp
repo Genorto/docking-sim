@@ -264,6 +264,12 @@ void Simulation::CheckEvents() {
 
 void Simulation::Draw() {
     window_->clear(sf::Color::Cyan);
+    sf::Sprite dock;
+    sf::Texture texture;
+    texture.loadFromFile("assets/sprites/dock.png");
+    dock.setTexture(texture);
+    dock.setPosition(0, 0);
+    window_->draw(dock);
 
     for (auto ship : model_->GetShips()) {
         ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());

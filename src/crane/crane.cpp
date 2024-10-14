@@ -58,8 +58,8 @@ void Crane::UnloadFirst() {
     if (isEmpty()) throw std::runtime_error("Queue is empty");
     Ship* ship = queue_.front();
     ship->set_weight(0);
-    ship->SetStartPos(ship->GetPos().first, ship->GetPos().second);
-    ship->SetEndPos(ship->GetPos().first, ship->GetPos().second - 200);
+    ship->SetStartPos(ship->GetPos().first - 50, ship->GetPos().second + 75);
+    ship->SetEndPos(ship->GetPos().first - 50, ship->GetPos().second + 275);
     ship->FadeOut();
     double offset = ship->GetSize().second + space_;
     queue_.pop();

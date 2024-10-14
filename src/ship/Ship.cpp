@@ -114,8 +114,8 @@ std::pair<double, double> Ship::GetEndPos() {
 
 void Ship::Animate(double time, int fps, double duration) {
 	int step = time * (double)fps;
-	x_ = start_x_ + step * (abs(end_x_ - start_x_) / (fps * duration));
-	y_ = start_y_ - step * (abs(end_y_ - start_y_) / (fps * duration));
+	x_ = start_x_ + step * ((end_x_ - start_x_) / (fps * duration));
+	y_ = start_y_ + step * ((end_y_ - start_y_) / (fps * duration));
 	if (animation_ == ColorAnimation::FadeIn) {
 		color_ = sf::Color(255, 255, 255, step * (255 / ((double)fps * duration)));
 	} else if (animation_ == ColorAnimation::FadeOut) {
