@@ -13,6 +13,7 @@ public:
     int GetContainerCranesNumber();
     std::vector<Ship*> GetShips();
     virtual void CheckEvents() override;
+    bool CheckFields();
     virtual void Draw() override;
     virtual bool isOpen() override;
     virtual ~Settings();

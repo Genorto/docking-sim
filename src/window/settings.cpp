@@ -57,6 +57,14 @@ std::vector<Ship*> Settings::GetShips() {
     return vector_ship_;
 }
 
+bool Settings::CheckFields() {
+    for (auto x : vector_ship_) {
+        if ((x->get_type() == ShipType::CargoShip && !number_bulk_crane_) ||
+            (x->get_type() == ShipType::Tanker && !number_fluid_crane_ && !number_container_crane_)) return false;
+    }
+    return true;
+}
+
 void Settings::CheckEvents() {
     while (window_->pollEvent(*event_)) {
         int x = event_->mouseButton.x, y = event_->mouseButton.y;
@@ -131,7 +139,7 @@ void Settings::CheckEvents() {
                                     if (x > background_button_.getPosition().x && x < background_button_.getPosition().x + background_button_.getSize().x &&
                                         y > background_button_.getPosition().y && y < background_button_.getPosition().y + background_button_.getSize().y) {
                                         FillingFields();
-                                        window_->close();
+                                        if (CheckFields()) window_->close();
                                     }
                                     else {
                                         status = mouse_status::nothing;
