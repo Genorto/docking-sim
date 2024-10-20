@@ -195,12 +195,12 @@ void Simulation::CheckEvents() {
                 model_->Update();
                 ++curr_hours;
             }
-            std::cout << model_->GetShipsCount() << "\n";
+            /*std::cout << model_->GetShipsCount() << "\n";
             std::cout << model_->GetAverageQueueLength() << "\n";
             std::cout << model_->GetAverageWaitingTime() << "\n";
             std::cout << model_->GetMaxUnloadRejectionTime() << "\n";
             std::cout << model_->GetAverageUnloadRejectionTime() << "\n";
-            std::cout << model_->GetTotalFine() << "\n";
+            std::cout << model_->GetTotalFine() << "\n";*/
             window_->close();
             break;
 
@@ -295,6 +295,10 @@ void Simulation::Draw() {
 
 bool Simulation::isOpen() {
     return window_->isOpen();
+}
+
+Model* Simulation::GetModel() {
+    return model_;
 }
 
 Simulation::~Simulation() {}

@@ -7,7 +7,6 @@ class Window {
      virtual void Draw() = 0;
      virtual bool isOpen() = 0;
      virtual ~Window();
-
  protected:
      sf::RenderWindow* window_ = nullptr;
      sf::Event* event_ = nullptr;

@@ -10,7 +10,7 @@ class Simulation : public Window {
      virtual void Draw() override;
      virtual bool isOpen() override;
      virtual ~Simulation();
-
+     Model* GetModel();
  private:
      Model* model_;
      CursorHoverWindow* chw_;
