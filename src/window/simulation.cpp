@@ -115,7 +115,7 @@ Simulation::Simulation() {
 }
 
 Simulation::Simulation(Settings* sett) {
-    window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation", sf::Style::Close);
+    window_ = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Docking simulation", sf::Style::Fullscreen);
     event_ = new sf::Event;
     model_ = new Model;
     /* these arguments are set by user */
@@ -212,7 +212,24 @@ void Simulation::CheckEvents() {
                     model_->NextHour();
                     model_->Update();
                 }
+            } else if (event_->key.scancode == sf::Keyboard::Scan::Escape) {
+                curr_hours = model_->GetTime().first * 24 + model_->GetTime().second;
+                end_hours = model_->GetTimeLimits().first * 24 + model_->GetTimeLimits().second;
+                while (end_hours > curr_hours) {
+                    model_->UpdateShipsPos();
+                    model_->NextHour();
+                    model_->Update();
+                    ++curr_hours;
+                }
+                std::cout << model_->GetShipsCount() << "\n";
+                std::cout << model_->GetAverageQueueLength() << "\n";
+                std::cout << model_->GetAverageWaitingTime() << "\n";
+                std::cout << model_->GetMaxUnloadRejectionTime() << "\n";
+                std::cout << model_->GetAverageUnloadRejectionTime() << "\n";
+                std::cout << model_->GetTotalFine() << "\n";
+                window_->close();
             }
+            break;
         }
     }
     if (model_->GetClock() >= model_->GetStepLength()) {

@@ -295,10 +295,12 @@ int Model::GetShipsCount() {
 }
 
 double Model::GetAverageQueueLength() {
+    if (!res_queues_cnt_) return 0;
     return res_total_queues_length_ / res_queues_cnt_;
 }
 
 double Model::GetAverageWaitingTime() {
+    if (!GetShipsCount()) return 0;
     return res_total_waiting_time_ / GetShipsCount();
 }
 
@@ -307,6 +309,7 @@ int Model::GetMaxUnloadRejectionTime() {
 }
 
 double Model::GetAverageUnloadRejectionTime() {
+    if (!GetShipsCount()) return 0;
     return res_total_unload_rejection_time_ / GetShipsCount();
 }
 
