@@ -86,8 +86,14 @@ void Ship::SetPos(double x, double y) {
 	start_y_ = y;
 	end_x_ = x;
 	end_y_ = y;
-	if (animation_ == Animation::FadeOut) animation_ = Animation::Invisible;
-	else if (animation_ == Animation::FadeIn || animation_ == Animation::Unload) animation_ = Animation::Visible;
+	if (animation_ == Animation::FadeOut) {
+		animation_ = Animation::Invisible;
+	} else if (animation_ == Animation::FadeIn) {
+		animation_ = Animation::Visible;
+	} else if (animation_ == Animation::Unload) {
+		rotation_ = -90;
+		animation_ = Animation::Visible;
+	}
 }
 
 std::pair<double, double> Ship::GetPos() {

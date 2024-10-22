@@ -127,7 +127,7 @@ Simulation::Simulation(Settings* sett) {
     model_->SetSpeedLimits(1, 5);
     model_->SetUnloadRejectionLimits(1, 5); // may be modified
     model_->SetFPS(240);
-    model_->SetStepLength(3);
+    model_->SetStepLength(5);
 
     int bulk_cnt = sett->GetBulkCranesNumber();
     int fluid_cnt = sett->GetFluidCranesNumber();
