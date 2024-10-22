@@ -8,7 +8,7 @@ Crane::Crane() {
     model_.loadFromFile("assets/sprites/error.png");
     name_ = "John Doe";
     speed_ = 1;
-    last_ship_pos_ = y_ + 25;
+    last_ship_pos_ = y_ + size_y_ / 2;
     unload_time_ = -INT_MAX + 1;
 }
 
@@ -58,13 +58,20 @@ void Crane::UnloadFirst() {
     if (isEmpty()) throw std::runtime_error("Queue is empty");
     Ship* ship = queue_.front();
     ship->set_weight(0);
-    ship->SetStartPos(ship->GetPos().first - 50, ship->GetPos().second + 75);
-    ship->SetEndPos(ship->GetPos().first - 50, ship->GetPos().second + 275);
+    ship->SetStartPos(ship->GetPos().first, ship->GetPos().second);
+    ship->SetEndPos(ship->GetPos().first - 150, ship->GetPos().second);
     ship->FadeOut();
     double offset = ship->GetSize().second + space_;
     queue_.pop();
     last_ship_pos_ -= offset;
     std::queue<Ship*> all_ships = queue_;
+    if (!all_ships.empty()) {
+        ship = all_ships.front();
+        ship->Unload();
+        ship->SetStartPos(ship->GetPos().first, ship->GetPos().second);
+        ship->SetEndPos(x_ + size_x_ / 2 - ship->GetSize().first / 2, ship->GetPos().second - offset);
+        all_ships.pop();
+    }
     while (!all_ships.empty()) {
         ship = all_ships.front();
         ship->SetStartPos(ship->GetPos().first, ship->GetPos().second);
@@ -84,12 +91,13 @@ int Crane::GetSpeed() {
 void Crane::SetPos(double x, double y) {
     x_ = x;
     y_ = y;
-    last_ship_pos_ = y_ + 25;
+    last_ship_pos_ = y_ + size_y_ / 2;
 }
 
 void Crane::SetSize(double size_x, double size_y) {
     size_x_ = size_x;
     size_y_ = size_y;
+    last_ship_pos_ = y_ + size_y_ / 2;
 }
 
 void Crane::SetModel(std::string path) {

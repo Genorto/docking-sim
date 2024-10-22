@@ -36,7 +36,7 @@ Ship& Ship::operator= (const Ship& other) {
 }
 
 bool Ship::isHovered(sf::Vector2i cursor_pos) {
-	return (animation_ != ColorAnimation::Invisible) && (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
+	return (animation_ != Animation::Invisible) && (cursor_pos.x >= x_ && cursor_pos.x <= x_ + size_x_) && (cursor_pos.y >= y_ && cursor_pos.y <= y_ + size_y_);
 }
 	
 void Ship::SetType(ShipType type) {
@@ -86,8 +86,8 @@ void Ship::SetPos(double x, double y) {
 	start_y_ = y;
 	end_x_ = x;
 	end_y_ = y;
-	if (animation_ == ColorAnimation::FadeOut) animation_ = ColorAnimation::Invisible;
-	else if (animation_ == ColorAnimation::FadeIn) animation_ = ColorAnimation::Visible;
+	if (animation_ == Animation::FadeOut) animation_ = Animation::Invisible;
+	else if (animation_ == Animation::FadeIn || animation_ == Animation::Unload) animation_ = Animation::Visible;
 }
 
 std::pair<double, double> Ship::GetPos() {
@@ -112,21 +112,32 @@ std::pair<double, double> Ship::GetEndPos() {
 	return { end_x_, end_y_ };
 }
 
+double RadToAngle(double rad) {
+	return (180 * rad) / 3.14159265358979323846;
+}
+
 void Ship::Animate(double time, int fps, double duration) {
 	int step = time * (double)fps;
+	
+	if (animation_ == Animation::Unload) {
+		rotation_ = -90 * (time / duration);
+	}
+
 	x_ = start_x_ + step * ((end_x_ - start_x_) / (fps * duration));
 	y_ = start_y_ + step * ((end_y_ - start_y_) / (fps * duration));
-	if (animation_ == ColorAnimation::FadeIn) {
+
+	if (animation_ == Animation::FadeIn) {
 		color_ = sf::Color(255, 255, 255, step * (255 / ((double)fps * duration)));
-	} else if (animation_ == ColorAnimation::FadeOut) {
+	} else if (animation_ == Animation::FadeOut) {
 		color_ = sf::Color(255, 255, 255, 255 - step * (255 / ((double)fps * duration)));
-	} else if (animation_ == ColorAnimation::Visible) {
+	} else if (animation_ == Animation::Visible || animation_ == Animation::Unload) {
 		color_ = sf::Color(255, 255, 255, 255);
 	} else {
 		color_ = sf::Color(255, 255, 255, 0);
 	}
+
 	if (time >= duration) {
-		SetPos(x_, y_);
+		SetPos(end_x_, end_y_);
 	}
 }
 
@@ -144,25 +155,32 @@ void Ship::SetModel(std::string path) {
 }
 
 void Ship::Show() {
-	animation_ = ColorAnimation::Visible;
+	animation_ = Animation::Visible;
 }
 
 void Ship::Hide() {
-	animation_ = ColorAnimation::Invisible;
+	animation_ = Animation::Invisible;
 }
 
 void Ship::FadeIn() {
-	animation_ = ColorAnimation::FadeIn;
+	animation_ = Animation::FadeIn;
 }
 
 void Ship::FadeOut() {
-	animation_ = ColorAnimation::FadeOut;
+	animation_ = Animation::FadeOut;
 }
+
+void Ship::Unload() {
+	animation_ = Animation::Unload;
+}
+
 
 void Ship::Draw(sf::RenderWindow*& window) {
 	sf::Sprite ship(model_);
-	ship.setPosition(sf::Vector2f(x_, y_));
 	ship.setScale(size_x_ / model_.getSize().x, size_y_ / model_.getSize().y);
+	ship.setOrigin(ship.getLocalBounds().width / 2, ship.getLocalBounds().height / 2);
+	ship.setPosition(sf::Vector2f(x_ + ship.getLocalBounds().width / 2, y_ + ship.getLocalBounds().height / 2));
+	ship.setRotation(rotation_);
 	ship.setColor(color_);
 	window->draw(ship);
 }

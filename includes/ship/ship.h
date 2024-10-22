@@ -2,7 +2,7 @@
 #include "SFML/Graphics.hpp"
 
 enum class ShipType { CargoShip, Tanker };
-enum class ColorAnimation { FadeIn, FadeOut, Visible, Invisible };
+enum class Animation { FadeIn, Unload, FadeOut, Visible, Invisible };
 
 class Ship {
 public:
@@ -38,6 +38,7 @@ public:
 	virtual void Hide() final;
 	virtual void FadeIn() final;
 	virtual void FadeOut() final;
+	virtual void Unload() final;
 	virtual void Draw(sf::RenderWindow*& window) final;
 
 protected:
@@ -56,7 +57,8 @@ protected:
 	double start_x_ = 0, start_y_ = 0;
 	double end_x_ = 0, end_y_ = 0;
 	double size_x_ = 0, size_y_ = 0;
+	double rotation_;
 	sf::Texture model_;
-	ColorAnimation animation_ = ColorAnimation::Invisible;
+	Animation animation_ = Animation::Invisible;
 	sf::Color color_ = sf::Color(255, 255, 255);
 };

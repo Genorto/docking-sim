@@ -3,10 +3,17 @@
 void ContainerCrane::AddToQueue(Ship*& target) {
     if (!(target->get_type() == ShipType::Tanker))
         throw std::runtime_error("Container crane is incompatible with received ship");
+    // kaka
+    if (isEmpty()) {
+        target->Unload();
+        target->SetStartPos(x_ + size_x_, last_ship_pos_ + 200);
+        target->SetEndPos(x_ + size_x_ / 2 - target->GetSize().first / 2, last_ship_pos_);
+    } else {
+        target->FadeIn();
+        target->SetStartPos(x_ + size_x_, last_ship_pos_ + 200);
+        target->SetEndPos(x_ + size_x_, last_ship_pos_);
+    }
     queue_.push(target);
-    target->SetStartPos(x_ + 45, last_ship_pos_ + 200);
-    target->SetEndPos(x_ + 45, last_ship_pos_);
-    target->FadeIn();
     last_ship_pos_ += target->GetSize().second + space_;
 }
 

@@ -115,7 +115,7 @@ Simulation::Simulation() {
 }
 
 Simulation::Simulation(Settings* sett) {
-    window_ = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Docking simulation", sf::Style::Fullscreen);
+    window_ = new sf::RenderWindow(sf::VideoMode(1500, 800), "Docking simulation", sf::Style::Close);
     event_ = new sf::Event;
     model_ = new Model;
     /* these arguments are set by user */
@@ -132,34 +132,34 @@ Simulation::Simulation(Settings* sett) {
     int bulk_cnt = sett->GetBulkCranesNumber();
     int fluid_cnt = sett->GetFluidCranesNumber();
     int container_cnt = sett->GetContainerCranesNumber();
-    int crane_x = 0, crane_y = 100;
-    int crane_size_x = 100, crane_size_y = 100;
+    int crane_x = 50, crane_y = 100;
+    int crane_size_x = 150, crane_size_y = 150;
     while (bulk_cnt--) {
         Crane* temp_crane = new BulkCrane;
         temp_crane->SetPos(crane_x, crane_y);
         temp_crane->SetSize(crane_size_x, crane_size_y);
-        temp_crane->SetModel("assets/sprites/default_crane.png");
-        temp_crane->SetSpace(10);
+        temp_crane->SetModel("assets/sprites/default-crane-pixel-top.png");
+        temp_crane->SetSpace(30);
         model_->AddBulkCrane(temp_crane);
-        crane_x += crane_size_x + 10;
+        crane_x += crane_size_x + 150;
     }
     while (fluid_cnt--) {
         Crane* temp_crane = new FluidCrane;
         temp_crane->SetPos(crane_x, crane_y);
         temp_crane->SetSize(crane_size_x, crane_size_y);
-        temp_crane->SetModel("assets/sprites/default_crane.png");
-        temp_crane->SetSpace(10);
+        temp_crane->SetModel("assets/sprites/default-crane-pixel-top.png");
+        temp_crane->SetSpace(30);
         model_->AddFluidCrane(temp_crane);
-        crane_x += crane_size_x + 10;
+        crane_x += crane_size_x + 150;
     }
     while (container_cnt--) {
         Crane* temp_crane = new ContainerCrane;
         temp_crane->SetPos(crane_x, crane_y);
         temp_crane->SetSize(crane_size_x, crane_size_y);
-        temp_crane->SetModel("assets/sprites/default_crane.png");
-        temp_crane->SetSpace(10);
+        temp_crane->SetModel("assets/sprites/default-crane-pixel-top.png");
+        temp_crane->SetSpace(30);
         model_->AddContainerCrane(temp_crane);
-        crane_x += crane_size_x + 10;
+        crane_x += crane_size_x + 150;
     }
 
     std::vector<Ship*> ships = sett->GetShips();
@@ -195,12 +195,6 @@ void Simulation::CheckEvents() {
                 model_->Update();
                 ++curr_hours;
             }
-            /*std::cout << model_->GetShipsCount() << "\n";
-            std::cout << model_->GetAverageQueueLength() << "\n";
-            std::cout << model_->GetAverageWaitingTime() << "\n";
-            std::cout << model_->GetMaxUnloadRejectionTime() << "\n";
-            std::cout << model_->GetAverageUnloadRejectionTime() << "\n";
-            std::cout << model_->GetTotalFine() << "\n";*/
             window_->close();
             break;
 
@@ -221,12 +215,6 @@ void Simulation::CheckEvents() {
                     model_->Update();
                     ++curr_hours;
                 }
-                std::cout << model_->GetShipsCount() << "\n";
-                std::cout << model_->GetAverageQueueLength() << "\n";
-                std::cout << model_->GetAverageWaitingTime() << "\n";
-                std::cout << model_->GetMaxUnloadRejectionTime() << "\n";
-                std::cout << model_->GetAverageUnloadRejectionTime() << "\n";
-                std::cout << model_->GetTotalFine() << "\n";
                 window_->close();
             }
             break;
@@ -240,6 +228,7 @@ void Simulation::CheckEvents() {
             model_->Update();
         }
     }
+
     /* check all objects if they are hovered */
     std::vector<std::string*> empty(0);
     chw_->SetInfo(empty);
