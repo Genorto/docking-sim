@@ -336,6 +336,11 @@ void Simulation::Draw() {
     time.setFillColor(sf::Color::White);
     time.setString("day " + std::to_string(tm.first) + " time " + std::to_string(tm.second) + " : 00");
     time.setPosition(window_->getSize().x - time.getLocalBounds().width - 15 + view.getCenter().x - default_center.x, 10 + view.getCenter().y - default_center.y);
+    sf::RectangleShape back;
+    back.setSize(sf::Vector2f(time.getLocalBounds().width + 25, time.getLocalBounds().height + 30));
+    back.setPosition(sf::Vector2f(window_->getSize().x - time.getLocalBounds().width - 25 + view.getCenter().x - default_center.x, view.getCenter().y - default_center.y));
+    back.setFillColor(sf::Color(160, 82, 45));
+    window_->draw(back);
     window_->draw(time);
 
     chw_->Draw(window_);
