@@ -306,3 +306,7 @@ double Model::GetAverageUnloadRejectionTime() {
 int Model::GetTotalFine() {
     return res_total_fine_;
 }
+
+std::vector<std::string*> Model::GetLog() {
+    return log;
+}

@@ -121,6 +121,8 @@ Simulation::Simulation(Settings* sett) {
     window_->setView(view);
     event_ = new sf::Event;
     model_ = new Model;
+    news_l = 0;
+    news_r = 4;
     /* these arguments are set by user */
     model_->SetStepSize(sett->GetStepSize());
     model_->SetFont("assets/fonts/roboto.ttf");
@@ -143,6 +145,7 @@ Simulation::Simulation(Settings* sett) {
         temp_crane->SetSize(crane_size_x, crane_size_y);
         temp_crane->SetModel("assets/sprites/default-crane-pixel-top.png");
         temp_crane->SetSpace(30);
+        temp_crane->SetName("#" + std::to_string(sett->GetBulkCranesNumber() - bulk_cnt + 1));
         model_->AddBulkCrane(temp_crane);
         crane_x += crane_size_x + 150;
     }
@@ -152,6 +155,7 @@ Simulation::Simulation(Settings* sett) {
         temp_crane->SetSize(crane_size_x, crane_size_y);
         temp_crane->SetModel("assets/sprites/default-crane-pixel-top.png");
         temp_crane->SetSpace(30);
+        temp_crane->SetName("#" + std::to_string(sett->GetFluidCranesNumber() - fluid_cnt + 1));
         model_->AddFluidCrane(temp_crane);
         crane_x += crane_size_x + 150;
     }
@@ -161,6 +165,7 @@ Simulation::Simulation(Settings* sett) {
         temp_crane->SetSize(crane_size_x, crane_size_y);
         temp_crane->SetModel("assets/sprites/default-crane-pixel-top.png");
         temp_crane->SetSpace(30);
+        temp_crane->SetName("#" + std::to_string(sett->GetContainerCranesNumber() - container_cnt + 1));
         model_->AddContainerCrane(temp_crane);
         crane_x += crane_size_x + 150;
     }
@@ -222,6 +227,20 @@ void Simulation::CheckEvents() {
             }
             break;
 
+        case sf::Event::MouseWheelScrolled:
+            if (event_->mouseWheelScroll.delta < 0) {
+                if (news_l > 0) {
+                    --news_l;
+                    news_r = news_l + 4;
+                }
+            } else if (event_->mouseWheelScroll.delta > 0) {
+                if (news_r < model_->GetLog().size() - 1) {
+                    ++news_r;
+                    news_l = news_r - 4;
+                }
+            }
+            break;
+
         case sf::Event::MouseButtonPressed:
             if (event_->mouseButton.button == 0) {
                 moving = true;
@@ -242,9 +261,8 @@ void Simulation::CheckEvents() {
             window_->setView(view);
             oldPos = window_->mapPixelToCoords(sf::Vector2i(event_->mouseMove.x, event_->mouseMove.y));
             break;
+
         }
-
-
     }
     if (model_->GetClock() >= model_->GetStepLength()) {
         int cycles = model_->GetStepSize();
@@ -327,6 +345,7 @@ void Simulation::Draw() {
         window_->draw(dock);
     }
 
+    /* time */
     std::pair<int, int> tm = model_->GetTime();
     sf::Text time;
     sf::Font font;
@@ -342,6 +361,25 @@ void Simulation::Draw() {
     back.setFillColor(sf::Color(160, 82, 45));
     window_->draw(back);
     window_->draw(time);
+
+    /* log */
+    std::vector<std::string*> log = model_->GetLog();
+    for (int i = news_l; i < log.size() && i <= news_r; ++i) {
+        sf::Text time;
+        sf::Font font;
+        font.loadFromFile("assets/fonts/roboto.ttf");
+        time.setFont(font);
+        time.setCharacterSize(30);
+        time.setFillColor(sf::Color::White);
+        time.setString(*log[i]);
+        time.setPosition(view.getCenter().x - default_center.x, window_->getSize().y - 30 * (i - news_l + 1) + view.getCenter().y - default_center.y);
+        sf::RectangleShape back;
+        back.setSize(sf::Vector2f(window_->getSize().x, 30));
+        back.setPosition(sf::Vector2f(view.getCenter().x - default_center.x, window_->getSize().y - 30 * (i - news_l + 1) + view.getCenter().y - default_center.y));
+        back.setFillColor(sf::Color(160, 82, 45));
+        window_->draw(back);
+        window_->draw(time);
+    }
 
     chw_->Draw(window_);
     window_->display();

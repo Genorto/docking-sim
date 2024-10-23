@@ -47,6 +47,7 @@ class Model final {
      int GetMaxUnloadRejectionTime();
      double GetAverageUnloadRejectionTime();
      int GetTotalFine();
+     std::vector<std::string*> GetLog();
 
  private:
      void UpdateRejections();
