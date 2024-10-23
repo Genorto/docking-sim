@@ -94,10 +94,18 @@ void Crane::SetPos(double x, double y) {
     last_ship_pos_ = y_ + size_y_ / 2;
 }
 
+std::pair<double, double> Crane::GetPos() {
+    return { x_, y_ };
+}
+
 void Crane::SetSize(double size_x, double size_y) {
     size_x_ = size_x;
     size_y_ = size_y;
     last_ship_pos_ = y_ + size_y_ / 2;
+}
+
+std::pair<double, double> Crane::GetSize() {
+    return { size_x_, size_y_ };
 }
 
 void Crane::SetModel(std::string path) {

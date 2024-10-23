@@ -14,4 +14,8 @@ class Simulation : public Window {
  private:
      Model* model_;
      CursorHoverWindow* chw_;
+     sf::View view;
+     sf::Vector2f oldPos;
+     const sf::Vector2f default_center = sf::Vector2f(750, 400);
+     bool moving = false;
 };

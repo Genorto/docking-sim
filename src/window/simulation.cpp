@@ -116,6 +116,9 @@ Simulation::Simulation() {
 
 Simulation::Simulation(Settings* sett) {
     window_ = new sf::RenderWindow(sf::VideoMode(1500, 800), "Docking simulation", sf::Style::Close);
+    moving = false;
+    view.reset(sf::FloatRect(0, 0, default_center.x * 2, default_center.y * 2));
+    window_->setView(view);
     event_ = new sf::Event;
     model_ = new Model;
     /* these arguments are set by user */
@@ -218,7 +221,30 @@ void Simulation::CheckEvents() {
                 window_->close();
             }
             break;
+
+        case sf::Event::MouseButtonPressed:
+            if (event_->mouseButton.button == 0) {
+                moving = true;
+                oldPos = window_->mapPixelToCoords(sf::Vector2i(event_->mouseButton.x, event_->mouseButton.y));
+            }
+            break;
+
+        case  sf::Event::MouseButtonReleased:
+            if (event_->mouseButton.button == 0) {
+                moving = false;
+            }
+            break;
+
+        case sf::Event::MouseMoved:
+            if (!moving) break;
+            const sf::Vector2f deltaPos = oldPos - window_->mapPixelToCoords(sf::Vector2i(event_->mouseMove.x, event_->mouseMove.y));
+            view.setCenter(view.getCenter() + deltaPos);
+            window_->setView(view);
+            oldPos = window_->mapPixelToCoords(sf::Vector2i(event_->mouseMove.x, event_->mouseMove.y));
+            break;
         }
+
+
     }
     if (model_->GetClock() >= model_->GetStepLength()) {
         int cycles = model_->GetStepSize();
@@ -230,10 +256,13 @@ void Simulation::CheckEvents() {
     }
 
     /* check all objects if they are hovered */
+
     std::vector<std::string*> empty(0);
     chw_->SetInfo(empty);
     chw_->SetPos(-1000, -1000);
     sf::Vector2i cursor = sf::Mouse::getPosition(*window_);
+    cursor.x -= default_center.x - view.getCenter().x;
+    cursor.y -= default_center.y - view.getCenter().y;
 
     for (auto ship : model_->GetShips()) {
         if (ship->isHovered(cursor)) {
@@ -274,8 +303,6 @@ void Simulation::Draw() {
     sf::Texture texture;
     texture.loadFromFile("assets/sprites/dock.png");
     dock.setTexture(texture);
-    dock.setPosition(0, 0);
-    window_->draw(dock);
 
     for (auto ship : model_->GetShips()) {
         ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
@@ -284,14 +311,20 @@ void Simulation::Draw() {
 
     for (auto crane : model_->GetBulkCranes()) {
         crane->Draw(window_);
+        dock.setPosition(crane->GetPos().first - 600, 0);
+        window_->draw(dock);
     }
 
     for (auto crane : model_->GetFluidCranes()) {
         crane->Draw(window_);
+        dock.setPosition(crane->GetPos().first - 600, 0);
+        window_->draw(dock);
     }
 
     for (auto crane : model_->GetContainerCranes()) {
         crane->Draw(window_);
+        dock.setPosition(crane->GetPos().first - 600, 0);
+        window_->draw(dock);
     }
 
     model_->DisplayTime(window_);

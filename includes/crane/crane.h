@@ -19,6 +19,8 @@ class Crane {
      void UnloadFirst();
      void SetSpeed(int);
      int GetSpeed();
+     std::pair<double, double> GetPos();
+     std::pair<double, double> GetSize();
      virtual void SetPos(double x, double y) final;
      virtual void SetSize(double size_x, double size_y) final;
      virtual void SetModel(std::string path) final;
