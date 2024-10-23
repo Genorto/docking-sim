@@ -214,6 +214,14 @@ void Simulation::CheckEvents() {
                     model_->NextHour();
                     model_->Update();
                 }
+            } else if (event_->key.scancode == sf::Keyboard::Scan::Space) {
+                if (working) {
+                    working = false;
+                    model_->SetStepLength(1.79769e+308);
+                } else {
+                    working = true;
+                    model_->SetStepLength(5);
+                }
             } else if (event_->key.scancode == sf::Keyboard::Scan::Escape) {
                 curr_hours = model_->GetTime().first * 24 + model_->GetTime().second;
                 end_hours = model_->GetTimeLimits().first * 24 + model_->GetTimeLimits().second;
@@ -323,7 +331,8 @@ void Simulation::Draw() {
     dock.setTexture(texture);
 
     for (auto ship : model_->GetShips()) {
-        ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
+        if (working) ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
+        else ship->Animate(1, model_->GetFPS(), 1);
         ship->Draw(window_);
     }
 
@@ -379,6 +388,14 @@ void Simulation::Draw() {
         back.setFillColor(sf::Color(160, 82, 45));
         window_->draw(back);
         window_->draw(time);
+    }
+
+    if (!working) {
+        sf::RectangleShape back;
+        back.setSize(sf::Vector2f(window_->getSize().x, window_->getSize().y));
+        back.setPosition(sf::Vector2f(view.getCenter().x - default_center.x, view.getCenter().y - default_center.y));
+        back.setFillColor(sf::Color(255, 255, 255, 50));
+        window_->draw(back);
     }
 
     chw_->Draw(window_);

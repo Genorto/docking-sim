@@ -17,6 +17,6 @@ class Simulation : public Window {
      sf::View view;
      sf::Vector2f oldPos;
      const sf::Vector2f default_center = sf::Vector2f(750, 400);
-     bool moving = false;
+     bool moving = false, working = true;
      int news_l, news_r;
 };
