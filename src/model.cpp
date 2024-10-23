@@ -280,16 +280,6 @@ void Model::UpdateShipsPos() {
     }
 }
 
-void Model::DisplayTime(sf::RenderWindow*& window) {
-    sf::Text time;
-    time.setFont(font_);
-    time.setCharacterSize(30);
-    time.setFillColor(sf::Color::White);
-    time.setString("day " + std::to_string(day_) + " time " + std::to_string(hour_) + " : 00");
-    time.setPosition(window->getSize().x - time.getLocalBounds().width - 15, 10);
-    window->draw(time);
-}
-
 int Model::GetShipsCount() {
     return ships_.size();
 }

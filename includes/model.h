@@ -40,7 +40,6 @@ class Model final {
      void NextHour();
      std::pair<int, int> GetTime();
      void Update();
-     void DisplayTime(sf::RenderWindow*& window);
      void UpdateShipsPos(); // only when switches by key
      int GetShipsCount();
      double GetAverageQueueLength();

@@ -261,8 +261,8 @@ void Simulation::CheckEvents() {
     chw_->SetInfo(empty);
     chw_->SetPos(-1000, -1000);
     sf::Vector2i cursor = sf::Mouse::getPosition(*window_);
-    cursor.x -= default_center.x - view.getCenter().x;
-    cursor.y -= default_center.y - view.getCenter().y;
+    cursor.x += view.getCenter().x - default_center.x;
+    cursor.y += view.getCenter().y - default_center.y;
 
     for (auto ship : model_->GetShips()) {
         if (ship->isHovered(cursor)) {
@@ -327,7 +327,17 @@ void Simulation::Draw() {
         window_->draw(dock);
     }
 
-    model_->DisplayTime(window_);
+    std::pair<int, int> tm = model_->GetTime();
+    sf::Text time;
+    sf::Font font;
+    font.loadFromFile("assets/fonts/roboto.ttf");
+    time.setFont(font);
+    time.setCharacterSize(30);
+    time.setFillColor(sf::Color::White);
+    time.setString("day " + std::to_string(tm.first) + " time " + std::to_string(tm.second) + " : 00");
+    time.setPosition(window_->getSize().x - time.getLocalBounds().width - 15 + view.getCenter().x - default_center.x, 10 + view.getCenter().y - default_center.y);
+    window_->draw(time);
+
     chw_->Draw(window_);
     window_->display();
 }
