@@ -59,8 +59,8 @@ std::vector<Ship*> Settings::GetShips() {
 
 bool Settings::CheckFields() {
     for (auto x : vector_ship_) {
-        if ((x->get_type() == ShipType::CargoShip && !number_bulk_crane_) ||
-            (x->get_type() == ShipType::Tanker && !number_fluid_crane_ && !number_container_crane_)) return false;
+        if ((x->GetType() == ShipType::CargoShip && !number_bulk_crane_) ||
+            (x->GetType() == ShipType::Tanker && !number_fluid_crane_ && !number_container_crane_)) return false;
     }
     return true;
 }
@@ -98,14 +98,14 @@ void Settings::CheckEvents() {
                                 if (status == mouse_status::graph5) {
                                     if (x > 340 && x < 340 + 50) {
                                         vector_ship_.push_back(new Tanker);
-                                        vector_ship_[count_ship_]->set_ship_name("#" + std::to_string(count_ship_ + 1));
+                                        vector_ship_[count_ship_]->SetShipName("#" + std::to_string(count_ship_ + 1));
                                         count_ship_++;
                                         up_border_ = std::max(0, (int)vector_ship_.size() - 9);
                                         bottom_border_ = (int)vector_ship_.size() - 1;
                                     }
                                     if (x > 420 && x < 420 + 50) {
                                         vector_ship_.push_back(new CargoShip);
-                                        vector_ship_[count_ship_]->set_ship_name("#" + std::to_string(count_ship_ + 1));
+                                        vector_ship_[count_ship_]->SetShipName("#" + std::to_string(count_ship_ + 1));
                                         count_ship_++;
                                         up_border_ = std::max(0, (int)vector_ship_.size() - 9);
                                         bottom_border_ = (int)vector_ship_.size() - 1;
@@ -119,17 +119,17 @@ void Settings::CheckEvents() {
                                 bool in = false;
                                 for (int i = 0, j = up_border_; j <= bottom_border_; ++i, ++j) {
                                     if (x > 260 && x < 260 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        vector_ship_[j]->set_weight(std::min(std::max(0, vector_ship_[j]->get_weight() + (which_button ? 1: -1) * 100), 900));
+                                        vector_ship_[j]->SetWeight(std::min(std::max(0, vector_ship_[j]->GetWeight() + (which_button ? 1: -1) * 100), 900));
                                         in = true;
                                     }
                                     if (x > 460 && x < 460 + 40 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        std::pair<int, int> copy = vector_ship_[j]->get_arrival_time();
+                                        std::pair<int, int> copy = vector_ship_[j]->GetArrivalTime();
                                         copy.first = (31 + copy.first + (which_button ? 1 : -1)) % 31;
                                         vector_ship_[j]->SetArrivalTime(copy);
                                         in = true;
                                     }
                                     if (x > 540 && x < 540 + 60 && y > 40 * i + 390 && y < 40 * (i + 1) + 390) {
-                                        std::pair<int, int> copy = vector_ship_[j]->get_arrival_time();
+                                        std::pair<int, int> copy = vector_ship_[j]->GetArrivalTime();
                                         copy.second = (24 + copy.second + (which_button ? 1 : -1)) % 24;
                                         vector_ship_[j]->SetArrivalTime(copy);
                                         in = true;
@@ -229,25 +229,25 @@ void Settings::Draw() {
                 background_.setPosition(x, y);
                 window_->draw(background_);
                 sf::String type = L"Тип корабля:";
-                type += (vector_ship_[j]->get_type() == ShipType::CargoShip) ? ("CargoShip " + vector_ship_[j]->get_ship_name() + "  ") : ("Tanker       " + vector_ship_[j]->get_ship_name() + "  ");
+                type += (vector_ship_[j]->GetType() == ShipType::CargoShip) ? ("CargoShip " + vector_ship_[j]->GetName() + "  ") : ("Tanker       " + vector_ship_[j]->GetName() + "  ");
                 type += L"Вес: ";
-                type += std::to_wstring(vector_ship_[j]->get_weight());
-                if (vector_ship_[j]->get_weight() / 100 > 0) {
+                type += std::to_wstring(vector_ship_[j]->GetWeight());
+                if (vector_ship_[j]->GetWeight() / 100 > 0) {
                     type += L" ";
                 }
                 else {
                     type += L"     ";
                 }
                 type += L" Время: день ";
-                if (vector_ship_[j]->get_arrival_time().first / 10 < 1) {
+                if (vector_ship_[j]->GetArrivalTime().first / 10 < 1) {
                     type += L"  ";
                 }
-                type += std::to_wstring(vector_ship_[j]->get_arrival_time().first);
+                type += std::to_wstring(vector_ship_[j]->GetArrivalTime().first);
                 type += L" часы ";
-                if (vector_ship_[j]->get_arrival_time().second / 10 < 1) {
+                if (vector_ship_[j]->GetArrivalTime().second / 10 < 1) {
                     type+= L"0";
                 }
-                type += std::to_wstring(vector_ship_[j]->get_arrival_time().second);
+                type += std::to_wstring(vector_ship_[j]->GetArrivalTime().second);
                 type += L":00";
                 text_answer_.setString(type);
                 text_answer_.setPosition(x, y);

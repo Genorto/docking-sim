@@ -4,13 +4,13 @@ Conclusion::Conclusion(Simulation* simulation) {
     window_ = new sf::RenderWindow(sf::VideoMode(960, 600), "Conclusion");
     event_ = new sf::Event;
     
-    background_image.loadFromFile("assets/sprites/background.png");
-    background_texture.loadFromImage(background_image);
-    background_sprite.setTexture(background_texture);
-    background_sprite.setPosition(0, 0);
-    background_sprite.setScale(0.5, 0.5);
+    background_image_.loadFromFile("assets/sprites/background.png");
+    background_texture_.loadFromImage(background_image_);
+    background_sprite_.setTexture(background_texture_);
+    background_sprite_.setPosition(0, 0);
+    background_sprite_.setScale(0.5, 0.5);
 
-    text = { L"Статистика:",L"Число разгруженных судов", L"Средняя длина очереди", L"Среднее время ожидания", L"Максимальная и средняя задержка разгрузки", L"Общая сумма выплаченного штрафа" };
+    text_vector_ = { L"Статистика:",L"Число разгруженных судов", L"Средняя длина очереди", L"Среднее время ожидания", L"Максимальная и средняя задержка разгрузки", L"Общая сумма выплаченного штрафа" };
     
     res_ships_cnt_ = simulation->GetModel()->GetShipsCount();
     average_queue_length_ = simulation->GetModel()->GetAverageQueueLength();
@@ -19,11 +19,11 @@ Conclusion::Conclusion(Simulation* simulation) {
     get_average_unload_time_ = simulation->GetModel()->GetAverageUnloadRejectionTime();
     total_fine_ = simulation->GetModel()->GetTotalFine();
 
-    font.loadFromFile("assets/fonts/roboto.ttf");
+    font_.loadFromFile("assets/fonts/roboto.ttf");
     background_text_.setFillColor(sf::Color(256, 256, 256, 75));
     background_text_.setSize({ 470, 385 });
     background_text_.setPosition(450, 50);
-    text_.setFont(font);
+    text_.setFont(font_);
     text_.setColor(sf::Color::White);
     text_.setCharacterSize(19);
 
@@ -33,19 +33,19 @@ Conclusion::Conclusion() {
     window_ = new sf::RenderWindow(sf::VideoMode(960, 600), "Conclusion");
     event_ = new sf::Event;
 
-    background_image.loadFromFile("assets/sprites/background.png");
-    background_texture.loadFromImage(background_image);
-    background_sprite.setTexture(background_texture);
-    background_sprite.setPosition(0, 0);
-    background_sprite.setScale(0.5, 0.5);
+    background_image_.loadFromFile("assets/sprites/background.png");
+    background_texture_.loadFromImage(background_image_);
+    background_sprite_.setTexture(background_texture_);
+    background_sprite_.setPosition(0, 0);
+    background_sprite_.setScale(0.5, 0.5);
 
-    text = { L"Статистика:", L"Число разгруженных судов:", L"Средняя длина очереди:", L"Среднее время ожидания:", L"Максимальная и средняя задержка разгрузки:", L"Общая сумма выплаченного штрафа:"};
+    text_vector_ = { L"Статистика:", L"Число разгруженных судов:", L"Средняя длина очереди:", L"Среднее время ожидания:", L"Максимальная и средняя задержка разгрузки:", L"Общая сумма выплаченного штрафа:"};
 
-    font.loadFromFile("assets/fonts/roboto.ttf");
+    font_.loadFromFile("assets/fonts/roboto.ttf");
     background_text_.setFillColor(sf::Color(256, 256, 256, 75));
     background_text_.setSize({ 470, 385 });
     background_text_.setPosition(450, 50);
-    text_.setFont(font);
+    text_.setFont(font_);
     text_.setColor(sf::Color::White);
     text_.setCharacterSize(19);
 
@@ -63,12 +63,12 @@ void Conclusion::CheckEvents() {
 
 void Conclusion::Draw() {
     window_->clear();
-    window_->draw(background_sprite);
+    window_->draw(background_sprite_);
     window_->draw(background_text_);
     int x = 455, y = 55;
     text_.setStyle(sf::Text::Bold | sf::Text::Underlined);
-    for (int i = 0; i < text.size(); ++i) {
-        text_.setString(text[i]);
+    for (int i = 0; i < text_vector_.size(); ++i) {
+        text_.setString(text_vector_[i]);
         text_.setPosition(x, y);
         window_->draw(text_);
         y += (i == 0?35:70);

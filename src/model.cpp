@@ -8,7 +8,7 @@ Model::Model() {
 void Model::RandomizeShipsData() {
     for (auto ship : ships_) {
         if (rand() % 2) {
-            ship->set_arrival_rejection(rand() % (rejection_limits_.second -
+            ship->SetArrivalRejection(rand() % (rejection_limits_.second -
                 rejection_limits_.first + 1) + rejection_limits_.first);
         }
     }
@@ -134,7 +134,7 @@ std::pair<int, int> Model::GetTime() {
     return { day_, hour_ };
 }
 
-void Model::Update() {
+void Model::UpdateSimulation() {
     UpdateUnloads();
     UpdateQueues();
     UpdateRejections();
@@ -145,13 +145,13 @@ void Model::UpdateRejections() {
     std::string* message;
     std::pair<int, int> cur_tm = { day_, hour_ };
     for (auto ship : ships_) {
-        if (ship->get_arrival_time() == cur_tm) {
-            int day = ship->get_arrival_time().first;
-            int hour = ship->get_arrival_time().second + ship->get_arrival_rejection();
+        if (ship->GetArrivalTime() == cur_tm) {
+            int day = ship->GetArrivalTime().first;
+            int hour = ship->GetArrivalTime().second + ship->GetArrivalRejection();
             day += hour / 24;
             hour %= 24;
             message = new std::string;
-            *message = ship->get_ship_name() + "'s arrival is postponed to day " + std::to_string(day) + " time " + std::to_string(hour) + " : 00";
+            *message = ship->GetName() + "'s arrival is postponed to day " + std::to_string(day) + " time " + std::to_string(hour) + " : 00";
             log.push_back(message);
             std::cout << *message << "\n";
         }
@@ -161,13 +161,13 @@ void Model::UpdateRejections() {
 void Model::UpdateQueues() {
     std::pair<int, int> cur_tm = { day_, hour_ };
     for (auto ship : ships_) {
-        std::pair<int, int> arr_tm = ship->get_arrival_time();
-        arr_tm.second += ship->get_arrival_rejection();
+        std::pair<int, int> arr_tm = ship->GetArrivalTime();
+        arr_tm.second += ship->GetArrivalRejection();
         arr_tm.first += arr_tm.second / 24;
         arr_tm.second %= 24;
         size_t smallest_queue = INT_MAX, best_option = 0;
         if (cur_tm == arr_tm) {
-            switch (ship->get_type()) {
+            switch (ship->GetType()) {
             case ShipType::CargoShip:
                 for (size_t it = 0; it < bulk_cranes_.size(); ++it) {
                     if (bulk_cranes_[it]->GetQueueSize() < smallest_queue) {
@@ -234,7 +234,7 @@ void Model::UpdateUnloads() {
         if (!crane->isEmpty()) {
             Ship* ship = crane->GetFirstShip();
             if (crane->GetUnloadTime() == -INT_MAX + 1) {
-                crane->GetUnloadTime() = ((ship->get_weight() / (crane->GetSpeed() * 5)) + 59) / 60;
+                crane->GetUnloadTime() = ((ship->GetWeight() / (crane->GetSpeed() * 5)) + 59) / 60;
                 if (rand() % 2) {
                     int postpone_number = rand() % ((unload_rejection_limits_.second -
                         unload_rejection_limits_.first + 1) + unload_rejection_limits_.first);
@@ -256,14 +256,14 @@ void Model::UpdateUnloads() {
 
                 /* for results */
                 std::pair<int, int> cur_tm = { day_, hour_ };
-                std::pair<int, int> arr_tm = ship->get_arrival_time();
+                std::pair<int, int> arr_tm = ship->GetArrivalTime();
                 int waiting_time = (cur_tm.first * 24 + cur_tm.second - arr_tm.first * 24 - arr_tm.second);
                 res_total_fine_ = fine_ * waiting_time;
                 res_total_waiting_time_ += waiting_time;
                 /* for results */
 
                 message = new std::string;
-                *message = ship->get_ship_name() + " is unloaded";
+                *message = ship->GetName() + " is unloaded";
                 log.push_back(message);
                 std::cout << *message << "\n";
                 crane->GetUnloadTime() = -INT_MAX + 1;
@@ -274,7 +274,7 @@ void Model::UpdateUnloads() {
     }
 }
 
-void Model::UpdateShipsPos() {
+void Model::SkipShipsAnimations() {
     for (auto ship : ships_) {
         ship->SetPos(ship->GetEndPos().first, ship->GetEndPos().second);
     }
@@ -309,4 +309,23 @@ int Model::GetTotalFine() {
 
 std::vector<std::string*> Model::GetLog() {
     return log;
+}
+
+Model::~Model() {
+    for (auto ship : ships_) {
+        delete ship;
+    }
+    for (auto crane : bulk_cranes_) {
+        delete crane;
+    }
+    for (auto crane : fluid_cranes_) {
+        delete crane;
+    }
+    for (auto crane : container_cranes_) {
+        delete crane;
+    }
+    for (auto message : log) {
+        delete message;
+    }
+    delete clock_;
 }

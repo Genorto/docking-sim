@@ -13,46 +13,42 @@ public:
 	Ship& operator= (const Ship& other);
 	~Ship() = default;
 	virtual bool isHovered(sf::Vector2i cursor_pos) final;
-	virtual std::vector<std::string*> GetInfo() = 0;
+	void Animate(double time, int fps, double duration);
+	void Show();
+	void Hide();
+	void FadeIn();
+	void FadeOut();
+	void Unload();
+	void Draw(sf::RenderWindow*& window);
+
 	void SetType(ShipType type);
-	void set_weight(int);
-	int get_weight();
-	void set_arrival_rejection(int);
-	int get_arrival_rejection();
-	std::pair<int, int> get_arrival_time();
-	void set_ship_name(std::string);
-	std::string get_ship_name();
-	ShipType get_type();
-	virtual void SetPos(double x, double y) final;
-	virtual void SetArrivalTime(std::pair<int, int> data);
-	virtual std::pair<double, double> GetPos() final;
-	virtual void SetStartPos(double x, double y) final;
-	virtual std::pair<double, double> GetStartPos() final;
-	virtual void SetEndPos(double x, double y) final;
-	virtual std::pair<double, double> GetEndPos() final;
-	virtual void Animate(double time, int fps, double duration) final;
-	virtual void SetSize(double size_x, double size_y) final;
-	virtual std::pair<double, double> GetSize() final;
-	virtual void SetModel(std::string path) final;
-	virtual void Show() final;
-	virtual void Hide() final;
-	virtual void FadeIn() final;
-	virtual void FadeOut() final;
-	virtual void Unload() final;
-	virtual void Draw(sf::RenderWindow*& window) final;
+	void SetWeight(int);
+	void SetArrivalRejection(int);
+	void SetShipName(std::string);
+	void SetPos(double x, double y);
+	void SetArrivalTime(std::pair<int, int> data);
+	void SetStartPos(double x, double y);
+	void SetEndPos(double x, double y);
+	void SetSize(double size_x, double size_y);
+	void SetModel(std::string path);
+
+	virtual std::vector<std::string*> GetInfo() = 0;
+	int GetWeight();
+	int GetArrivalRejection();
+	std::pair<int, int> GetArrivalTime();
+	std::string GetName();
+	ShipType GetType();
+	std::pair<double, double> GetPos();
+	std::pair<double, double> GetStartPos();
+	std::pair<double, double> GetEndPos();
+	std::pair<double, double> GetSize();
 
 protected:
-	// installed before the start
 	int weight_;
-	int fine_; // penalty for an hour of delay
-	int arrival_rejection_; // delay
-	std::pair<int, int> arrival_time_; // first - day, second - hour
+	int arrival_rejection_;
+	std::pair<int, int> arrival_time_; // day, hour
 	std::string ship_name_;
 	ShipType type_;
-	//  installed after the start
-	int waiting_time_;
-	int service_time_;
-	// frontend variables
 	double x_ = 0, y_ = 0;
 	double start_x_ = 0, start_y_ = 0;
 	double end_x_ = 0, end_y_ = 0;

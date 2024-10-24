@@ -1,14 +1,12 @@
-#include <iostream>
 #include "../../includes/ship/ship.h"
 
-Ship::Ship() : weight_(0), arrival_time_({ 0, 0 }), arrival_rejection_(0), fine_(0) {}
+Ship::Ship() : weight_(0), arrival_time_({ 0, 0 }), arrival_rejection_(0) {}
 
 Ship::Ship(int weight, std::pair<int, int> arrival_time, std::string ship_name) {
 	weight_ = weight;
 	arrival_time_ = arrival_time;
 	ship_name_ = ship_name;
 	arrival_rejection_ = rand() % 11 - 2;
-	fine_ = rand() % 20;
 }
 
 Ship::Ship(const Ship& other) {
@@ -43,27 +41,27 @@ void Ship::SetType(ShipType type) {
 	type_ = type;
 }
 
-void Ship::set_weight(int weight) {
+void Ship::SetWeight(int weight) {
 	weight_ = weight;
 }
 
-int Ship::get_weight() {
+int Ship::GetWeight() {
 	return weight_;
 }
 
-void Ship::set_ship_name(std::string name) {
+void Ship::SetShipName(std::string name) {
 	ship_name_ = name;
 }
 
-std::string Ship::get_ship_name() {
+std::string Ship::GetName() {
 	return ship_name_;
 }
 
-void Ship::set_arrival_rejection(int rej) {
+void Ship::SetArrivalRejection(int rej) {
 	arrival_rejection_ = rej;
 }
 
-int Ship::get_arrival_rejection() {
+int Ship::GetArrivalRejection() {
 	return arrival_rejection_;
 }
 
@@ -71,11 +69,11 @@ void Ship::SetArrivalTime(std::pair<int, int> data) {
 	arrival_time_ = data;
 }
 
-std::pair<int, int> Ship::get_arrival_time() {
+std::pair<int, int> Ship::GetArrivalTime() {
 	return arrival_time_;
 }
 
-ShipType Ship::get_type() {
+ShipType Ship::GetType() {
 	return type_;
 }
 
@@ -127,7 +125,9 @@ void Ship::Animate(double time, int fps, double duration) {
 	
 	if (animation_ == Animation::Unload) {
 		rotation_ = -90 * (time / duration);
-	}
+	} else if (animation_ == Animation::FadeIn) {
+		rotation_ = 0;
+	} 
 
 	x_ = start_x_ + step * ((end_x_ - start_x_) / (fps * duration));
 	y_ = start_y_ + step * ((end_y_ - start_y_) / (fps * duration));
@@ -180,7 +180,6 @@ void Ship::Unload() {
 	animation_ = Animation::Unload;
 }
 
-
 void Ship::Draw(sf::RenderWindow*& window) {
 	sf::Sprite ship(model_);
 	ship.setScale(size_x_ / model_.getSize().x, size_y_ / model_.getSize().y);
@@ -190,4 +189,3 @@ void Ship::Draw(sf::RenderWindow*& window) {
 	ship.setColor(color_);
 	window->draw(ship);
 }
-

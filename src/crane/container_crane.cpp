@@ -1,9 +1,8 @@
 #include "../../includes/crane/container_crane.h"
 
 void ContainerCrane::AddToQueue(Ship*& target) {
-    if (!(target->get_type() == ShipType::Tanker))
+    if (!(target->GetType() == ShipType::Tanker))
         throw std::runtime_error("Container crane is incompatible with received ship");
-    // kaka
     if (isEmpty()) {
         target->Unload();
         target->SetStartPos(x_ + size_x_, last_ship_pos_ + 200);
@@ -21,8 +20,10 @@ std::vector<std::string*> ContainerCrane::GetInfo() {
     std::vector<std::string*> info;
     info.push_back(new std::string("Container crane"));
     info.push_back(new std::string(name_));
+    info.push_back(new std::string("Speed: "));
+    info.push_back(new std::string(std::to_string(speed_) + " min per 5 kg"));
     info.push_back(new std::string("Currently unloading:"));
     if (isEmpty()) info.push_back(new std::string("None"));
-    else info.push_back(new std::string(queue_.front()->get_ship_name()));
+    else info.push_back(new std::string(queue_.front()->GetName()));
     return info;
 }

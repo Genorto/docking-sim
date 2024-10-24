@@ -11,24 +11,26 @@ class Crane {
      Crane(const Crane& other);
      Crane& operator=(const Crane& other);
      virtual void AddToQueue(Ship*& target) = 0;
-     size_t GetQueueSize();
-     virtual bool isHovered(sf::Vector2i cursor_pos) final;
-     virtual std::vector<std::string*> GetInfo() = 0;
+     bool isHovered(sf::Vector2i cursor_pos);
      bool isEmpty();
-     Ship* GetFirstShip();
      void UnloadFirst();
+     void Draw(sf::RenderWindow*& window);
+
+     void SetPos(double x, double y);
+     void SetSize(double size_x, double size_y);
+     void SetModel(std::string path);
+     void SetSpace(double space);
+     void SetName(std::string name);
+
+     size_t GetQueueSize();
+     Ship* GetFirstShip();
      void SetSpeed(int);
      int GetSpeed();
      std::pair<double, double> GetPos();
      std::pair<double, double> GetSize();
-     virtual void SetPos(double x, double y) final;
-     virtual void SetSize(double size_x, double size_y) final;
-     virtual void SetModel(std::string path) final;
-     virtual void SetName(std::string name) final;
-     virtual std::string GetName() final;
-     virtual void SetSpace(double space) final;
-     virtual int& GetUnloadTime() final;
-     virtual void Draw(sf::RenderWindow*& window) final;
+     virtual std::vector<std::string*> GetInfo() = 0;
+     std::string GetName();
+     int& GetUnloadTime();
 
  protected:
      double x_ = 0, y_ = 0;

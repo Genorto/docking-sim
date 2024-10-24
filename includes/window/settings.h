@@ -5,6 +5,13 @@ enum class mouse_status { graph1, graph2, graph3, graph4, graph5, nothing};
 class Settings : public Window {
 public:
     Settings();
+    virtual ~Settings();
+    virtual void CheckEvents() override;
+    bool CheckFields();
+    virtual void Draw() override;
+    virtual bool isOpen() override;
+    void FillingFields();
+
     int GetStepSize();
     std::pair<int, int> GetRejectionLimits();
     int GetFine();
@@ -12,12 +19,6 @@ public:
     int GetFluidCranesNumber();
     int GetContainerCranesNumber();
     std::vector<Ship*> GetShips();
-    virtual void CheckEvents() override;
-    bool CheckFields();
-    virtual void Draw() override;
-    virtual bool isOpen() override;
-    virtual ~Settings();
-    void FillingFields();
 
     int penalty_waiting_; // штраф, который мы платим за час ожидания
     std::pair<int, int> shift_in_arrival_; //насколько поезд прибыл раньше/позже в днях

@@ -1,121 +1,20 @@
 #include "../../includes/window/simulation.h"
-#include "iostream"
 
 Simulation::Simulation() {
-    window_ = new sf::RenderWindow(sf::VideoMode(1200, 800), "Docking simulation", sf::Style::Close);
+    window_ = new sf::RenderWindow(sf::VideoMode(1500, 800), "Docking simulation");
     event_ = new sf::Event;
     model_ = new Model;
-    /* these arguments are set by user */
-    model_->SetStepSize(1);
-    model_->SetFont("assets/fonts/roboto.ttf");
-    model_->SetTimeLimits(31, 0);
-    model_->SetRejectionLimits(1, 6);
-    model_->SetFine(100);
-    model_->SetSpeedLimits(1, 5);
-    model_->SetUnloadRejectionLimits(1, 5);
-    model_->SetFPS(240);
-    model_->SetStepLength(3);
-
-    Crane* temp_crane;
-    temp_crane = new BulkCrane;
-    temp_crane->SetPos(50, 50);
-    temp_crane->SetSize(100, 100);
-    temp_crane->SetName("Red impostor");
-    temp_crane->SetModel("assets/sprites/default_crane.png");
-    temp_crane->SetSpace(10);
-    model_->AddBulkCrane(temp_crane);
-
-    temp_crane = new FluidCrane;
-    temp_crane->SetPos(150, 50);
-    temp_crane->SetSize(100, 100);
-    temp_crane->SetName("Best crane ever");
-    temp_crane->SetModel("assets/sprites/default_crane.png");
-    temp_crane->SetSpace(10);
-    model_->AddFluidCrane(temp_crane);
-
-    temp_crane = new ContainerCrane;
-    temp_crane->SetPos(250, 50);
-    temp_crane->SetSize(100, 100);
-    temp_crane->SetName("lol kek cheburek kek lol arbidol");
-    temp_crane->SetModel("assets/sprites/default_crane.png");
-    temp_crane->SetSpace(10);
-    model_->AddContainerCrane(temp_crane);
-
-    Ship* temp_ship;
-    temp_ship = new CargoShip;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("Green Sausages");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new CargoShip;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("Lebron James");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new CargoShip;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("KKK");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new CargoShip;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("Evergreen");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new CargoShip;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("Yeei 52");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new Tanker;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("First tanker ever");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new Tanker;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("Big tanker");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
-
-    temp_ship = new Tanker;
-    temp_ship->set_weight(5000);
-    temp_ship->SetArrivalTime({ 0, 1 });
-    temp_ship->set_ship_name("Gorillaz");
-    temp_ship->SetSize(80, 150);
-    temp_ship->SetModel("assets/sprites/default_ship.png");
-    model_->AddShip(temp_ship);
 
     model_->RandomizeShipsData();
-    model_->Update();
+    model_->UpdateSimulation();
 
     chw_ = new CursorHoverWindow;
-    chw_->SetSize(200, 150);
+    chw_->SetSize(200, 200);
     chw_->SetFont("assets/fonts/roboto.ttf");
 }
 
 Simulation::Simulation(Settings* sett) {
-    window_ = new sf::RenderWindow(sf::VideoMode(1500, 800), "Docking simulation", sf::Style::Close);
+    window_ = new sf::RenderWindow(sf::VideoMode(1500, 800), "Docking simulation");
     moving = false;
     view.reset(sf::FloatRect(0, 0, default_center.x * 2, default_center.y * 2));
     window_->setView(view);
@@ -172,10 +71,10 @@ Simulation::Simulation(Settings* sett) {
 
     std::vector<Ship*> ships = sett->GetShips();
     for (auto ship : ships) {
-        ship->SetSize(80, 100 + ship->get_weight() / 10);
-        if (ship->get_type() == ShipType::CargoShip) ship->SetModel("assets/sprites/default_ship.png");
+        ship->SetSize(80, 100 + ship->GetWeight() / 10);
+        if (ship->GetType() == ShipType::CargoShip) ship->SetModel("assets/sprites/default_ship.png");
         else ship->SetModel("assets/sprites/default_tanker.png");
-        if (ship->get_type() == ShipType::CargoShip) {
+        if (ship->GetType() == ShipType::CargoShip) {
             model_->AddShip(ship);
         } else {
             model_->AddShip(ship);
@@ -183,10 +82,10 @@ Simulation::Simulation(Settings* sett) {
     }
 
     model_->RandomizeShipsData();
-    model_->Update();
+    model_->UpdateSimulation();
 
     chw_ = new CursorHoverWindow;
-    chw_->SetSize(200, 150);
+    chw_->SetSize(200, 200);
     chw_->SetFont("assets/fonts/roboto.ttf");
 }
 
@@ -198,9 +97,9 @@ void Simulation::CheckEvents() {
             curr_hours = model_->GetTime().first * 24 + model_->GetTime().second;
             end_hours = model_->GetTimeLimits().first * 24 + model_->GetTimeLimits().second;
             while (end_hours > curr_hours) {
-                model_->UpdateShipsPos();
+                model_->SkipShipsAnimations();
                 model_->NextHour();
-                model_->Update();
+                model_->UpdateSimulation();
                 ++curr_hours;
             }
             window_->close();
@@ -210,9 +109,9 @@ void Simulation::CheckEvents() {
             if (event_->key.scancode == sf::Keyboard::Scan::Right) {
                 int cycles = model_->GetStepSize();
                 while (cycles--) {
-                    model_->UpdateShipsPos();
+                    model_->SkipShipsAnimations();
                     model_->NextHour();
-                    model_->Update();
+                    model_->UpdateSimulation();
                 }
             } else if (event_->key.scancode == sf::Keyboard::Scan::Space) {
                 if (working) {
@@ -226,13 +125,18 @@ void Simulation::CheckEvents() {
                 curr_hours = model_->GetTime().first * 24 + model_->GetTime().second;
                 end_hours = model_->GetTimeLimits().first * 24 + model_->GetTimeLimits().second;
                 while (end_hours > curr_hours) {
-                    model_->UpdateShipsPos();
+                    model_->SkipShipsAnimations();
                     model_->NextHour();
-                    model_->Update();
+                    model_->UpdateSimulation();
                     ++curr_hours;
                 }
                 window_->close();
             }
+            break;
+
+        case sf::Event::Resized:
+            view.setSize(event_->size.width, event_->size.height);
+            window_->setView(view);
             break;
 
         case sf::Event::MouseWheelScrolled:
@@ -269,15 +173,14 @@ void Simulation::CheckEvents() {
             window_->setView(view);
             oldPos = window_->mapPixelToCoords(sf::Vector2i(event_->mouseMove.x, event_->mouseMove.y));
             break;
-
         }
     }
     if (model_->GetClock() >= model_->GetStepLength()) {
         int cycles = model_->GetStepSize();
         while (cycles--) {
-            model_->UpdateShipsPos();
+            model_->SkipShipsAnimations();
             model_->NextHour();
-            model_->Update();
+            model_->UpdateSimulation();
         }
     }
 
@@ -285,7 +188,7 @@ void Simulation::CheckEvents() {
 
     std::vector<std::string*> empty(0);
     chw_->SetInfo(empty);
-    chw_->SetPos(-1000, -1000);
+    chw_->SetPos(-1000 + view.getCenter().x - default_center.x, -1000 + view.getCenter().y - default_center.y);
     sf::Vector2i cursor = sf::Mouse::getPosition(*window_);
     cursor.x += view.getCenter().x - default_center.x;
     cursor.y += view.getCenter().y - default_center.y;
@@ -324,7 +227,7 @@ void Simulation::CheckEvents() {
 }
 
 void Simulation::Draw() {
-    window_->clear(sf::Color::Cyan);
+    window_->clear(sf::Color(0, 229, 255));
     sf::Sprite dock;
     sf::Texture texture;
     texture.loadFromFile("assets/sprites/dock.png");
@@ -354,7 +257,6 @@ void Simulation::Draw() {
         window_->draw(dock);
     }
 
-    /* time */
     std::pair<int, int> tm = model_->GetTime();
     sf::Text time;
     sf::Font font;
@@ -367,11 +269,10 @@ void Simulation::Draw() {
     sf::RectangleShape back;
     back.setSize(sf::Vector2f(time.getLocalBounds().width + 25, time.getLocalBounds().height + 30));
     back.setPosition(sf::Vector2f(window_->getSize().x - time.getLocalBounds().width - 25 + view.getCenter().x - default_center.x, view.getCenter().y - default_center.y));
-    back.setFillColor(sf::Color(160, 82, 45));
+    back.setFillColor(sf::Color(160, 82, 45, 100));
     window_->draw(back);
     window_->draw(time);
 
-    /* log */
     std::vector<std::string*> log = model_->GetLog();
     for (int i = news_l; i < log.size() && i <= news_r; ++i) {
         sf::Text time;
@@ -385,7 +286,7 @@ void Simulation::Draw() {
         sf::RectangleShape back;
         back.setSize(sf::Vector2f(window_->getSize().x, 30));
         back.setPosition(sf::Vector2f(view.getCenter().x - default_center.x, window_->getSize().y - 30 * (i - news_l + 1) + view.getCenter().y - default_center.y));
-        back.setFillColor(sf::Color(160, 82, 45));
+        back.setFillColor(sf::Color(160, 82, 45, 50));
         window_->draw(back);
         window_->draw(time);
     }
@@ -394,7 +295,7 @@ void Simulation::Draw() {
         sf::RectangleShape back;
         back.setSize(sf::Vector2f(window_->getSize().x, window_->getSize().y));
         back.setPosition(sf::Vector2f(view.getCenter().x - default_center.x, view.getCenter().y - default_center.y));
-        back.setFillColor(sf::Color(255, 255, 255, 50));
+        back.setFillColor(sf::Color(255, 255, 255, 100));
         window_->draw(back);
     }
 
@@ -410,4 +311,7 @@ Model* Simulation::GetModel() {
     return model_;
 }
 
-Simulation::~Simulation() {}
+Simulation::~Simulation() {
+    delete model_;
+    delete chw_;
+}

@@ -1,9 +1,8 @@
 #include "../../includes/crane/bulk_crane.h"
 
 void BulkCrane::AddToQueue(Ship*& target) {
-    if (!(target->get_type() == ShipType::CargoShip))
+    if (!(target->GetType() == ShipType::CargoShip))
         throw std::runtime_error("Bulk crane is incompatible with received ship");
-    // kaka
     if (isEmpty()) {
         target->Unload();
         target->SetStartPos(x_ + size_x_, last_ship_pos_ + 200);
@@ -21,9 +20,10 @@ std::vector<std::string*> BulkCrane::GetInfo() {
     std::vector<std::string*> info;
     info.push_back(new std::string("Bulk crane"));
     info.push_back(new std::string(name_));
+    info.push_back(new std::string("Speed: "));
+    info.push_back(new std::string(std::to_string(speed_) + " min per 5 kg"));
     info.push_back(new std::string("Currently unloading:"));
     if (isEmpty()) info.push_back(new std::string("None"));
-    else info.push_back(new std::string(queue_.front()->get_ship_name()));
+    else info.push_back(new std::string(queue_.front()->GetName()));
     return info;
 }
-

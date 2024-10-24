@@ -10,6 +10,7 @@
 class Model final {
  public:
      Model();
+     virtual ~Model();
      void RandomizeShipsData();
      void AddBulkCrane(Crane*&);
      void AddFluidCrane(Crane*&);
@@ -19,16 +20,12 @@ class Model final {
      std::vector<Crane*> GetFluidCranes();
      std::vector<Crane*> GetContainerCranes();
      std::vector<Ship*> GetShips();
-     double GetClock();
+     
      void SetFPS(int);
-     int GetFPS();
      void SetStepLength(double);
-     double GetStepLength();
      void SetStepSize(int);
-     int GetStepSize();
      void SetTimeLimits(std::pair<int, int>);
      void SetTimeLimits(int, int);
-     std::pair<int, int> GetTimeLimits();
      void SetRejectionLimits(std::pair<int, int>);
      void SetRejectionLimits(int, int);
      void SetUnloadRejectionLimits(std::pair<int, int>);
@@ -37,13 +34,20 @@ class Model final {
      void SetSpeedLimits(std::pair<int, int>);
      void SetSpeedLimits(int, int);
      void SetFont(std::string font_dir);
-     void NextHour();
+
+     int GetFPS();
+     double GetClock();
+     double GetStepLength();
+     int GetStepSize();
+     std::pair<int, int> GetTimeLimits();
      std::pair<int, int> GetTime();
-     void Update();
-     void UpdateShipsPos(); // only when switches by key
      int GetShipsCount();
      double GetAverageQueueLength();
      double GetAverageWaitingTime();
+
+     void NextHour();
+     void UpdateSimulation();
+     void SkipShipsAnimations(); // only when switches by key
      int GetMaxUnloadRejectionTime();
      double GetAverageUnloadRejectionTime();
      int GetTotalFine();
