@@ -72,8 +72,27 @@ Simulation::Simulation(Settings* sett) {
     std::vector<Ship*> ships = sett->GetShips();
     for (auto ship : ships) {
         ship->SetSize(80, 100 + ship->GetWeight() / 10);
-        if (ship->GetType() == ShipType::CargoShip) ship->SetModel("assets/sprites/cargo1.png");
-        else ship->SetModel("assets/sprites/tanker1.png");
+        if (ship->GetType() == ShipType::CargoShip) {
+            int random_texture = rand() % 3;
+            if (random_texture == 0) {
+                ship->SetModel("assets/sprites/cargo1.png");
+            } else if (random_texture == 1) {
+                ship->SetModel("assets/sprites/cargo2.png");
+            } else {
+                ship->SetModel("assets/sprites/cargo3.png");
+            }
+        } else {
+            int random_texture = rand() % 4;
+            if (random_texture == 0) {
+                ship->SetModel("assets/sprites/tanker1.png");
+            } else if (random_texture == 1) {
+                ship->SetModel("assets/sprites/tanker2.png");
+            } else if (random_texture == 2) {
+                ship->SetModel("assets/sprites/tanker3.png");
+            } else {
+                ship->SetModel("assets/sprites/tanker4.png");
+            }
+        }
         if (ship->GetType() == ShipType::CargoShip) {
             model_->AddShip(ship);
         } else {
@@ -232,6 +251,7 @@ void Simulation::Draw() {
     sf::Texture texture;
     texture.loadFromFile("assets/sprites/dock.png");
     dock.setTexture(texture);
+    dock.setScale(0.5f, 0.5f);
 
     for (auto ship : model_->GetShips()) {
         if (working) ship->Animate(model_->GetClock(), model_->GetFPS(), model_->GetStepLength());
@@ -241,19 +261,19 @@ void Simulation::Draw() {
 
     for (auto crane : model_->GetBulkCranes()) {
         crane->Draw(window_);
-        dock.setPosition(crane->GetPos().first - 600, 0);
+        dock.setPosition(crane->GetPos().first + crane->GetSize().first / 2 - dock.getLocalBounds().width / 4, crane->GetPos().second - dock.getLocalBounds().height / 2);
         window_->draw(dock);
     }
 
     for (auto crane : model_->GetFluidCranes()) {
         crane->Draw(window_);
-        dock.setPosition(crane->GetPos().first - 600, 0);
+        dock.setPosition(crane->GetPos().first + crane->GetSize().first / 2 - dock.getLocalBounds().width / 4, crane->GetPos().second - dock.getLocalBounds().height / 2);
         window_->draw(dock);
     }
 
     for (auto crane : model_->GetContainerCranes()) {
         crane->Draw(window_);
-        dock.setPosition(crane->GetPos().first - 600, 0);
+        dock.setPosition(crane->GetPos().first + crane->GetSize().first / 2 - dock.getLocalBounds().width / 4, crane->GetPos().second - dock.getLocalBounds().height / 2);
         window_->draw(dock);
     }
 
