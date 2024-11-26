@@ -1,6 +1,7 @@
-# docking-sim
-# C++ docking system simulation
-Work in progress...
-![image](https://github.com/user-attachments/assets/cca56a83-cd61-4ecf-8ca5-975dd730b785)
-Our team's goal is to make a fully functioning docking simulation.
-Ships voyage, cranes unload - it's simple. But our system is intended to make delays both in arriving to dock and finishing unloading the cargo. That's what makes it relatively realistic.
+# C++ docking simulation
+Ships voyage, cranes unload - sounds simple. But our system is intended to make delays in both arriving to dock and finishing unloading the cargo. That's what makes simulation relatively realistic.
+The application provides user with precise settings and informative statistics.
+## Navigation
+1) Hover objects to receive information about them.
+2) Use right arrow key to skip 1 step.
+3) Close window or press "ESC" to fully skip simulation.
